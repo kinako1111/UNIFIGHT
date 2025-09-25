@@ -34,13 +34,23 @@ public class E : MonoBehaviour
 
 	private void FixedUpdate()
 	{
+		if ((m_target[((int)TargetType.Player)].transform.position - transform.position).magnitude >= 3 && 
+			(m_target[((int)TargetType.Tower)].transform.position - transform.position).magnitude >= 3)
+		{
+			isMove = true;
+		}
+		else
+		{
+			Debug.Log(isMove);
+			isMove = false;
+		}
+
 		// “G‚©‚çŒ©‚Ätower‚Ì•û‚ªPlayer‚æ‚è‚à‰“‚©‚Á‚½‚çPlyer‚ğ’ÇÕ‚·‚é
 		if ((m_target[((int)TargetType.Tower)].transform.position - transform.position).magnitude >=
-			(m_target[((int)TargetType.Player)].transform.position - transform.position).magnitude) 
+			(m_target[((int)TargetType.Player)].transform.position - transform.position).magnitude)
 		{
 			//Navmesh‚ÌˆÚ“®
 			m_navmeshAgent.SetDestination(m_target[((int)TargetType.Player)].transform.position);
-			isMove = true;
 		}
 		// “G‚©‚çŒ©‚Ätower‚Ì•û‚ªPlayer‚æ‚è‚à‹ß‚¢‚©‚Â“G‚ÆPlayer‚Æ‚Ì‹——£‚ª10–¢–‚¾‚Á‚½‚çtower‚ğ’ÇÕ‚·‚é
 		else if ((m_target[((int)TargetType.Tower)].transform.position - transform.position).magnitude <=
@@ -49,12 +59,12 @@ public class E : MonoBehaviour
 		{
 			//Navmesh‚ÌˆÚ“®
 			m_navmeshAgent.SetDestination(m_target[((int)TargetType.Tower)].transform.position);
-
-			isMove = true;
 		}
-		else 
+		else if ((m_target[((int)TargetType.Tower)].transform.position - transform.position).magnitude <= 3 ||
+				(m_target[((int)TargetType.Player)].transform.position - transform.position).magnitude <= 3)
 		{
 			isMove = false;
+			Debug.Log("aaaa");
 		}
 
 		if (!isMove)
@@ -67,7 +77,6 @@ public class E : MonoBehaviour
 		}
 
 		m_animator.SetBool("Walk", isMove);
-		Debug.Log(isMove);
 	}
 
 	void OnAttack()
