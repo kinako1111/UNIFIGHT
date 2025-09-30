@@ -149,14 +149,14 @@ public class ShotGunFighter : MonoBehaviour
 			Bullet bullet3 = bulletInstance3.GetComponent<Bullet>();
 			Bullet bullet4 = bulletInstance4.GetComponent<Bullet>();
 			Bullet bullet5 = bulletInstance5.GetComponent<Bullet>();
-			if (bullet != null)
-			{
-				bullet.SetDirection(firePoint.forward); // firePoint‚Ì‘O•û‚ð”­ŽË•ûŒü‚Æ‚·‚é
-				bullet2.SetDirection(firePoint2.forward);
-				bullet3.SetDirection(firePoint3.forward);
-				bullet4.SetDirection(firePoint4.forward);
-				bullet5.SetDirection(firePoint5.forward);
-			}
+			//if (bullet != null)
+			//{
+			//	bullet.SetDirection(firePoint.forward); // firePoint‚Ì‘O•û‚ð”­ŽË•ûŒü‚Æ‚·‚é
+			//	bullet2.SetDirection(firePoint2.forward);
+			//	bullet3.SetDirection(firePoint3.forward);
+			//	bullet4.SetDirection(firePoint4.forward);
+			//	bullet5.SetDirection(firePoint5.forward);
+			//}
 		}
 	}
 }
