@@ -21,6 +21,9 @@ public class E : MonoBehaviour
 	[SerializeField]
 	Animator m_animator;
 
+	[SerializeField]
+	float m_stopingDistance;
+
 	float m_attackCoolTime;
 	bool isMove;
 
@@ -34,14 +37,13 @@ public class E : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		if ((m_target[((int)TargetType.Player)].transform.position - transform.position).magnitude >= 3 && 
-			(m_target[((int)TargetType.Tower)].transform.position - transform.position).magnitude >= 3)
+		if ((m_target[((int)TargetType.Player)].transform.position - transform.position).magnitude >= m_stopingDistance && 
+			(m_target[((int)TargetType.Tower)].transform.position - transform.position).magnitude >= m_stopingDistance)
 		{
 			isMove = true;
 		}
 		else
 		{
-			Debug.Log(isMove);
 			isMove = false;
 		}
 
@@ -60,12 +62,12 @@ public class E : MonoBehaviour
 			//Navmesh‚ÌˆÚ“®
 			m_navmeshAgent.SetDestination(m_target[((int)TargetType.Tower)].transform.position);
 		}
-		else if ((m_target[((int)TargetType.Tower)].transform.position - transform.position).magnitude <= 3 ||
-				(m_target[((int)TargetType.Player)].transform.position - transform.position).magnitude <= 3)
-		{
-			isMove = false;
-			Debug.Log("aaaa");
-		}
+		//else if ((m_target[((int)TargetType.Tower)].transform.position - transform.position).magnitude <= m_stopingDistance ||
+		//		(m_target[((int)TargetType.Player)].transform.position - transform.position).magnitude <= m_stopingDistance)
+		//{
+		//	isMove = false;
+		//	Debug.Log("a");
+		//}
 
 		if (!isMove)
 		{
