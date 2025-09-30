@@ -2,21 +2,23 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-	[SerializeField] float bulletSpeed = 20f; // ’e‘¬
-	[SerializeField] float lifeTime = 3f; // ’e‚Ìõ–½
+	// [SerializeField] float bulletSpeed = 20f; // © ‚±‚Ìs‚ÍPlayerController1‚ÅŠÇ—‚·‚é‚½‚ß•s—v‚É‚È‚è‚Ü‚µ‚½
+	[SerializeField] float lifeTime = 3f;
 
-	public void SetDirection(Vector3 direction)
+	private float _currentBulletSpeed; // PlayerController1‚©‚çó‚¯æ‚Á‚½’e‘¬‚ğŠi”[‚·‚é•Ï”
+
+	// ’e‚Ì‰Šúİ’è‚ğs‚¤ƒƒ\ƒbƒh
+	public void Initialize(Vector3 direction, float speed)
 	{
-		// ’e‚ª”­Ë‚³‚ê‚½•ûŒü‚Éi‚Ş‚æ‚¤‚Éİ’è
 		transform.forward = direction;
+		_currentBulletSpeed = speed; // ó‚¯æ‚Á‚½’e‘¬‚ğİ’è
 	}
 
 	void Update()
 	{
-		// ‘O•û‚ÉˆÚ“®
-		transform.Translate(Vector3.forward * bulletSpeed * Time.deltaTime);
+		// ‘O•û‚ÉˆÚ“® (_currentBulletSpeed ‚ğg—p)
+		transform.Translate(Vector3.forward * _currentBulletSpeed * Time.deltaTime);
 
-		// õ–½‚ª—ˆ‚½‚çíœ
 		lifeTime -= Time.deltaTime;
 		if (lifeTime <= 0)
 		{
@@ -24,14 +26,10 @@ public class Bullet : MonoBehaviour
 		}
 	}
 
-	// Õ“Ë”»’èi—áF“G‚É“–‚½‚Á‚½‚ç’e‚ğÁ‚·‚È‚Çj
 	void OnTriggerEnter(Collider other)
 	{
-		 if (other.CompareTag("Enemy"))
-		{
-			Destroy(other.gameObject); // “G‚ğ”j‰ó
-			Destroy(gameObject); // ’e‚ğ”j‰ó
-		}
-		Destroy(gameObject); // ‰½‚©‚É“–‚½‚Á‚½‚ç’e‚ğ”j‰ó
+		// “G‚É“–‚½‚Á‚½ê‡‚Ìˆ—‚È‚Ç‚ğ‚±‚±‚É’Ç‰Á
+		// Œ»ó‚ÍCollider‚ÉG‚ê‚½‚çÁ–Å
+		Destroy(gameObject);
 	}
 }
