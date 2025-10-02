@@ -5,7 +5,6 @@ using System.Collections;
 public class PlayerController1 : MonoBehaviour
 {
 	[SerializeField] Status m_status;
-	[SerializeField] float rotateSpeed = 500f;
 	[SerializeField] float gravity = 15f;
 
 	// 銃撃関連のフィールド
@@ -29,14 +28,19 @@ public class PlayerController1 : MonoBehaviour
 	[SerializeField] float ultDuration = 20f; // Ultの持続時間
 	[SerializeField] float ultCooldown = 60f; // Ultのクールダウン時間
 
+	// ★追加: 射撃方向線用のフィールド
+	[Header("Aim Line Settings")]
+	[SerializeField] LineRenderer aimLineRenderer; // Line Rendererコンポーネンスへの参照
+	[SerializeField] float aimLineLength = 10f; // 線の長さ
+
 	CharacterController controller;
 	PlayerInput m_playerInput;
 	Vector2 moveInput;
-	Vector2 lookInput;
+	Vector2 lookInput; // 左スティックの入力として使用
 	float verticalVelocity;
 
 	private bool canShoot = true; // 連射速度制御用フラグ
-	private float shootTimer = 0f; // 連射速度制御用タイマー (reloadTimerから名称変更)
+	private float shootTimer = 0f; // 連射速度制御用タイマー
 
 	private float currentBulletSpeed; // 現在の弾速を保持する変数
 
@@ -51,7 +55,7 @@ public class PlayerController1 : MonoBehaviour
 	private bool isUltActive = false; // Ult発動中かどうか
 	private bool canUseUlt = true; // Ultが使用可能かどうか
 
-	// ★追加: 射撃入力が押されているかどうかを追跡するフラグ
+	// 射撃入力が押されているかどうかを追跡するフラグ
 	private bool isShootingInputPressed = false;
 
 	void Awake()
@@ -60,6 +64,26 @@ public class PlayerController1 : MonoBehaviour
 		m_playerInput = GetComponent<PlayerInput>();
 		currentBulletSpeed = baseBulletSpeed; // 初期弾速を設定
 		currentAmmo = maxAmmo; // 初期弾数を設定
+
+		// ★追加: Line Rendererの初期設定
+		if (aimLineRenderer == null)
+		{
+			aimLineRenderer = GetComponent<LineRenderer>();
+			if (aimLineRenderer == null)
+			{
+				Debug.LogWarning("Line Renderer not found on Player object. Adding one automatically.");
+				aimLineRenderer = gameObject.AddComponent<LineRenderer>();
+				// デフォルトマテリアルが設定されるので、エディタで忘れずに設定し直す
+				aimLineRenderer.material = new Material(Shader.Find("Sprites/Default")); // 仮のマテリアル
+				aimLineRenderer.startWidth = 0.1f;
+				aimLineRenderer.endWidth = 0.05f;
+				aimLineRenderer.startColor = Color.blue;
+				aimLineRenderer.endColor = Color.cyan;
+				aimLineRenderer.positionCount = 2;
+				aimLineRenderer.useWorldSpace = true;
+			}
+		}
+		aimLineRenderer.enabled = false; // 最初は非表示
 	}
 
 	private void OnEnable()
@@ -70,14 +94,8 @@ public class PlayerController1 : MonoBehaviour
 		m_playerInput.actions["Look"].performed += OnLook;
 		m_playerInput.actions["Look"].canceled += OnLookCancel;
 
-		// Shotアクションのperformedとcanceledイベントを両方登録
-		m_playerInput.actions["Shot"].performed += OnShotPerformed;
-		m_playerInput.actions["Shot"].canceled += OnShotCanceled;
-
-		// Skill2 の入力イベント登録
 		m_playerInput.actions["Skill2"].performed += OnSkill2;
 
-		// Ult の入力イベント登録
 		m_playerInput.actions["Ult"].performed += OnUlt;
 	}
 
@@ -89,14 +107,8 @@ public class PlayerController1 : MonoBehaviour
 		m_playerInput.actions["Look"].performed -= OnLook;
 		m_playerInput.actions["Look"].canceled -= OnLookCancel;
 
-		// Shotアクションのperformedとcanceledイベントを両方解除
-		m_playerInput.actions["Shot"].performed -= OnShotPerformed;
-		m_playerInput.actions["Shot"].canceled -= OnShotCanceled;
-
-		// Skill2 の入力イベント解除
 		m_playerInput.actions["Skill2"].performed -= OnSkill2;
 
-		// Ult の入力イベント解除
 		m_playerInput.actions["Ult"].performed -= OnUlt;
 	}
 
@@ -113,35 +125,36 @@ public class PlayerController1 : MonoBehaviour
 	private void OnLook(InputAction.CallbackContext context)
 	{
 		lookInput = context.ReadValue<Vector2>();
+		if (lookInput.magnitude > 0.1f)
+		{
+			isShootingInputPressed = true;
+			// ★追加: 左スティックが倒されたら線を表示
+			aimLineRenderer.enabled = true;
+		}
+		else
+		{
+			isShootingInputPressed = false;
+			// ★追加: 左スティックが離されたら線を非表示
+			aimLineRenderer.enabled = false;
+		}
 	}
 
 	private void OnLookCancel(InputAction.CallbackContext context)
 	{
 		lookInput = Vector2.zero;
-	}
-
-	// ★修正: Shotボタンが押されたとき
-	private void OnShotPerformed(InputAction.CallbackContext context)
-	{
-		isShootingInputPressed = true;
-	}
-
-	// ★修正: Shotボタンが離されたとき
-	private void OnShotCanceled(InputAction.CallbackContext context)
-	{
 		isShootingInputPressed = false;
+		// ★追加: 左スティックが離されたら線を非表示
+		aimLineRenderer.enabled = false;
 	}
 
-	// Skill2 の入力イベントハンドラ
 	private void OnSkill2(InputAction.CallbackContext context)
 	{
-		if (!isSkill2Active) // 重複防止のみ
+		if (!isSkill2Active)
 		{
 			StartCoroutine(ActivateSkill2());
 		}
 	}
 
-	// Ult の入力イベントハンドラ
 	private void OnUlt(InputAction.CallbackContext context)
 	{
 		if (canUseUlt && !isUltActive)
@@ -170,9 +183,12 @@ public class PlayerController1 : MonoBehaviour
 			verticalVelocity -= gravity * Time.deltaTime;
 		}
 
-		if (lookInput != Vector2.zero)
+		// 移動方向への向きの変更（右スティックのMove入力に基づく）
+		if (moveInput != Vector2.zero)
 		{
-			transform.Rotate(Vector3.up, lookInput.x * rotateSpeed * Time.deltaTime);
+			Vector3 moveDirection = new Vector3(moveInput.x, 0, moveInput.y).normalized;
+			Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+			transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, m_status.GetSpeed() * 10f * Time.deltaTime); // 向きの滑らかさ調整
 		}
 
 		Vector3 move = transform.TransformDirection(new Vector3(moveInput.x, 0, moveInput.y));
@@ -183,7 +199,7 @@ public class PlayerController1 : MonoBehaviour
 
 		controller.Move(velocity * Time.deltaTime);
 
-		// ★連射速度制御タイマーの更新
+		// 連射速度制御タイマーの更新
 		if (!canShoot)
 		{
 			shootTimer -= Time.deltaTime;
@@ -193,17 +209,15 @@ public class PlayerController1 : MonoBehaviour
 			}
 		}
 
-		// ★連射処理
+		// 連射処理
 		if (isShootingInputPressed && canShoot && !isReloading)
 		{
-			// Ult発動中、または弾がある場合にのみ射撃
 			if (isUltActive || currentAmmo > 0)
 			{
 				Shoot();
-				canShoot = false; // 次の射撃まで待機
-				shootTimer = shootRate; // 連射速度タイマーをリセット
+				canShoot = false;
+				shootTimer = shootRate;
 
-				// Ult中でなければ弾を消費し、弾切れならリロードを開始
 				if (!isUltActive)
 				{
 					currentAmmo--;
@@ -216,7 +230,6 @@ public class PlayerController1 : MonoBehaviour
 			}
 			else if (currentAmmo <= 0 && !isReloading)
 			{
-				// 弾切れだがリロード中でない場合、自動的にリロード開始
 				StartCoroutine(Reload());
 			}
 			else if (isReloading)
@@ -224,6 +237,30 @@ public class PlayerController1 : MonoBehaviour
 				Debug.Log("Reloading...");
 			}
 		}
+
+		// ★追加: 射撃方向線の更新
+		if (aimLineRenderer.enabled)
+		{
+			Vector3 shootDirection;
+			if (lookInput.magnitude > 0.1f)
+			{
+				shootDirection = new Vector3(lookInput.x, 0, lookInput.y).normalized;
+			}
+			else
+			{
+				shootDirection = transform.forward; // 左スティック入力がない場合でも、線が表示されているなら体の向き
+			}
+
+			// FirePointから線が伸びるように調整
+			// Y座標をFirePointの高さに合わせることで、地面と平行に線が表示されやすくなる
+			Vector3 startPoint = firePoint.position;
+			startPoint.y = transform.position.y + 0.5f; // キャラクターの少し上あたり
+
+			Vector3 endPoint = startPoint + shootDirection * aimLineLength;
+			aimLineRenderer.SetPosition(0, startPoint);
+			aimLineRenderer.SetPosition(1, endPoint);
+		}
+
 
 		// UI表示のためのデバッグログ（後で実際のUIに置き換える）
 		if (isReloading)
@@ -245,13 +282,23 @@ public class PlayerController1 : MonoBehaviour
 	{
 		if (bulletPrefab != null && firePoint != null)
 		{
-			GameObject bulletInstance = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+			Vector3 shootDirection;
+
+			if (lookInput.magnitude > 0.1f)
+			{
+				shootDirection = new Vector3(lookInput.x, 0, lookInput.y).normalized;
+			}
+			else
+			{
+				shootDirection = transform.forward;
+			}
+
+			GameObject bulletInstance = Instantiate(bulletPrefab, firePoint.position, Quaternion.LookRotation(shootDirection));
 
 			Bullet bullet = bulletInstance.GetComponent<Bullet>();
 			if (bullet != null)
 			{
-				// 弾速をBulletスクリプトに渡す
-				bullet.Initialize(firePoint.forward, currentBulletSpeed);
+				bullet.Initialize(shootDirection, currentBulletSpeed);
 			}
 		}
 		else
@@ -260,63 +307,45 @@ public class PlayerController1 : MonoBehaviour
 		}
 	}
 
-	// マガジンリロードを行うコルーチン
+	// 以下、Reload, ActivateSkill2, ActivateUlt メソッドは変更なし
 	IEnumerator Reload()
 	{
 		isReloading = true;
 		Debug.Log("Start Reloading...");
 		yield return new WaitForSeconds(reloadDuration);
-		currentAmmo = maxAmmo; // 弾数を満タンにする
+		currentAmmo = maxAmmo;
 		isReloading = false;
 		Debug.Log("Reload Complete! Ammo: " + currentAmmo);
 	}
 
-	// スキル2を発動するコルーチン
 	IEnumerator ActivateSkill2()
 	{
 		isSkill2Active = true;
 		Debug.Log("Skill 2 activated! Bullet speed UP!");
-
-		// 弾速をアップ
 		currentBulletSpeed = baseBulletSpeed * skill2BulletSpeedMultiplier;
-
-		yield return new WaitForSeconds(skill2Duration); // 指定時間待機
-
-		// スキル効果終了
-		currentBulletSpeed = baseBulletSpeed; // 弾速を元に戻す
+		yield return new WaitForSeconds(skill2Duration);
+		currentBulletSpeed = baseBulletSpeed;
 		isSkill2Active = false;
 		Debug.Log("Skill 2 deactivated. Bullet speed returned to normal.");
 	}
 
-	// Ultを発動するコルーチン
 	IEnumerator ActivateUlt()
 	{
 		isUltActive = true;
-		canUseUlt = false; // Ult使用不可にする
+		canUseUlt = false;
 		Debug.Log("ULTIMATE ACTIVATED! Infinite Ammo for " + ultDuration + " seconds!");
-
-		// Ult中はリロードフラグを強制的に解除し、弾数を考慮しない
 		isReloading = false;
-		currentAmmo = maxAmmo; // UI表示のため一応満タンにしておく
-
+		currentAmmo = maxAmmo;
 		yield return new WaitForSeconds(ultDuration);
-
-		// Ult効果終了
 		isUltActive = false;
 		Debug.Log("ULTIMATE DEACTIVATED. Ammo limitations back on.");
-
-		// Ult終了後、もし弾数が0ならリロードを開始する
 		if (currentAmmo <= 0)
 		{
 			StartCoroutine(Reload());
 		}
-
-
-		// クールダウン開始
 		Debug.Log("ULTIMATE COOLDOWN initiated. " + ultCooldown + " seconds remaining.");
 		yield return new WaitForSeconds(ultCooldown);
-
-		canUseUlt = true; // クールダウン終了、再度使用可能に
+		canUseUlt = true;
 		Debug.Log("ULTIMATE COOLDOWN FINISHED. Ready to use again!");
 	}
 }
