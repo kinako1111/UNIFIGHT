@@ -4,7 +4,7 @@ using System.Collections;
 
 public class PlayerController1 : MonoBehaviour
 {
-	[SerializeField] float moveSpeed = 3f;
+	[SerializeField] Status m_status;
 	[SerializeField] float rotateSpeed = 500f;
 	[SerializeField] float gravity = 15f;
 
@@ -178,7 +178,7 @@ public class PlayerController1 : MonoBehaviour
 		Vector3 move = transform.TransformDirection(new Vector3(moveInput.x, 0, moveInput.y));
 		move.y = 0;
 
-		Vector3 velocity = move * moveSpeed + Vector3.up * verticalVelocity;
+		Vector3 velocity = move * m_status.GetSpeed() + Vector3.up * verticalVelocity;
 
 		controller.Move(velocity * Time.deltaTime);
 
