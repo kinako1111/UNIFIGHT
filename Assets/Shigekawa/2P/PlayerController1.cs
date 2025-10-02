@@ -179,6 +179,7 @@ public class PlayerController1 : MonoBehaviour
 		move.y = 0;
 
 		Vector3 velocity = move * m_status.GetSpeed() + Vector3.up * verticalVelocity;
+		Debug.Log(m_status.GetSpeed());
 
 		controller.Move(velocity * Time.deltaTime);
 

@@ -21,7 +21,7 @@ public class Status : MonoBehaviour
 
     UnitData unitData;
 
-    int character;
+    string character;
     int hp;
     int attackPower;
     float magnitication;
@@ -31,8 +31,12 @@ public class Status : MonoBehaviour
     void Start()
     {
         unitData = unit.dataArray[(int)m_name];
+
+        character = unitData.Character;
+        hp = unitData.Hp;
+        attackPower = unitData.Attackpower;
+        magnitication = unitData.Magnification;
         speed = unitData.Speed;
-        Debug.Log(unitData.Hp);
     }
 
     // Update is called once per frame
@@ -41,7 +45,7 @@ public class Status : MonoBehaviour
 
     }
 
-    public int GetCharacter()
+    public string GetCharacter()
     {
         return character;
     }
@@ -51,9 +55,24 @@ public class Status : MonoBehaviour
         return hp;
 	}
 
+    public int GetAttackPower()
+    {
+        return attackPower;
+    }
 
-    public float GetSpeed()
+    public float GetMagnitication()
+    {
+        return magnitication;
+    }
+
+
+	public float GetSpeed()
     {
         return speed;
+    }
+
+    public void Damage(int damage)
+    {
+        hp -= damage;
     }
 }
