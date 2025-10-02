@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
-using System.Collections.Generic; // Listを使用するため追加
+using System.Collections.Generic;
 
 public class PlayerController2 : MonoBehaviour
 {
@@ -18,10 +18,10 @@ public class PlayerController2 : MonoBehaviour
 	[SerializeField] float passiveEffectInterval = 1f; // オーラ効果の間隔
 
 	[Header("Potion Settings")]
-	[SerializeField] GameObject attackPotionPrefab; // 攻撃モードで投擲するポーション
-	[SerializeField] GameObject healPotionPrefab;   // 回復モードで投擲するポーション
+	[SerializeField] GameObject potionPrefab; // 投擲するポーションのPrefab (PotionProjectileコンポーネントを持つもの)
 	[SerializeField] float throwForce = 15f; // ポーションを投げる力
 	[SerializeField] Transform throwPoint; // ポーションを投げる開始位置
+	[SerializeField] float shotDelay = 0.5f; // ポーションが飛翔中に次のポーションを投げるまでのディレイ
 
 	[Header("Skill Settings")]
 	[SerializeField] float skill2Duration = 5f; // スキル2の効果時間 (2連射)
@@ -36,15 +36,10 @@ public class PlayerController2 : MonoBehaviour
 	bool isAttackMode = true; // 現在のモード (true: 攻撃, false: 回復)
 	bool canUseSkill2 = true; // スキル2が使用可能か
 	bool isDoubleShotActive = false; // スキル2 (2連射) がアクティブか
+	bool isShooting = false; // ポーション発射中フラグ
 
 	GameObject currentAuraEffect; // 生成されたオーラエフェクトのインスタンス
-
-	// ポーションが飛翔中に次のポーションを投げるまでのディレイ
-	[SerializeField] float shotDelay = 0.2f;
-	private bool isShooting = false; // ポーション発射中フラグ
-
-	// Passive Auraのコルーチンを停止・再開するために保持
-	private Coroutine passiveAuraCoroutine;
+	private Coroutine passiveAuraCoroutine; // Passive Auraのコルーチンを停止・再開するために保持
 
 	void Awake()
 	{
@@ -84,30 +79,16 @@ public class PlayerController2 : MonoBehaviour
 		StopPassiveAura(); // ゲーム終了時にオーラを停止
 	}
 
-	private void OnMove(InputAction.CallbackContext context)
-	{
-		moveInput = context.ReadValue<Vector2>();
-	}
-
-	private void OnMoveCancel(InputAction.CallbackContext context)
-	{
-		moveInput = Vector2.zero;
-	}
-
-	private void OnLook(InputAction.CallbackContext context)
-	{
-		lookInput = context.ReadValue<Vector2>();
-	}
-
-	private void OnLookCancel(InputAction.CallbackContext context)
-	{
-		lookInput = Vector2.zero;
-	}
+	// --- Input Callbacks ---
+	private void OnMove(InputAction.CallbackContext context) => moveInput = context.ReadValue<Vector2>();
+	private void OnMoveCancel(InputAction.CallbackContext context) => moveInput = Vector2.zero;
+	private void OnLook(InputAction.CallbackContext context) => lookInput = context.ReadValue<Vector2>();
+	private void OnLookCancel(InputAction.CallbackContext context) => lookInput = Vector2.zero;
 
 	// 通常攻撃 (ポーション投擲) の入力イベントハンドラ
 	private void OnShotPerformed(InputAction.CallbackContext context)
 	{
-		if (!isShooting) // ポーション発射中でなければ
+		if (!isShooting)
 		{
 			StartCoroutine(HandleShot());
 		}
@@ -136,27 +117,9 @@ public class PlayerController2 : MonoBehaviour
 
 	void Update()
 	{
-		// 移動と重力の処理
-		if (controller.isGrounded)
-		{
-			verticalVelocity = -1f;
-		}
-		else
-		{
-			verticalVelocity -= gravity * Time.deltaTime;
-		}
-
-		if (lookInput != Vector2.zero)
-		{
-			transform.Rotate(Vector3.up, lookInput.x * rotateSpeed * Time.deltaTime);
-		}
-
-		Vector3 move = transform.TransformDirection(new Vector3(moveInput.x, 0, moveInput.y));
-		move.y = 0;
-
-		Vector3 velocity = move * moveSpeed + Vector3.up * verticalVelocity;
-
-		controller.Move(velocity * Time.deltaTime);
+		// --- 移動と重力の処理 ---
+		ApplyGravity();
+		HandleMovementAndRotation();
 
 		// オーラエフェクトをプレイヤーの位置に追従させる
 		if (currentAuraEffect != null)
@@ -165,14 +128,41 @@ public class PlayerController2 : MonoBehaviour
 		}
 	}
 
-	// ポーション投擲処理
+	void ApplyGravity()
+	{
+		if (controller.isGrounded)
+		{
+			verticalVelocity = -1f; // 接地している場合は少しだけ下に押し付ける
+		}
+		else
+		{
+			verticalVelocity -= gravity * Time.deltaTime;
+		}
+	}
+
+	void HandleMovementAndRotation()
+	{
+		// 向きの変更
+		if (lookInput != Vector2.zero)
+		{
+			transform.Rotate(Vector3.up, lookInput.x * rotateSpeed * Time.deltaTime);
+		}
+
+		// 移動量の計算
+		Vector3 moveDirection = transform.TransformDirection(new Vector3(moveInput.x, 0, moveInput.y));
+		moveDirection.y = 0; // Y軸方向の移動は重力に任せる
+
+		Vector3 velocity = moveDirection * moveSpeed + Vector3.up * verticalVelocity;
+
+		controller.Move(velocity * Time.deltaTime);
+	}
+
+	// --- ポーション投擲処理 ---
 	void ThrowPotion()
 	{
-		GameObject potionPrefab = isAttackMode ? attackPotionPrefab : healPotionPrefab;
-
 		if (potionPrefab == null)
 		{
-			Debug.LogWarning($"No {(isAttackMode ? "attack" : "heal")} potion prefab assigned!");
+			Debug.LogWarning("Potion prefab is not assigned!");
 			return;
 		}
 		if (throwPoint == null)
@@ -181,16 +171,20 @@ public class PlayerController2 : MonoBehaviour
 			return;
 		}
 
-		GameObject potion = Instantiate(potionPrefab, throwPoint.position, throwPoint.rotation);
-		Rigidbody rb = potion.GetComponent<Rigidbody>();
+		GameObject potionInstance = Instantiate(potionPrefab, throwPoint.position, throwPoint.rotation);
+		Rigidbody rb = potionInstance.GetComponent<Rigidbody>();
 		if (rb != null)
 		{
 			rb.AddForce(throwPoint.forward * throwForce, ForceMode.VelocityChange);
-			// ポーションにモード情報を持たせるためのスクリプトがある場合
-			PotionProjectile potionProjectile = potion.GetComponent<PotionProjectile>();
+			// ポーションにモード情報を持たせるためのスクリプト
+			PotionProjectile potionProjectile = potionInstance.GetComponent<PotionProjectile>();
 			if (potionProjectile != null)
 			{
-				potionProjectile.SetPotionMode(isAttackMode);
+				potionProjectile.SetPotionMode(isAttackMode); // 現在のモードをポーションに渡す
+			}
+			else
+			{
+				Debug.LogWarning("PotionPrefab does not have a PotionProjectile component!");
 			}
 		}
 		else
@@ -206,24 +200,25 @@ public class PlayerController2 : MonoBehaviour
 		ThrowPotion();
 		if (isDoubleShotActive)
 		{
-			yield return new WaitForSeconds(0.1f); // 2連射時の少しのディレイ
+			yield return new WaitForSeconds(0.15f); // 2連射時の少しのディレイ (調整可能)
 			ThrowPotion();
 		}
 		yield return new WaitForSeconds(shotDelay); // 次のショットまでのディレイ
 		isShooting = false;
 	}
 
-	// パッシブオーラを開始する
+	// --- パッシブオーラの管理 ---
 	void StartPassiveAura()
 	{
 		// オーラエフェクトの生成 (見た目用)
-		if (auraEffectPrefab != null)
+		if (auraEffectPrefab != null && currentAuraEffect == null) // 既に存在しない場合のみ生成
 		{
 			currentAuraEffect = Instantiate(auraEffectPrefab, transform.position, Quaternion.identity, transform);
-			// オーラの見た目を設定 (例えば、色やパーティクルシステム)
-			// currentAuraEffect.transform.localScale = Vector3.one * auraRadius * 2; // 円の直径に合わせる
+			// オーラの見た目を初期化
+			UpdateAuraEffectVisuals();
 		}
 
+		// 既存のコルーチンがあれば停止し、新しく開始
 		if (passiveAuraCoroutine != null)
 		{
 			StopCoroutine(passiveAuraCoroutine);
@@ -231,16 +226,17 @@ public class PlayerController2 : MonoBehaviour
 		passiveAuraCoroutine = StartCoroutine(ApplyPassiveAuraEffect());
 	}
 
-	// パッシブオーラを停止する
 	void StopPassiveAura()
 	{
 		if (passiveAuraCoroutine != null)
 		{
 			StopCoroutine(passiveAuraCoroutine);
+			passiveAuraCoroutine = null;
 		}
 		if (currentAuraEffect != null)
 		{
 			Destroy(currentAuraEffect);
+			currentAuraEffect = null;
 		}
 	}
 
@@ -257,35 +253,25 @@ public class PlayerController2 : MonoBehaviour
 				// 自分自身は対象外
 				if (hitCollider.gameObject == gameObject) continue;
 
-				// HealthManager healthManager = hitCollider.GetComponent<HealthManager>(); // 体力管理コンポーネント
-				// if (healthManager == null) continue;
+				// HealthManager healthManager = hitCollider.GetComponent<HealthManager>(); 
+				// if (healthManager == null) continue; // 体力管理コンポーネントがない場合はスキップ
 
 				if (isAttackMode)
 				{
 					// 攻撃モード: 敵に毒ダメージ
-					// if (hitCollider.CompareTag("Enemy")) // 敵のタグを設定
-					// {
-					//     healthManager.TakeDamage(passivePoisonDamage);
-					//     Debug.Log($"Poisoned {hitCollider.name} for {passivePoisonDamage} damage.");
-					// }
-					// ここではHealthManagerがないためDebug.Logで代替
 					if (hitCollider.CompareTag("Enemy"))
 					{
-						Debug.Log($"Attacking: Poisoned {hitCollider.name} for {passivePoisonDamage} damage.");
+						// healthManager.TakeDamage(passivePoisonDamage);
+						Debug.Log($"Passive Aura (Attack Mode): Poisoned {hitCollider.name} for {passivePoisonDamage} damage.");
 					}
 				}
 				else
 				{
 					// 回復モード: 味方に少量の自動回復
-					// if (hitCollider.CompareTag("Ally") || hitCollider.CompareTag("Player")) // 味方のタグを設定
-					// {
-					//     healthManager.Heal(passiveHealAmount);
-					//     Debug.Log($"Healed {hitCollider.name} for {passiveHealAmount} health.");
-					// }
-					// ここではHealthManagerがないためDebug.Logで代替
 					if (hitCollider.CompareTag("Ally") || hitCollider.CompareTag("Player"))
 					{
-						Debug.Log($"Healing: Healed {hitCollider.name} for {passiveHealAmount} health.");
+						// healthManager.Heal(passiveHealAmount);
+						Debug.Log($"Passive Aura (Heal Mode): Healed {hitCollider.name} for {passiveHealAmount} health.");
 					}
 				}
 			}
@@ -297,24 +283,25 @@ public class PlayerController2 : MonoBehaviour
 	{
 		if (currentAuraEffect != null)
 		{
-			// ここでオーラエフェクトの見た目をモードに応じて変更するロジックを実装
-			// 例: ParticleSystemの色を変える、Materialの色を変える
+			// ここでオーラエフェクトの見た目をモードに応じて変更するロジックを実装します。
+			// 例: マテリアルの色を変更
 			Renderer renderer = currentAuraEffect.GetComponent<Renderer>();
 			if (renderer != null)
 			{
-				renderer.material.color = isAttackMode ? Color.red : Color.green; // 例として色を変える
+				renderer.material.color = isAttackMode ? Color.red : Color.green;
 			}
+
 			// ParticleSystemを制御する例
-			// ParticleSystem ps = currentAuraEffect.GetComponent<ParticleSystem>();
-			// if (ps != null)
-			// {
-			//     var main = ps.main;
-			//     main.startColor = isAttackMode ? Color.red : Color.green;
-			// }
+			ParticleSystem ps = currentAuraEffect.GetComponent<ParticleSystem>();
+			if (ps != null)
+			{
+				var main = ps.main;
+				main.startColor = isAttackMode ? new ParticleSystem.MinMaxGradient(Color.red) : new ParticleSystem.MinMaxGradient(Color.green);
+			}
 		}
 	}
 
-	// スキル2: 2連射をアクティブにするコルーチン
+	// --- スキル2: 2連射をアクティブにするコルーチン ---
 	IEnumerator ActivateSkill2()
 	{
 		canUseSkill2 = false;
@@ -327,7 +314,13 @@ public class PlayerController2 : MonoBehaviour
 		Debug.Log("Skill2 Deactivated: Normal shot.");
 
 		// クールダウン
-		yield return new WaitForSeconds(skill2Cooldown);
+		float remainingCooldown = skill2Cooldown;
+		while (remainingCooldown > 0)
+		{
+			Debug.Log($"Skill2 Cooldown: {Mathf.CeilToInt(remainingCooldown)}s remaining.");
+			yield return new WaitForSeconds(1f);
+			remainingCooldown -= 1f;
+		}
 
 		canUseSkill2 = true;
 		Debug.Log("Skill2 is ready again.");
@@ -342,7 +335,7 @@ public class PlayerController2 : MonoBehaviour
 	// デバッグ表示用 (ギズモ)
 	void OnDrawGizmos()
 	{
-		Gizmos.color = isAttackMode ? Color.red : Color.green;
+		Gizmos.color = isAttackMode ? Color.red : Color.green; // 現在のモードに応じて色を変える
 		Gizmos.DrawWireSphere(transform.position, auraRadius);
 	}
 }
