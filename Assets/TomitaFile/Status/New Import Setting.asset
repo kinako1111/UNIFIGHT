@@ -42,6 +42,34 @@ MonoBehaviour:
     name: speed
     isEnable: 0
     isArray: 0
+  - type: 5
+    name: passive
+    isEnable: 0
+    isArray: 0
+  - type: 5
+    name: skill1CoolTime
+    isEnable: 0
+    isArray: 0
+  - type: 5
+    name: skill2CoolTime
+    isEnable: 0
+    isArray: 0
+  - type: 5
+    name: urthCoolTime
+    isEnable: 0
+    isArray: 0
+  - type: 5
+    name: skill1Duration
+    isEnable: 0
+    isArray: 0
+  - type: 5
+    name: skill2Duration
+    isEnable: 0
+    isArray: 0
+  - type: 5
+    name: urthDuration
+    isEnable: 0
+    isArray: 0
   excelFilePath: Assets/TomitaFile/Status/StatusParameter.xlsx
   SheetNames:
   - Unit

@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections; // Coroutineのために必要
+using System.Collections;
+using UnityEngine.UI; // Coroutineのために必要
+using TMPro;
+using UnityEditor;
 
 public class PlayerController1 : MonoBehaviour
 {
@@ -14,13 +17,17 @@ public class PlayerController1 : MonoBehaviour
 
 	// スキル2関連のフィールド
 	[Header("Skill 2 Settings (Bullet Speed Up)")]
-	[SerializeField] float skill2BulletSpeedMultiplier = 1.5f; // スキル発動時の弾速倍率
-	[SerializeField] float skill2Duration = 5f; // スキル2の持続時間
+	[SerializeField] float skill2BulletSpeedMultiplier = 15f; // スキル発動時の弾速倍率
+	//[SerializeField] float skill2Duration; // スキル2の持続時間
 
 	// アルティメットスキル関連のフィールド
 	[Header("Ultimate Skill Settings (Infinite Ammo)")]
-	[SerializeField] float ultDuration = 20f; // Ultの持続時間
-	[SerializeField] float ultCooldown = 60f; // Ultのクールダウン時間
+	//[SerializeField] float ultDuration = 20f; // Ultの持続時間
+	//[SerializeField] float ultCooldown = 60f; // Ultのクールダウン時間
+
+	// キャラクターのHpを表示
+	[SerializeField] Slider m_playerSlider;
+	[SerializeField] TextMeshProUGUI m_hpText;
 
 	private CharacterController controller;
 	private PlayerInput m_playerInput;
@@ -65,6 +72,11 @@ public class PlayerController1 : MonoBehaviour
 		{
 			Debug.LogWarning("Main Camera not found! Please tag your camera as 'MainCamera'.");
 		}
+	}
+
+	private void Start()
+	{
+		
 	}
 
 	private void OnEnable()
@@ -137,8 +149,12 @@ public class PlayerController1 : MonoBehaviour
 		}
 	}
 
-	void Update()
+	void FixedUpdate()
 	{
+		m_playerSlider.maxValue = m_status.maxHp;
+		m_playerSlider.value = m_status.GetHp();
+		m_hpText.text = m_status.GetHp().ToString() + " / " + m_status.maxHp.ToString();
+
 		ApplyGravity();
 		CalculateMovementAndRotation();
 		MoveCharacter();
@@ -220,7 +236,7 @@ public class PlayerController1 : MonoBehaviour
 		{
 			playerShooting.CurrentBulletSpeed = playerShooting.GetBaseBulletSpeed() * skill2BulletSpeedMultiplier;
 		}
-		yield return new WaitForSeconds(skill2Duration);
+		yield return new WaitForSeconds(m_status.GetSkill2Duration());
 		if (playerShooting != null)
 		{
 			playerShooting.CurrentBulletSpeed = playerShooting.GetBaseBulletSpeed();
@@ -233,13 +249,13 @@ public class PlayerController1 : MonoBehaviour
 	{
 		isUltActive = true;
 		canUseUlt = false;
-		Debug.Log("ULTIMATE ACTIVATED! Infinite Ammo for " + ultDuration + " seconds!");
+		Debug.Log("ULTIMATE ACTIVATED! Infinite Ammo for " + m_status.GetUrthDuration() + " seconds!");
 		if (playerShooting != null)
 		{
 			playerShooting.ForceReload();
 		}
 
-		yield return new WaitForSeconds(ultDuration);
+		yield return new WaitForSeconds(m_status.GetUrthDuration());
 
 		isUltActive = false;
 		Debug.Log("ULTIMATE DEACTIVATED. Ammo limitations back on.");
@@ -251,8 +267,8 @@ public class PlayerController1 : MonoBehaviour
 			}
 		}
 
-		Debug.Log("ULTIMATE COOLDOWN initiated. " + ultCooldown + " seconds remaining.");
-		yield return new WaitForSeconds(ultCooldown);
+		Debug.Log("ULTIMATE COOLDOWN initiated. " + m_status.GetUrthCoolTime() + " seconds remaining.");
+		yield return new WaitForSeconds(m_status.GetUrthCoolTime());
 		canUseUlt = true;
 		Debug.Log("ULTIMATE COOLDOWN FINISHED. Ready to use again!");
 	}

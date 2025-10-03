@@ -21,11 +21,43 @@ public class Status : MonoBehaviour
 
     UnitData unitData;
 
-    string character;
+    // キャラ情報
+    string character; 
+
+    // キャラのHp
     int hp;
+
+    // 攻撃力
     int attackPower;
+
+    // クリティカル率
     float magnitication;
+
+    // 移動速度
     float speed;
+
+    // パッシブの時間
+    float passive;
+
+    // スキル1クールタイム
+    float skill1CoolTime;
+
+    // スキル2クールタイム
+    float skill2CoolTime;
+
+    // ウルトクールタイム
+    float urthCoolTime;
+
+    //スキル１持続時間
+    float skill1Duration;
+
+    // スキル2持続時間
+    float skill2Duration;
+
+    // ウルトの持続時間
+    float urthDuration;
+
+    // 最大Hp
     public int maxHp;
 
 	void Start()
@@ -37,8 +69,15 @@ public class Status : MonoBehaviour
         attackPower = unitData.Attackpower;
         magnitication = unitData.Magnification;
         speed = unitData.Speed;
+        passive = unitData.Passive;
+		skill1CoolTime = unitData.Skill1cooltime;
+		skill2CoolTime = unitData.Skill2cooltime;
+        urthCoolTime = unitData.Urthcooltime;
+        skill1Duration = unitData.Skill1duration;
+        skill2Duration = unitData.Skill2duration;
+        urthDuration = unitData.Urthduration;
+
         maxHp = unitData.Hp;
-        Debug.Log(maxHp);
 	}
 
     void FixedUpdate()
@@ -72,7 +111,43 @@ public class Status : MonoBehaviour
         return speed;
     }
 
-    public void Damage(int damage)
+    public float GetPassive()
+    {
+        return passive;
+    }
+
+    public float GetSkill1CoolTime()
+    {
+        return skill1CoolTime;
+    }
+
+    public float GetSkill2CoolTime()
+    {
+        return skill2CoolTime;
+    }
+
+    public float GetUrthCoolTime()
+    {
+        return urthCoolTime;
+    }
+
+    public float GetSkill1Duration()
+    {
+        return skill1Duration;
+    }
+
+    public float GetSkill2Duration()
+    {
+        return skill2Duration;
+    }
+
+    public float GetUrthDuration()
+    {
+        return urthDuration;
+    }
+
+
+	public void Damage(int damage)
     {
         hp -= damage;
     }
