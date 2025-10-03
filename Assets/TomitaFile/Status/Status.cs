@@ -26,9 +26,9 @@ public class Status : MonoBehaviour
     int attackPower;
     float magnitication;
     float speed;
+    public int maxHp;
 
-    // Start is called before the first frame update
-    void Start()
+	void Start()
     {
         unitData = unit.dataArray[(int)m_name];
 
@@ -37,13 +37,14 @@ public class Status : MonoBehaviour
         attackPower = unitData.Attackpower;
         magnitication = unitData.Magnification;
         speed = unitData.Speed;
-    }
+        maxHp = unitData.Hp;
+        Debug.Log(maxHp);
+	}
 
-    // Update is called once per frame
     void FixedUpdate()
     {
-
-    }
+		
+	}
 
     public string GetCharacter()
     {
@@ -74,5 +75,15 @@ public class Status : MonoBehaviour
     public void Damage(int damage)
     {
         hp -= damage;
+    }
+
+    public void Heal(int heal)
+    {
+        hp += heal;
+    }
+
+    public int GetMaxHp()
+    {
+        return maxHp;
     }
 }
