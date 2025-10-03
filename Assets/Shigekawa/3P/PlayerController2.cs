@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI; // UI要素のために追加
 using TMPro; // TextMeshProのために追加
+			 // using UnityEditor; // ビルド時にエラーになるため削除
 
 public class PlayerController2 : MonoBehaviour
 {
@@ -48,6 +49,7 @@ public class PlayerController2 : MonoBehaviour
 
 	GameObject currentAuraEffect;
 	private Coroutine passiveAuraCoroutine;
+	private Coroutine ultimateCooldownCoroutine; // ウルトのクールダウンコルーチンを管理するためのフィールド
 
 	void Awake()
 	{
@@ -94,7 +96,8 @@ public class PlayerController2 : MonoBehaviour
 
 		m_playerInput.actions["Skill1"].performed += OnSkill1;
 		m_playerInput.actions["Skill2"].performed += OnSkill2;
-		m_playerInput.actions["Ultimate"].performed += OnUltimate; // ウルトの入力イベントを追加
+		// ここを修正: "Ultimate" から "Ult" へ変更
+		m_playerInput.actions["Ult"].performed += OnUlt;
 
 		StartPassiveAura();
 	}
@@ -111,9 +114,14 @@ public class PlayerController2 : MonoBehaviour
 
 		m_playerInput.actions["Skill1"].performed -= OnSkill1;
 		m_playerInput.actions["Skill2"].performed -= OnSkill2;
-		m_playerInput.actions["Ultimate"].performed -= OnUltimate;
+		// ここを修正: "Ultimate" から "Ult" へ変更
+		m_playerInput.actions["Ult"].performed -= OnUlt; // OnUltimate -> OnUlt に修正
 
 		StopPassiveAura();
+		if (ultimateCooldownCoroutine != null)
+		{
+			StopCoroutine(ultimateCooldownCoroutine);
+		}
 	}
 
 	// --- Input Callbacks ---
@@ -154,15 +162,23 @@ public class PlayerController2 : MonoBehaviour
 	}
 
 	// --- ウルトの入力イベントハンドラ ---
-	private void OnUltimate(InputAction.CallbackContext context)
+	private void OnUlt(InputAction.CallbackContext context)
 	{
 		if (IsDead && canUseUltimate) // 死亡中で、かつウルトが使用可能であれば発動
 		{
-			StartCoroutine(ActivateUltimate());
+			if (ultimateCooldownCoroutine != null)
+			{
+				StopCoroutine(ultimateCooldownCoroutine); // 既存のクールダウンコルーチンがあれば停止
+			}
+			ultimateCooldownCoroutine = StartCoroutine(ActivateUlt()); // ActivateUltimate -> ActivateUlt に修正
 		}
 		else if (!IsDead)
 		{
-			Debug.Log("Ultimate can only be used when dead, or it's on cooldown.");
+			Debug.Log("Ultimate can only be used when the player is dead.");
+		}
+		else // IsDead && !canUseUltimate の場合
+		{
+			Debug.Log("Ultimate is on cooldown. Cannot revive yet.");
 		}
 	}
 
@@ -222,7 +238,13 @@ public class PlayerController2 : MonoBehaviour
 
 	void HandleMovementAndRotation()
 	{
-		if (cameraTransform == null) return;
+		if (cameraTransform == null)
+		{
+			// カメラが見つからない場合のフォールバック
+			CurrentLookDirection = transform.forward;
+			moveDirection = Vector3.zero;
+			return;
+		}
 
 		Vector3 forward = cameraTransform.forward;
 		Vector3 right = cameraTransform.right;
@@ -309,9 +331,11 @@ public class PlayerController2 : MonoBehaviour
 
 			// 死亡中はパッシブオーラも停止
 			if (IsDead) continue;
+			// Statusがnullの場合は処理しない
+			if (m_status == null) continue;
 
 			Collider[] hitColliders = Physics.OverlapSphere(transform.position, auraRadius);
-			foreach (var hitCollider in hitColliders)
+			foreach (var hitCollider in hitColliders) // hitCollizers -> hitColliders に修正
 			{
 				if (hitCollider.gameObject == gameObject) continue;
 
@@ -386,7 +410,7 @@ public class PlayerController2 : MonoBehaviour
 		// 敵との接触
 		if (hit.gameObject.CompareTag("Enemy"))
 		{
-			if (m_status.GetHp() <= 0) return; // 既にHPが0以下の場合は処理しない
+			if (m_status == null || m_status.GetHp() <= 0) return; // Statusがないか、既にHPが0以下の場合は処理しない
 			m_status.Damage(hitDamage);
 			Debug.Log($"Direct hit by {hit.gameObject.name}. Took {hitDamage} damage. Current HP: {m_status.GetHp()}");
 			CheckDeath(); // ダメージを受けた後に死亡判定
@@ -395,18 +419,18 @@ public class PlayerController2 : MonoBehaviour
 		// 回復アイテムとの接触
 		if (hit.gameObject.CompareTag("Heal"))
 		{
-			if (m_status.GetMaxHp() <= m_status.GetHp()) return; // 最大HPの場合は回復しない
+			if (m_status == null || m_status.GetMaxHp() <= m_status.GetHp()) return; // Statusがないか、最大HPの場合は回復しない
 			m_status.Heal(healAmount);
 			Debug.Log($"Touched Heal item. Healed for {healAmount}. Current HP: {m_status.GetHp()}");
 			// 回復アイテムは一度触れたら消えるなど、別途処理が必要な場合が多い
-			// Destroy(hit.gameObject); 
+			// Destroy(hit.gameObject);
 		}
 	}
 
 	// --- 死亡判定とウルト処理 ---
 	public void CheckDeath()
 	{
-		if (m_status.GetHp() <= 0 && !IsDead)
+		if (m_status != null && m_status.GetHp() <= 0 && !IsDead) // Statusがnullでないことを確認
 		{
 			Die();
 		}
@@ -423,7 +447,7 @@ public class PlayerController2 : MonoBehaviour
 		// ウルトのクールダウン表示などを開始
 		if (canUseUltimate)
 		{
-			Debug.Log("Press 'Ultimate' to revive!");
+			Debug.Log("Press 'Ult' to revive!"); // メッセージもUltに変更
 		}
 		else
 		{
@@ -432,20 +456,28 @@ public class PlayerController2 : MonoBehaviour
 	}
 
 	// ウルト発動コルーチン
-	IEnumerator ActivateUltimate()
+	IEnumerator ActivateUlt() // ActivateUltimate -> ActivateUlt に修正
 	{
 		canUseUltimate = false; // ウルト使用不可にする
 		Debug.Log("Activating Ultimate: Revive!");
 
 		// 死亡状態を解除し、HPを回復
 		IsDead = false;
-		int reviveHp = m_status.maxHp * reviveHpPercentage / 100;
-		m_status.Heal(reviveHp - m_status.GetHp()); // 現在のHPに関わらず指定割合まで回復
+		if (m_status != null) // Statusがnullでないことを確認
+		{
+			int reviveHp = m_status.maxHp * reviveHpPercentage / 100;
+			// 現在のHPが復活HPよりも低い場合のみ回復
+			if (m_status.GetHp() < reviveHp)
+			{
+				m_status.Heal(reviveHp - m_status.GetHp()); // 現在のHPに関わらず指定割合まで回復
+			}
+		}
+
 
 		// プレイヤーを再度アクティブにする（もし非アクティブにしていた場合）
 		// gameObject.SetActive(true);
 
-		Debug.Log($"Player revived with {reviveHp} HP! Current HP: {m_status.GetHp()}");
+		Debug.Log($"Player revived with {(m_status != null ? (m_status.maxHp * reviveHpPercentage / 100).ToString() : "N/A")} HP! Current HP: {(m_status != null ? m_status.GetHp().ToString() : "N/A")}");
 
 		// クールダウン開始
 		float remainingCooldown = ultimateCooldown;
@@ -458,6 +490,7 @@ public class PlayerController2 : MonoBehaviour
 
 		canUseUltimate = true;
 		Debug.Log("Ultimate is ready again.");
+		ultimateCooldownCoroutine = null; // クールダウン終了時にコルーチン参照をクリア
 	}
 
 	// デバッグ表示用 (ギズモ)

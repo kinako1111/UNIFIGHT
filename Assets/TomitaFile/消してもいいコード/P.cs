@@ -28,26 +28,26 @@ public class P : MonoBehaviour
 		m_playerSlider.value = m_status.GetHp();
 		m_hpText.text = m_status.GetHp().ToString() + " / " + m_status.maxHp.ToString();
 
-		//Wキーがおされたら
-		if (Input.GetKey(KeyCode.W))
-		{
-			m_characterController.Move(this.gameObject.transform.forward * m_status.GetSpeed() * Time.deltaTime);
-		}
-		//Sキーがおされたら
-		if (Input.GetKey(KeyCode.S))
-		{
-			m_characterController.Move(this.gameObject.transform.forward * -1f * m_status.GetSpeed() * Time.deltaTime);
-		}
-		//Aキーがおされたら
-		if (Input.GetKey(KeyCode.A))
-		{
-			m_characterController.Move(this.gameObject.transform.right * -1 * m_status.GetSpeed() * Time.deltaTime);
-		}
-		//Dキーがおされたら
-		if (Input.GetKey(KeyCode.D))
-		{
-			m_characterController.Move(this.gameObject.transform.right * m_status.GetSpeed() * Time.deltaTime);
-		}
+		////Wキーがおされたら
+		//if (Input.GetKey(KeyCode.W))
+		//{
+		//	m_characterController.Move(this.gameObject.transform.forward * m_status.GetSpeed() * Time.deltaTime);
+		//}
+		////Sキーがおされたら
+		//if (Input.GetKey(KeyCode.S))
+		//{
+		//	m_characterController.Move(this.gameObject.transform.forward * -1f * m_status.GetSpeed() * Time.deltaTime);
+		//}
+		////Aキーがおされたら
+		//if (Input.GetKey(KeyCode.A))
+		//{
+		//	m_characterController.Move(this.gameObject.transform.right * -1 * m_status.GetSpeed() * Time.deltaTime);
+		//}
+		////Dキーがおされたら
+		//if (Input.GetKey(KeyCode.D))
+		//{
+		//	m_characterController.Move(this.gameObject.transform.right * m_status.GetSpeed() * Time.deltaTime);
+		//}
 
 
 		// キャラクターを動かす
