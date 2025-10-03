@@ -29,11 +29,8 @@ public class PotionProjectile : MonoBehaviour
 
 	void OnCollisionEnter(Collision collision)
 	{
-		// ポーションを投げたオブジェクト自身には効果を適用しない
 		if (collision.gameObject == thrower)
 		{
-			// Debug.Log("Potion hit its thrower, no effect applied.");
-			// 例えば、衝突エフェクトだけ出して消滅させる
 			if (hitEffectPrefab != null)
 			{
 				GameObject effectInstance = Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
@@ -53,37 +50,28 @@ public class PotionProjectile : MonoBehaviour
 
 	void ApplyPotionEffect(GameObject target)
 	{
-		// ターゲットのStatusコンポーネントを取得
 		Status targetStatus = target.GetComponent<Status>();
 		if (targetStatus == null)
 		{
-			// Statusコンポーネントがない場合は効果なし
-			// Debug.LogWarning($"Target {target.name} does not have a Status component. Potion effect not applied.");
 			return;
 		}
 
 		if (isAttackPotion)
 		{
-			// 攻撃ポーション: 敵にダメージ
 			if (target.CompareTag("Enemy"))
 			{
 				targetStatus.Damage((int)effectAmount);
-				Debug.Log($"Attack Potion hit {target.name}. Dealt {effectAmount} damage. Current HP: {targetStatus.GetHp()}");
-				// プレイヤーのポーションが敵に当たった場合、敵の死亡判定も考慮
-				PlayerController2 enemyController = target.GetComponent<PlayerController2>(); // 敵がPlayerController2を持つとは限らない
-				if (enemyController != null) enemyController.CheckDeath(); // 敵がこのメソッドを持つ場合
+				PlayerController2 enemyController = target.GetComponent<PlayerController2>();
+				if (enemyController != null) enemyController.CheckDeath();
 			}
 		}
 		else
 		{
-			// 回復ポーション: 味方に回復 (プレイヤー自身も含む)
 			if (target.CompareTag("Ally") || target.CompareTag("Player"))
 			{
-				// 最大HPを超えないように回復
 				if (targetStatus.GetMaxHp() > targetStatus.GetHp())
 				{
 					targetStatus.Heal((int)effectAmount);
-					Debug.Log($"Heal Potion hit {target.name}. Healed for {effectAmount}. Current HP: {targetStatus.GetHp()}");
 				}
 			}
 		}

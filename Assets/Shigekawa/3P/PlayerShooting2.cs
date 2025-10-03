@@ -5,7 +5,6 @@ using System.Collections;
 public class PlayerShooting2 : MonoBehaviour
 {
 	[Header("Potion Settings")]
-	// 攻撃用ポーションと回復用ポーションのPrefabをそれぞれ設定
 	[SerializeField] GameObject attackPotionPrefab;  // 攻撃モードで投擲するポーションのPrefab
 	[SerializeField] GameObject healPotionPrefab;    // 回復モードで投擲するポーションのPrefab
 
@@ -17,20 +16,18 @@ public class PlayerShooting2 : MonoBehaviour
 	[SerializeField] float skill2Duration = 5f;
 	[SerializeField] float skill2Cooldown = 15f;
 
-	bool isAttackMode = true;
+	bool isAttackMode = false; // 初期値を回復モード(false)に変更
 	bool canUseSkill2 = true;
 	bool isDoubleShotActive = false;
 	bool isShooting = false;
 
 	private Vector3 currentLookDirection;
 
-	// PlayerController2からモード情報を更新するために呼び出される
 	public void SetAttackMode(bool mode)
 	{
 		isAttackMode = mode;
 	}
 
-	// PlayerController2から現在のLookDirectionを更新するために呼び出される
 	public void SetLookDirection(Vector3 lookDir)
 	{
 		currentLookDirection = lookDir;
@@ -51,12 +48,10 @@ public class PlayerShooting2 : MonoBehaviour
 
 		if (currentPotionPrefab == null)
 		{
-			Debug.LogWarning($"{(isAttackMode ? "Attack" : "Heal")} Potion prefab is not assigned to PlayerShooting!");
 			return;
 		}
 		if (throwPoint == null)
 		{
-			Debug.LogWarning("ThrowPoint is not assigned to PlayerShooting! Assign a Transform to throwPoint in the inspector.");
 			return;
 		}
 
@@ -70,17 +65,8 @@ public class PlayerShooting2 : MonoBehaviour
 			if (potionProjectile != null)
 			{
 				potionProjectile.SetPotionMode(isAttackMode);
-				// ポーションを投げたオブジェクトを設定 (自身)
 				potionProjectile.SetThrower(this.gameObject);
 			}
-			else
-			{
-				Debug.LogWarning($"{currentPotionPrefab.name} does not have a PotionProjectile component!");
-			}
-		}
-		else
-		{
-			Debug.LogWarning($"{currentPotionPrefab.name} does not have a Rigidbody component!");
 		}
 	}
 
@@ -105,32 +91,24 @@ public class PlayerShooting2 : MonoBehaviour
 		{
 			StartCoroutine(ActivateSkill2());
 		}
-		else
-		{
-			Debug.Log("Skill2 is on cooldown.");
-		}
 	}
 
 	IEnumerator ActivateSkill2()
 	{
 		canUseSkill2 = false;
 		isDoubleShotActive = true;
-		Debug.Log("Skill2 Activated: Double shot for " + skill2Duration + " seconds!");
 
 		yield return new WaitForSeconds(skill2Duration);
 
 		isDoubleShotActive = false;
-		Debug.Log("Skill2 Deactivated: Normal shot.");
 
 		float remainingCooldown = skill2Cooldown;
 		while (remainingCooldown > 0)
 		{
-			Debug.Log($"Skill2 Cooldown: {Mathf.CeilToInt(remainingCooldown)}s remaining.");
 			yield return new WaitForSeconds(1f);
 			remainingCooldown -= 1f;
 		}
 
 		canUseSkill2 = true;
-		Debug.Log("Skill2 is ready again.");
 	}
 }
