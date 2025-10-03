@@ -2,30 +2,39 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI; // UI要素のために追加
+using TMPro; // TextMeshProのために追加
 
 public class PlayerController2 : MonoBehaviour
 {
 	[Header("Movement Settings")]
 	[SerializeField] float moveSpeed = 3f;
-	[SerializeField] float rotateSpeed = 500f;
+	[SerializeField] float rotateSpeed = 10f;
 	[SerializeField] float gravity = 15f;
 
+	[SerializeField] Status m_status;
+	private Transform cameraTransform;
+	public Vector3 CurrentLookDirection { get; private set; }
+
+	[SerializeField] PlayerShooting2 playerShooting;
+
 	[Header("Passive Aura Settings")]
-	[SerializeField] GameObject auraEffectPrefab; // 円形のオーラエフェクトのPrefab (見た目用)
-	[SerializeField] float auraRadius = 5f; // オーラの範囲
-	[SerializeField] float passiveHealAmount = 1f; // 味方への自動回復量
-	[SerializeField] float passivePoisonDamage = 1f; // 敵への毒ダメージ
-	[SerializeField] float passiveEffectInterval = 1f; // オーラ効果の間隔
+	[SerializeField] GameObject auraEffectPrefab;
+	[SerializeField] float auraRadius = 5f;
+	[SerializeField] float passiveHealAmount = 1f;
+	[SerializeField] float passivePoisonDamage = 1f;
+	[SerializeField] float passiveEffectInterval = 1f;
 
-	[Header("Potion Settings")]
-	[SerializeField] GameObject potionPrefab; // 投擲するポーションのPrefab (PotionProjectileコンポーネントを持つもの)
-	[SerializeField] float throwForce = 15f; // ポーションを投げる力
-	[SerializeField] Transform throwPoint; // ポーションを投げる開始位置
-	[SerializeField] float shotDelay = 0.5f; // ポーションが飛翔中に次のポーションを投げるまでのディレイ
+	// Pスクリプトから移行したUI関連のフィールド
+	[Header("UI Settings")]
+	[SerializeField] Slider m_playerSlider;
+	[SerializeField] TextMeshProUGUI m_hpText;
 
-	[Header("Skill Settings")]
-	[SerializeField] float skill2Duration = 5f; // スキル2の効果時間 (2連射)
-	[SerializeField] float skill2Cooldown = 15f; // スキル2のクールダウン
+	[Header("Ultimate Skill Settings")]
+	[SerializeField] float ultimateCooldown = 60f; // ウルトのクールダウン時間
+	[SerializeField] int reviveHpPercentage = 50; // 蘇生時のHP割合 (例: 50で50%)
+	bool canUseUltimate = true; // ウルトが使用可能か
+	public bool IsDead { get; private set; } = false; // 死亡状態のフラグ
 
 	CharacterController controller;
 	PlayerInput m_playerInput;
@@ -33,18 +42,44 @@ public class PlayerController2 : MonoBehaviour
 	Vector2 lookInput;
 	float verticalVelocity;
 
-	bool isAttackMode = true; // 現在のモード (true: 攻撃, false: 回復)
-	bool canUseSkill2 = true; // スキル2が使用可能か
-	bool isDoubleShotActive = false; // スキル2 (2連射) がアクティブか
-	bool isShooting = false; // ポーション発射中フラグ
+	private Vector3 moveDirection;
 
-	GameObject currentAuraEffect; // 生成されたオーラエフェクトのインスタンス
-	private Coroutine passiveAuraCoroutine; // Passive Auraのコルーチンを停止・再開するために保持
+	bool isAttackMode = true;
+
+	GameObject currentAuraEffect;
+	private Coroutine passiveAuraCoroutine;
 
 	void Awake()
 	{
 		controller = GetComponent<CharacterController>();
 		m_playerInput = GetComponent<PlayerInput>();
+
+		if (Camera.main != null)
+		{
+			cameraTransform = Camera.main.transform;
+		}
+		else
+		{
+			Debug.LogWarning("Main Camera not found! Please tag your camera as 'MainCamera'.");
+		}
+
+		if (m_status == null)
+		{
+			m_status = GetComponent<Status>();
+			if (m_status == null)
+			{
+				Debug.LogError("Status component not found on this GameObject. Player speed will use default 'moveSpeed' value from PlayerController2.");
+			}
+		}
+
+		if (playerShooting == null)
+		{
+			playerShooting = GetComponent<PlayerShooting2>();
+			if (playerShooting == null)
+			{
+				Debug.LogError("PlayerShooting component not found. Please assign it in the Inspector or ensure it's on the same GameObject.");
+			}
+		}
 	}
 
 	private void OnEnable()
@@ -57,10 +92,11 @@ public class PlayerController2 : MonoBehaviour
 
 		m_playerInput.actions["Shot"].performed += OnShotPerformed;
 
-		m_playerInput.actions["Skill1"].performed += OnSkill1; // Skill1 (モード切り替え)
-		m_playerInput.actions["Skill2"].performed += OnSkill2; // Skill2 (2連射)
+		m_playerInput.actions["Skill1"].performed += OnSkill1;
+		m_playerInput.actions["Skill2"].performed += OnSkill2;
+		m_playerInput.actions["Ultimate"].performed += OnUltimate; // ウルトの入力イベントを追加
 
-		StartPassiveAura(); // ゲーム開始時にオーラを開始
+		StartPassiveAura();
 	}
 
 	private void OnDisable()
@@ -75,8 +111,9 @@ public class PlayerController2 : MonoBehaviour
 
 		m_playerInput.actions["Skill1"].performed -= OnSkill1;
 		m_playerInput.actions["Skill2"].performed -= OnSkill2;
+		m_playerInput.actions["Ultimate"].performed -= OnUltimate;
 
-		StopPassiveAura(); // ゲーム終了時にオーラを停止
+		StopPassiveAura();
 	}
 
 	// --- Input Callbacks ---
@@ -85,46 +122,89 @@ public class PlayerController2 : MonoBehaviour
 	private void OnLook(InputAction.CallbackContext context) => lookInput = context.ReadValue<Vector2>();
 	private void OnLookCancel(InputAction.CallbackContext context) => lookInput = Vector2.zero;
 
-	// 通常攻撃 (ポーション投擲) の入力イベントハンドラ
-	private void OnShotPerformed(InputAction.CallbackContext context)
+	public void OnShotPerformed(InputAction.CallbackContext context)
 	{
-		if (!isShooting)
+		if (IsDead) return; // 死亡中は攻撃不可
+		if (playerShooting != null)
 		{
-			StartCoroutine(HandleShot());
+			playerShooting.Shot();
 		}
 	}
 
-	// スキル1: 攻撃/回復モード切り替え
 	private void OnSkill1(InputAction.CallbackContext context)
 	{
+		if (IsDead) return; // 死亡中はスキル不可
 		isAttackMode = !isAttackMode;
 		Debug.Log("Mode switched to: " + (isAttackMode ? "Attack" : "Heal"));
-		UpdateAuraEffectVisuals(); // オーラの見た目を更新 (もしあれば)
+		UpdateAuraEffectVisuals();
+
+		if (playerShooting != null)
+		{
+			playerShooting.SetAttackMode(isAttackMode);
+		}
 	}
 
-	// スキル2: 一定時間2連射
 	private void OnSkill2(InputAction.CallbackContext context)
 	{
-		if (canUseSkill2)
+		if (IsDead) return; // 死亡中はスキル不可
+		if (playerShooting != null)
 		{
-			StartCoroutine(ActivateSkill2());
+			playerShooting.ActivateSkill2Action();
 		}
-		else
+	}
+
+	// --- ウルトの入力イベントハンドラ ---
+	private void OnUltimate(InputAction.CallbackContext context)
+	{
+		if (IsDead && canUseUltimate) // 死亡中で、かつウルトが使用可能であれば発動
 		{
-			Debug.Log("Skill2 is on cooldown.");
+			StartCoroutine(ActivateUltimate());
+		}
+		else if (!IsDead)
+		{
+			Debug.Log("Ultimate can only be used when dead, or it's on cooldown.");
 		}
 	}
 
 	void Update()
 	{
-		// --- 移動と重力の処理 ---
+		// 死亡中は移動やスキル発動を停止
+		if (IsDead)
+		{
+			// 死亡中の特別な処理 (例えば、キャラクターモデルを非表示にするなど)
+			controller.Move(Vector3.zero); // 移動を停止
+			moveDirection = Vector3.zero; // 移動方向をリセット
+			verticalVelocity = 0; // 重力の影響も停止
+
+			UpdateHpUI(); // HP表示だけは継続
+			return;
+		}
+
 		ApplyGravity();
 		HandleMovementAndRotation();
+		MoveCharacter();
 
-		// オーラエフェクトをプレイヤーの位置に追従させる
 		if (currentAuraEffect != null)
 		{
 			currentAuraEffect.transform.position = transform.position;
+		}
+
+		if (playerShooting != null)
+		{
+			playerShooting.SetLookDirection(CurrentLookDirection);
+		}
+
+		UpdateHpUI(); // HP表示を毎フレーム更新
+	}
+
+	// Pスクリプトから移行したHP UI更新メソッド
+	private void UpdateHpUI()
+	{
+		if (m_status != null && m_playerSlider != null && m_hpText != null)
+		{
+			m_playerSlider.maxValue = m_status.maxHp;
+			m_playerSlider.value = m_status.GetHp();
+			m_hpText.text = m_status.GetHp().ToString() + " / " + m_status.maxHp.ToString();
 		}
 	}
 
@@ -132,7 +212,7 @@ public class PlayerController2 : MonoBehaviour
 	{
 		if (controller.isGrounded)
 		{
-			verticalVelocity = -1f; // 接地している場合は少しだけ下に押し付ける
+			verticalVelocity = -1f;
 		}
 		else
 		{
@@ -142,83 +222,64 @@ public class PlayerController2 : MonoBehaviour
 
 	void HandleMovementAndRotation()
 	{
-		// 向きの変更
-		if (lookInput != Vector2.zero)
+		if (cameraTransform == null) return;
+
+		Vector3 forward = cameraTransform.forward;
+		Vector3 right = cameraTransform.right;
+
+		forward.y = 0f;
+		right.y = 0f;
+		forward.Normalize();
+		right.Normalize();
+
+		moveDirection = Vector3.zero;
+		if (moveInput.magnitude > 0.1f)
 		{
-			transform.Rotate(Vector3.up, lookInput.x * rotateSpeed * Time.deltaTime);
+			moveDirection = forward * moveInput.y + right * moveInput.x;
+			moveDirection.Normalize();
 		}
 
-		// 移動量の計算
-		Vector3 moveDirection = transform.TransformDirection(new Vector3(moveInput.x, 0, moveInput.y));
-		moveDirection.y = 0; // Y軸方向の移動は重力に任せる
+		Vector3 targetLookDirection = Vector3.zero;
 
-		Vector3 velocity = moveDirection * moveSpeed + Vector3.up * verticalVelocity;
-
-		controller.Move(velocity * Time.deltaTime);
-	}
-
-	// --- ポーション投擲処理 ---
-	void ThrowPotion()
-	{
-		if (potionPrefab == null)
+		if (lookInput.magnitude > 0.1f)
 		{
-			Debug.LogWarning("Potion prefab is not assigned!");
-			return;
+			targetLookDirection = forward * lookInput.y + right * lookInput.x;
+			targetLookDirection.y = 0f;
+			targetLookDirection.Normalize();
 		}
-		if (throwPoint == null)
+		else if (moveDirection.magnitude > 0.1f)
 		{
-			Debug.LogWarning("ThrowPoint is not assigned! Assign a Transform to throwPoint in the inspector.");
-			return;
+			targetLookDirection = moveDirection;
 		}
 
-		GameObject potionInstance = Instantiate(potionPrefab, throwPoint.position, throwPoint.rotation);
-		Rigidbody rb = potionInstance.GetComponent<Rigidbody>();
-		if (rb != null)
+		if (targetLookDirection != Vector3.zero)
 		{
-			rb.AddForce(throwPoint.forward * throwForce, ForceMode.VelocityChange);
-			// ポーションにモード情報を持たせるためのスクリプト
-			PotionProjectile potionProjectile = potionInstance.GetComponent<PotionProjectile>();
-			if (potionProjectile != null)
-			{
-				potionProjectile.SetPotionMode(isAttackMode); // 現在のモードをポーションに渡す
-			}
-			else
-			{
-				Debug.LogWarning("PotionPrefab does not have a PotionProjectile component!");
-			}
+			Quaternion targetRotation = Quaternion.LookRotation(targetLookDirection, Vector3.up);
+			transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
+			CurrentLookDirection = targetLookDirection;
 		}
 		else
 		{
-			Debug.LogWarning("Potion prefab does not have a Rigidbody component!");
+			CurrentLookDirection = transform.forward;
 		}
 	}
 
-	// ポーション発射と連射をハンドリングするコルーチン
-	IEnumerator HandleShot()
+	private void MoveCharacter()
 	{
-		isShooting = true;
-		ThrowPotion();
-		if (isDoubleShotActive)
-		{
-			yield return new WaitForSeconds(0.15f); // 2連射時の少しのディレイ (調整可能)
-			ThrowPotion();
-		}
-		yield return new WaitForSeconds(shotDelay); // 次のショットまでのディレイ
-		isShooting = false;
+		float currentMoveSpeed = (m_status != null) ? m_status.GetSpeed() : moveSpeed;
+		Vector3 velocity = moveDirection * currentMoveSpeed + Vector3.up * verticalVelocity;
+		controller.Move(velocity * Time.deltaTime);
 	}
 
 	// --- パッシブオーラの管理 ---
 	void StartPassiveAura()
 	{
-		// オーラエフェクトの生成 (見た目用)
-		if (auraEffectPrefab != null && currentAuraEffect == null) // 既に存在しない場合のみ生成
+		if (auraEffectPrefab != null && currentAuraEffect == null)
 		{
 			currentAuraEffect = Instantiate(auraEffectPrefab, transform.position, Quaternion.identity, transform);
-			// オーラの見た目を初期化
 			UpdateAuraEffectVisuals();
 		}
 
-		// 既存のコルーチンがあれば停止し、新しく開始
 		if (passiveAuraCoroutine != null)
 		{
 			StopCoroutine(passiveAuraCoroutine);
@@ -240,58 +301,64 @@ public class PlayerController2 : MonoBehaviour
 		}
 	}
 
-	// パッシブオーラの効果を適用するコルーチン
 	IEnumerator ApplyPassiveAuraEffect()
 	{
 		while (true)
 		{
 			yield return new WaitForSeconds(passiveEffectInterval);
 
+			// 死亡中はパッシブオーラも停止
+			if (IsDead) continue;
+
 			Collider[] hitColliders = Physics.OverlapSphere(transform.position, auraRadius);
 			foreach (var hitCollider in hitColliders)
 			{
-				// 自分自身は対象外
 				if (hitCollider.gameObject == gameObject) continue;
 
-				// HealthManager healthManager = hitCollider.GetComponent<HealthManager>(); 
-				// if (healthManager == null) continue; // 体力管理コンポーネントがない場合はスキップ
+				// Statusコンポーネントを持つオブジェクトのみを対象とする (味方/敵の判定)
+				Status targetStatus = hitCollider.GetComponent<Status>();
+				if (targetStatus == null) continue;
 
-				if (isAttackMode)
+				// 自身と同じプレイヤー/味方グループのタグを持つもの (例: "Player", "Ally")
+				bool isAlly = hitCollider.CompareTag("Ally") || hitCollider.CompareTag("Player");
+				// 自身と異なるプレイヤー/敵グループのタグを持つもの (例: "Enemy")
+				bool isEnemy = hitCollider.CompareTag("Enemy");
+
+
+				if (isAttackMode) // 攻撃モード
 				{
-					// 攻撃モード: 敵に毒ダメージ
-					if (hitCollider.CompareTag("Enemy"))
+					if (isEnemy)
 					{
-						// healthManager.TakeDamage(passivePoisonDamage);
-						Debug.Log($"Passive Aura (Attack Mode): Poisoned {hitCollider.name} for {passivePoisonDamage} damage.");
+						targetStatus.Damage((int)passivePoisonDamage); // 毒ダメージ
+						Debug.Log($"Passive Aura (Attack Mode): Poisoned {hitCollider.name} for {passivePoisonDamage} damage. Current HP: {targetStatus.GetHp()}");
 					}
 				}
-				else
+				else // 回復モード
 				{
-					// 回復モード: 味方に少量の自動回復
-					if (hitCollider.CompareTag("Ally") || hitCollider.CompareTag("Player"))
+					if (isAlly)
 					{
-						// healthManager.Heal(passiveHealAmount);
-						Debug.Log($"Passive Aura (Heal Mode): Healed {hitCollider.name} for {passiveHealAmount} health.");
+						// 最大HPを超えないように回復
+						if (targetStatus.GetMaxHp() > targetStatus.GetHp())
+						{
+							targetStatus.Heal((int)passiveHealAmount);
+							Debug.Log($"Passive Aura (Heal Mode): Healed {hitCollider.name} for {passiveHealAmount} health. Current HP: {targetStatus.GetHp()}");
+						}
 					}
 				}
 			}
 		}
 	}
 
-	// オーラエフェクトの見た目を更新する（例：色を変える、パーティクルを切り替えるなど）
 	void UpdateAuraEffectVisuals()
 	{
 		if (currentAuraEffect != null)
 		{
-			// ここでオーラエフェクトの見た目をモードに応じて変更するロジックを実装します。
-			// 例: マテリアルの色を変更
 			Renderer renderer = currentAuraEffect.GetComponent<Renderer>();
 			if (renderer != null)
 			{
 				renderer.material.color = isAttackMode ? Color.red : Color.green;
 			}
 
-			// ParticleSystemを制御する例
 			ParticleSystem ps = currentAuraEffect.GetComponent<ParticleSystem>();
 			if (ps != null)
 			{
@@ -301,41 +368,108 @@ public class PlayerController2 : MonoBehaviour
 		}
 	}
 
-	// --- スキル2: 2連射をアクティブにするコルーチン ---
-	IEnumerator ActivateSkill2()
-	{
-		canUseSkill2 = false;
-		isDoubleShotActive = true;
-		Debug.Log("Skill2 Activated: Double shot for " + skill2Duration + " seconds!");
-
-		yield return new WaitForSeconds(skill2Duration);
-
-		isDoubleShotActive = false;
-		Debug.Log("Skill2 Deactivated: Normal shot.");
-
-		// クールダウン
-		float remainingCooldown = skill2Cooldown;
-		while (remainingCooldown > 0)
-		{
-			Debug.Log($"Skill2 Cooldown: {Mathf.CeilToInt(remainingCooldown)}s remaining.");
-			yield return new WaitForSeconds(1f);
-			remainingCooldown -= 1f;
-		}
-
-		canUseSkill2 = true;
-		Debug.Log("Skill2 is ready again.");
-	}
-
-	// 他のコンポーネントからこのキャラクターのモードを取得したい場合
 	public bool IsAttackMode()
 	{
 		return isAttackMode;
 	}
 
+	// Pスクリプトから移行したOnControllerColliderHit
+	// CharacterControllerがアタッチされていることを前提とします。
+	// 敵や回復アイテムとの直接接触によるダメージ/回復処理
+	private void OnControllerColliderHit(ControllerColliderHit hit)
+	{
+		if (IsDead) return; // 死亡中は衝突処理も停止
+
+		int hitDamage = 10; // 直接接触時のダメージ
+		int healAmount = 1; // 直接接触時の回復量
+
+		// 敵との接触
+		if (hit.gameObject.CompareTag("Enemy"))
+		{
+			if (m_status.GetHp() <= 0) return; // 既にHPが0以下の場合は処理しない
+			m_status.Damage(hitDamage);
+			Debug.Log($"Direct hit by {hit.gameObject.name}. Took {hitDamage} damage. Current HP: {m_status.GetHp()}");
+			CheckDeath(); // ダメージを受けた後に死亡判定
+		}
+
+		// 回復アイテムとの接触
+		if (hit.gameObject.CompareTag("Heal"))
+		{
+			if (m_status.GetMaxHp() <= m_status.GetHp()) return; // 最大HPの場合は回復しない
+			m_status.Heal(healAmount);
+			Debug.Log($"Touched Heal item. Healed for {healAmount}. Current HP: {m_status.GetHp()}");
+			// 回復アイテムは一度触れたら消えるなど、別途処理が必要な場合が多い
+			// Destroy(hit.gameObject); 
+		}
+	}
+
+	// --- 死亡判定とウルト処理 ---
+	public void CheckDeath()
+	{
+		if (m_status.GetHp() <= 0 && !IsDead)
+		{
+			Die();
+		}
+	}
+
+	private void Die()
+	{
+		IsDead = true;
+		Debug.Log("Player has died!");
+		// 死亡時の視覚的な変化や操作不能にする処理などをここに追加
+		// 例: モデルを非表示にする、アニメーションを停止する、UIに死亡メッセージを表示するなど
+		// gameObject.SetActive(false); // 例えば、プレイヤーオブジェクト自体を非アクティブにする
+
+		// ウルトのクールダウン表示などを開始
+		if (canUseUltimate)
+		{
+			Debug.Log("Press 'Ultimate' to revive!");
+		}
+		else
+		{
+			Debug.Log("Ultimate is on cooldown. Cannot revive.");
+		}
+	}
+
+	// ウルト発動コルーチン
+	IEnumerator ActivateUltimate()
+	{
+		canUseUltimate = false; // ウルト使用不可にする
+		Debug.Log("Activating Ultimate: Revive!");
+
+		// 死亡状態を解除し、HPを回復
+		IsDead = false;
+		int reviveHp = m_status.maxHp * reviveHpPercentage / 100;
+		m_status.Heal(reviveHp - m_status.GetHp()); // 現在のHPに関わらず指定割合まで回復
+
+		// プレイヤーを再度アクティブにする（もし非アクティブにしていた場合）
+		// gameObject.SetActive(true);
+
+		Debug.Log($"Player revived with {reviveHp} HP! Current HP: {m_status.GetHp()}");
+
+		// クールダウン開始
+		float remainingCooldown = ultimateCooldown;
+		while (remainingCooldown > 0)
+		{
+			Debug.Log($"Ultimate Cooldown: {Mathf.CeilToInt(remainingCooldown)}s remaining.");
+			yield return new WaitForSeconds(1f);
+			remainingCooldown -= 1f;
+		}
+
+		canUseUltimate = true;
+		Debug.Log("Ultimate is ready again.");
+	}
+
 	// デバッグ表示用 (ギズモ)
 	void OnDrawGizmos()
 	{
-		Gizmos.color = isAttackMode ? Color.red : Color.green; // 現在のモードに応じて色を変える
+		Gizmos.color = isAttackMode ? Color.red : Color.green;
 		Gizmos.DrawWireSphere(transform.position, auraRadius);
+
+		if (Application.isPlaying)
+		{
+			Gizmos.color = Color.blue;
+			Gizmos.DrawRay(transform.position + Vector3.up * 0.5f, CurrentLookDirection * 2f);
+		}
 	}
 }
