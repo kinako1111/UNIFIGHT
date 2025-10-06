@@ -37,6 +37,8 @@ public class PlayerShooting : MonoBehaviour
 	private Vector2 currentLookInput;
 	private bool isUltActive = false; // Ultがアクティブかどうか
 
+	Animator m_animator;
+
 	// 外部から設定するためのプロパティ（主にPlayerController1から設定される）
 	public float CurrentBulletSpeed
 	{
@@ -47,6 +49,7 @@ public class PlayerShooting : MonoBehaviour
 	void Awake()
 	{
 		m_playerInput = GetComponent<PlayerInput>(); // Input Systemを取得
+		m_animator = GetComponent<Animator>();
 		currentBulletSpeed = baseBulletSpeed;
 		currentAmmo = maxAmmo;
 
@@ -86,11 +89,13 @@ public class PlayerShooting : MonoBehaviour
 	private void OnShotInputPerformed(InputAction.CallbackContext context)
 	{
 		isShootingInputPressed = true;
+		m_animator.SetBool("SetUp", true);
 	}
 
 	private void OnShotInputCanceled(InputAction.CallbackContext context)
 	{
 		isShootingInputPressed = false;
+		m_animator.SetBool("SetUp", false);
 	}
 
 	// PlayerController1からルック方向とルック入力を受け取るメソッド

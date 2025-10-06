@@ -32,6 +32,7 @@ public class PlayerController1 : MonoBehaviour
 	private CharacterController controller;
 	private PlayerInput m_playerInput;
 	private Transform cameraTransform;
+	Animator m_animator;
 
 	private Vector2 moveInput;
 	private Vector2 lookInput;
@@ -54,6 +55,7 @@ public class PlayerController1 : MonoBehaviour
 	{
 		controller = GetComponent<CharacterController>();
 		m_playerInput = GetComponent<PlayerInput>();
+		m_animator = GetComponent<Animator>();
 
 		if (playerShooting == null)
 		{
@@ -108,21 +110,26 @@ public class PlayerController1 : MonoBehaviour
 	private void OnMovePerformed(InputAction.CallbackContext context)
 	{
 		moveInput = context.ReadValue<Vector2>();
+		m_animator.SetBool("Move", true);
 	}
 
 	private void OnMoveCanceled(InputAction.CallbackContext context)
 	{
 		moveInput = Vector2.zero;
+		m_animator.SetBool("Move", false);
 	}
 
 	private void OnLookPerformed(InputAction.CallbackContext context)
 	{
 		lookInput = context.ReadValue<Vector2>();
+		//m_animator.SetBool("Move", false);
+		m_animator.SetBool("SetUp", true);
 	}
 
 	private void OnLookCanceled(InputAction.CallbackContext context)
 	{
 		lookInput = Vector2.zero;
+		m_animator.SetBool("SetUp", false);
 	}
 
 	private void OnSkill2(InputAction.CallbackContext context)
