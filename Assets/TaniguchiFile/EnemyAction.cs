@@ -7,13 +7,26 @@ using UnityEngine.AI;
 
 public class EnemyAction: MonoBehaviour
 {
+	[SerializeField]
+	Status status;
+
 	[Header("Navmesh"), SerializeField]
 	NavMeshAgent m_navmeshAgent;
+
+	[Header("エフェクトのリスト"),SerializeField]
+	List<GameObject> m_effectList = new();
+
+	[Header("攻撃地点のTransform"), SerializeField]
+	List<Transform> m_attackPos = new();
+
+	[Header("サウンドのリスト"),SerializeField]
+	List<GameObject> m_soundList = new();
 
 	//防衛対象のリスト
 	List<GameObject> m_targetList = new();
 
 	//プレイヤーのリスト
+	[SerializeField]
 	List<GameObject> m_playerList = new();
 
 	[Header("攻撃のクールタイム"), SerializeField]
@@ -23,24 +36,25 @@ public class EnemyAction: MonoBehaviour
 	float m_coolTime;
 	bool isMove;
 
-	private void Start()
+	private void Awake()
 	{
 		m_animator = GetComponent<Animator>();
 
-		//攻撃対象を持ってなければタグ参照
-		if (m_targetList == null)
-		{
-			m_targetList.AddRange(GameObject.FindGameObjectsWithTag("Target"));
-		}
+		m_playerList.AddRange(GameObject.FindGameObjectsWithTag("Player"));
+		m_targetList.AddRange(GameObject.FindGameObjectsWithTag("Target"));
 	}
 
 	private void FixedUpdate()
 	{
+		m_navmeshAgent.speed = status.GetSpeed();
+		m_attackCoolTime = status.GetSkill1CoolTime();
+
 		//現在最も近いプレイヤーを取得
 		GameObject clossPlayer = m_playerList.OrderBy(target => Vector3.Distance(target.transform.position, transform.position)).First();
 
 		//攻撃範囲内にプレイヤーがいる場合
-		if ((clossPlayer.transform.position - transform.position).magnitude <= m_navmeshAgent.stoppingDistance)
+		if ((clossPlayer.transform.position - transform.position).magnitude <= m_navmeshAgent.stoppingDistance
+			||(m_targetList.First().transform.position - transform.position).magnitude <= m_navmeshAgent.stoppingDistance)
 		{
 			isMove = false;
 
@@ -56,7 +70,7 @@ public class EnemyAction: MonoBehaviour
 			isMove = true;
 			m_navmeshAgent.SetDestination(m_targetList.First().transform.position);
 		}
-			m_animator.SetBool("Walk", isMove);
+		m_animator.SetBool("Walk", isMove);
 	}
 
 	void OnAttack()
@@ -64,6 +78,25 @@ public class EnemyAction: MonoBehaviour
 		m_animator.SetTrigger("Attack");
 		m_coolTime = m_attackCoolTime;
 	}
+
+
+
+	public void AttackStart()
+	{
+		Debug.Log("Golem attack started!");
+		// エフェクト生成やSE再生などの処理
+
+		GameObject obj = Instantiate(m_effectList.First(), m_attackPos.First());
+		Debug.Log(obj);
+	}
+
+
+	public void AttackEnd()
+	{
+
+	}
+
+
 
 	public void SetTarget(GameObject target)
 	{

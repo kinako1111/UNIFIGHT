@@ -10,6 +10,7 @@ public class Status : MonoBehaviour
         B,
         C,
         D,
+		Golem,
         Length,
     }
 
@@ -30,7 +31,7 @@ public class Status : MonoBehaviour
     // 攻撃力
     int attackPower;
 
-    // クリティカル率
+    // ダメージ倍率
     float magnitication;
 
     // 移動速度
@@ -62,8 +63,10 @@ public class Status : MonoBehaviour
 
 	void Start()
     {
+		//名前を元にunitDataを取得
         unitData = unit.dataArray[(int)m_name];
 
+		//unitDataをマスターデータとしてステータスの値を取得
         character = unitData.Character;
         hp = unitData.Hp;
         attackPower = unitData.Attackpower;
@@ -76,7 +79,6 @@ public class Status : MonoBehaviour
         skill1Duration = unitData.Skill1duration;
         skill2Duration = unitData.Skill2duration;
         urthDuration = unitData.Urthduration;
-
         maxHp = unitData.Hp;
 	}
 

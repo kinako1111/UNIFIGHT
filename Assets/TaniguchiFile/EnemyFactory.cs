@@ -7,7 +7,7 @@ public class EnemyFactory : MonoBehaviour
 {
 	private enum EnemyName
 	{
-	
+		Golem,
 	
 	}
 
@@ -23,15 +23,19 @@ public class EnemyFactory : MonoBehaviour
 		//Assets’¼‰º‚ÌPrefab‚ðŽæ“¾
 		m_enemyList.AddRange(Resources.LoadAll<GameObject>("Enemy"));
 	}
+	public void Start()
+	{
+		CreateEnemey((int)EnemyName.Golem, m_factoryPos);
+	}
 
-	//public void CreateEnemey(int name , Transform transform)
-	//{
-	//	Instantiate(GetEnemyInfo(name), transform);
-	//}
+	public void CreateEnemey(int name, Transform transform)
+	{
+		Instantiate(GetEnemyInfo(name), transform);
+	}
 
-	//public GameObject GetEnemyInfo(int name)
-	//{
-	//	return m_enemyList.FirstOrDefault(enemy => enemy.GetComponent<Status>().Get);
-	//}
+	public GameObject GetEnemyInfo(int name)
+	{
+		return m_enemyList[name];
+	}
 
 }
