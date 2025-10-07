@@ -39,7 +39,7 @@ public class E : MonoBehaviour
 	{
 		//Debug.Log(m_target[((int)TargetType.Tower)].transform.position - transform.position);
 
-		if ((m_target[((int)TargetType.Player)].transform.position - transform.position).magnitude >= m_stopingDistance || 
+		if ((m_target[((int)TargetType.Player)].transform.position - transform.position).magnitude >= m_stopingDistance && 
 			(m_target[((int)TargetType.Tower)].transform.position - transform.position).magnitude >= m_stopingDistance)
 		{
 			isMove = true;

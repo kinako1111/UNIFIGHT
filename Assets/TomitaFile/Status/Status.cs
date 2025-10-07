@@ -11,6 +11,7 @@ public class Status : MonoBehaviour
         C,
         D,
 		Golem,
+        Tower,
         Length,
     }
 
@@ -19,6 +20,9 @@ public class Status : MonoBehaviour
 
     [SerializeField]
     Name m_name;
+
+    [SerializeField]
+    Animator m_animator;
 
     UnitData unitData;
 
@@ -152,11 +156,13 @@ public class Status : MonoBehaviour
 	public void Damage(int damage)
     {
         hp -= damage;
+        m_animator.SetTrigger("Damage");
     }
 
     public void Heal(int heal)
     {
         hp += heal;
+        m_animator.SetTrigger("Heal");
     }
 
     public int GetMaxHp()
