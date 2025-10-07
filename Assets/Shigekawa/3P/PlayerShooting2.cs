@@ -22,6 +22,12 @@ public class PlayerShooting2 : MonoBehaviour
 	bool isShooting = false;
 
 	private Vector3 currentLookDirection;
+	Animator m_animator;
+
+	private void Awake()
+	{
+		m_animator = GetComponent<Animator>();
+	}
 
 	public void SetAttackMode(bool mode)
 	{
@@ -39,6 +45,7 @@ public class PlayerShooting2 : MonoBehaviour
 		if (!isShooting)
 		{
 			StartCoroutine(HandleShot());
+			m_animator.SetTrigger("Attack");
 		}
 	}
 

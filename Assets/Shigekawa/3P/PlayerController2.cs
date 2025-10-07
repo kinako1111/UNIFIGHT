@@ -39,6 +39,7 @@ public class PlayerController2 : MonoBehaviour
 
 	CharacterController controller;
 	PlayerInput m_playerInput;
+	Animator m_animator;
 	Vector2 moveInput;
 	Vector2 lookInput;
 	float verticalVelocity;
@@ -55,6 +56,7 @@ public class PlayerController2 : MonoBehaviour
 	{
 		controller = GetComponent<CharacterController>();
 		m_playerInput = GetComponent<PlayerInput>();
+		m_animator = GetComponent<Animator>();
 
 		if (Camera.main != null)
 		{
@@ -120,11 +122,13 @@ public class PlayerController2 : MonoBehaviour
 	private void OnMovePerformed(InputAction.CallbackContext context)
 	{
 		moveInput = context.ReadValue<Vector2>();
+		m_animator.SetBool("Move", true);
 	}
 
 	private void OnMoveCanceled(InputAction.CallbackContext context)
 	{
 		moveInput = Vector2.zero;
+		m_animator.SetBool("Move", false);
 	}
 
 	private void OnLookPerformed(InputAction.CallbackContext context)
