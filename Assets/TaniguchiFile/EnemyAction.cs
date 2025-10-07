@@ -58,6 +58,14 @@ public class EnemyAction: MonoBehaviour
 		{
 			isMove = false;
 
+			//対象物を最もヘイト値の高いプレイヤーに変更
+			//ヘイト値　：　攻撃範囲-プレイヤーの距離＋個々の値
+			//攻撃範囲内のプレイヤー取得　ー＞　ヘイト値計算
+
+			List<GameObject> playerList = m_playerList.FindAll(target => Vector3.Distance(target.transform.position ,transform.position) > m_navmeshAgent.stoppingDistance);
+				
+
+
 			//クールタイム終了と同時に攻撃
 			m_coolTime -= Time.deltaTime;
 			if (m_coolTime < 0)
