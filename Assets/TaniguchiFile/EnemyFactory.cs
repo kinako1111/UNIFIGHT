@@ -8,6 +8,7 @@ public class EnemyFactory : MonoBehaviour
 	private enum EnemyName
 	{
 		Golem,
+	
 	}
 
 	[SerializeField]
