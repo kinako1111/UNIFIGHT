@@ -6,6 +6,10 @@ public class UnitManager : MonoBehaviour
 {
 	//全ユニットのリスト
 	List<GameObject> m_unitList = new();
+	private void Start()
+	{
+		m_unitList.AddRange(GameObject.FindGameObjectsWithTag("Player"));
+	}
 
 	//ユニットの追加
 	public void AddUnit(GameObject unit ,Vector3 pos, Quaternion rotation)
