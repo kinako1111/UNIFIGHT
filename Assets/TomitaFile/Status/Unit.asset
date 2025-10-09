@@ -28,7 +28,7 @@ MonoBehaviour:
     skill1duration: 5
     skill2duration: 0
     urthduration: 0
-    range: "\u9AD8\u901F"
+    range: LongDistance
   - id: 2
     character: B
     hp: 50
@@ -42,7 +42,7 @@ MonoBehaviour:
     skill1duration: 25.5
     skill2duration: 10
     urthduration: 10
-    range: "\u4F4E\u901F"
+    range: ShortDistance
   - id: 3
     character: C
     hp: 60
@@ -56,7 +56,7 @@ MonoBehaviour:
     skill1duration: 20.5
     skill2duration: 15
     urthduration: 15
-    range: "\u666E\u901A"
+    range: Usually
   - id: 4
     character: D
     hp: 30
@@ -70,7 +70,7 @@ MonoBehaviour:
     skill1duration: 10.5
     skill2duration: 200
     urthduration: 0
-    range: "\u8D85\u9AD8\u901F"
+    range: SuperLongDistance
   - id: 100
     character: Golem
     hp: 10000
@@ -84,7 +84,7 @@ MonoBehaviour:
     skill1duration: 0
     skill2duration: 0
     urthduration: 0
-    range: "\u8D85\u4F4E\u901F"
+    range: ShortDistance
   - id: 0
     character: tower
     hp: 1000
@@ -98,4 +98,4 @@ MonoBehaviour:
     skill1duration: 0
     skill2duration: 0
     urthduration: 0
-    range: "\u666E\u901A"
+    range: Usually
