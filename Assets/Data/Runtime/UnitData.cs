@@ -60,4 +60,8 @@ public class UnitData
   float urthduration;
   public float Urthduration { get {return urthduration; } set { this.urthduration = value;} }
   
+  [SerializeField]
+  string range;
+  public string Range { get {return range; } set { this.range = value;} }
+  
 }

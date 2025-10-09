@@ -62,6 +62,9 @@ public class Status : MonoBehaviour
     // ƒEƒ‹ƒg‚Ì‘±ŠÔ
     float urthDuration;
 
+    // Ë’ö‹——£(UIText)
+    string range;
+
     // Å‘åHp
     public int maxHp;
 
@@ -83,6 +86,7 @@ public class Status : MonoBehaviour
         skill1Duration = unitData.Skill1duration;
         skill2Duration = unitData.Skill2duration;
         urthDuration = unitData.Urthduration;
+        range = unitData.Range;
         maxHp = unitData.Hp;
 	}
 
@@ -168,5 +172,10 @@ public class Status : MonoBehaviour
     public int GetMaxHp()
     {
         return maxHp;
+    }
+
+    public string GetRange()
+    {
+        return range;
     }
 }
