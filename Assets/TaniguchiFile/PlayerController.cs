@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
 	PlayerInput m_playerInput;
 	CharacterController m_characterController;
 	Camera m_targetCamera;
+	AutoAttack m_autoAttack;
 
 	private void Awake()
 	{
@@ -24,6 +25,7 @@ public class PlayerController : MonoBehaviour
 		m_animator = GetComponent<Animator>();
 		m_characterController = GetComponent<CharacterController>();
 		m_status = GetComponent<Status>();
+		m_autoAttack = GetComponent<AutoAttack>();
 		m_targetCamera = Camera.main;
 	}
 
@@ -69,6 +71,8 @@ public class PlayerController : MonoBehaviour
 		var moveDelta = moveVelocity * Time.deltaTime;
 
 		// CharacterControllerに移動量を指定し、オブジェクトを動かす
+		//攻撃中は移動、振り向き不可
+		if (m_autoAttack.IsAttack) return;
 		m_characterController.Move(moveDelta);
 
 		// 移動入力がある場合は、振り向き動作も行う
