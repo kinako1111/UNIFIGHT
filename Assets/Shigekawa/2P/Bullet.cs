@@ -1,24 +1,28 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class Bullet : MonoBehaviour
 {
-	// [SerializeField] float bulletSpeed = 20f; // ← この行はPlayerController1で管理するため不要になりました
 	[SerializeField] float lifeTime = 3f;
 
-	private float _currentBulletSpeed; // PlayerController1から受け取った弾速を格納する変数
+	private float _currentBulletSpeed;
+	private Rigidbody _rb; // 変数名を_rbに変更
 
-	// 弾の初期設定を行うメソッド
+	void Awake()
+	{
+		_rb = GetComponent<Rigidbody>(); // Rigidbodyを取得
+	}
+
 	public void Initialize(Vector3 direction, float speed)
 	{
 		transform.forward = direction;
-		_currentBulletSpeed = speed; // 受け取った弾速を設定
+		_currentBulletSpeed = speed;
+
+		_rb.velocity = direction * _currentBulletSpeed; // _rbを使用
 	}
 
 	void Update()
 	{
-		// 前方に移動 (_currentBulletSpeed を使用)
-		transform.Translate(Vector3.forward * _currentBulletSpeed * Time.deltaTime);
-
 		lifeTime -= Time.deltaTime;
 		if (lifeTime <= 0)
 		{
@@ -28,8 +32,6 @@ public class Bullet : MonoBehaviour
 
 	void OnTriggerEnter(Collider other)
 	{
-		// 敵に当たった場合の処理などをここに追加
-		// 現状はColliderに触れたら消滅
 		Destroy(gameObject);
 	}
 }
