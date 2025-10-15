@@ -158,9 +158,9 @@ public class PlayerController1 : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		m_playerSlider.maxValue = m_status.maxHp;
+		m_playerSlider.maxValue = m_status.GetMaxHp();
 		m_playerSlider.value = m_status.GetHp();
-		m_hpText.text = m_status.GetHp().ToString() + " / " + m_status.maxHp.ToString();
+		m_hpText.text = m_status.GetHp().ToString() + " / " + m_status.GetMaxHp().ToString();
 
 		ApplyGravity();
 		CalculateMovementAndRotation();

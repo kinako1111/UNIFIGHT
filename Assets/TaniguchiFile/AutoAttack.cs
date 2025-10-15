@@ -19,6 +19,9 @@ public class AutoAttack : MonoBehaviour
 	[Header("一度に攻撃できる数"), SerializeField]
 	int m_simultaneous = 1;
 
+	[Header("攻撃速度"), SerializeField]
+	float m_autoAttackInterval = 0.75f;
+
 	[Header("弾のPrefab"), SerializeField]
 	List<GameObject> m_bulletPrefab = new();
 
@@ -36,10 +39,12 @@ public class AutoAttack : MonoBehaviour
 
 	PlayerInput m_playerInput;
 	Animator m_animator;
-	List<GameObject> m_target;
+	List<GameObject> m_target = new();
 	Status m_status;
-
 	bool m_isAttack;
+	private bool m_isFirePressed = false;
+	private Coroutine m_attackCoroutine;
+
 
 	public bool IsAttack => m_isAttack;
 
@@ -53,58 +58,90 @@ public class AutoAttack : MonoBehaviour
 	private void Start()
 	{
 		m_isAttack = false;
+		m_rangeLooks.transform.localScale = new Vector3(
+			m_autoAttackRange * 2,
+			m_rangeLooks.transform.localScale.y,
+			m_autoAttackRange * 2
+			);
 	}
 
-	private void OnEnable()
+	void Update()
 	{
-		m_playerInput.actions["Fire"].performed += OnFire;
+		// Fireボタンが押されているかを判定
+		m_isFirePressed = m_playerInput.actions["Fire"].ReadValue<float>() > 0f;
+
+		//Fireが押されている間、攻撃範囲を表示
+		m_rangeLooks.SetActive( m_isFirePressed );
+
+		// 押されたら攻撃開始
+		if (m_isFirePressed && m_attackCoroutine == null)
+		{
+			m_attackCoroutine = StartCoroutine(RepeatAttack());
+		}
+
+		// 離されたら攻撃停止
+		if (!m_isFirePressed && m_attackCoroutine != null)
+		{
+			StopCoroutine(m_attackCoroutine);
+			m_attackCoroutine = null;
+		}
 	}
 
-	private void OnDisable()
+	IEnumerator RepeatAttack()
 	{
-		m_playerInput.actions["Fire"].performed -= OnFire;
+		while (true)
+		{
+			// 攻撃処理（OnFire の中身を関数化して呼び出す）
+			ExecuteAutoAttack();
+			yield return new WaitForSeconds(m_autoAttackInterval); // 攻撃間隔（調整可能）
+		}
 	}
 
-	public void OnFire(InputAction.CallbackContext callback)
+
+	private void ExecuteAutoAttack()
 	{
-		//ユニットリストを一度空にする
-		m_unitList .Clear();
+		if (m_isAttack) return;
+
+		m_unitList.Clear();
+		m_target.Clear();
 
 		Collider[] colliders = Physics.OverlapSphere(transform.position, m_autoAttackRange);
 
-		// 自分との距離が近い順にソートして GameObject を取得
 		m_unitList = colliders
 			.Select(col => col.gameObject)
-			.Where(obj => obj != this.gameObject && obj.CompareTag("Enemy")) // 自分以外 & ユニットのみ
-			.OrderBy(obj => (transform.position - obj.transform.position).sqrMagnitude) // 距離の二乗でソート（高速）
+			.Where(obj => obj != this.gameObject && obj.CompareTag("Enemy"))
+			.OrderBy(obj => (transform.position - obj.transform.position).sqrMagnitude)
 			.ToList();
 
-		//↓↓↓↓動かん
-		//ユニットの数が０
-
-
-		//攻撃範囲内にユニットがいるか  //magnitudeは重く平方根の計算を避けるためsqrMagnitudeを使う
 		if (m_unitList.Count == 0) return;
-	
-		//AAアニメーション再生
-		m_animator.SetTrigger("AutoAttack");
 
-		//攻撃中の変数
+		m_animator.SetTrigger("AutoAttack");
 		m_isAttack = true;
 
-		//AAのターゲットを設定
-		for(int i = 0; i < m_simultaneous; i++)
+		for (int i = 0; i < m_simultaneous && i < m_unitList.Count; i++)
 		{
 			m_target.Add(m_unitList[i]);
-			Debug.Log(m_unitList[i]);
+		}
+	}
+
+	public void OnAttackStart()
+	{
+		//アニメーションスタートのタイミングで呼び出す
+		// ターゲット方向を向く
+		Vector3 direction = (m_target.First().transform.position - transform.position).normalized;
+		direction.y = 0; // 水平方向のみ
+		if (direction != Vector3.zero)
+		{
+			Quaternion targetRotation = Quaternion.LookRotation(direction);
+			targetRotation *= Quaternion.Euler(0, 90f, 0); // ← ここで補正
+			transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10f);
 		}
 	}
 
 	public void CloseAttack()
 	{
-		//近接
+		//近接用
 		//アニメーションの攻撃の当たる瞬間に呼び出す
-
 		//対象キャラがまだ攻撃範囲内にいる
 		float rangeSqr = m_autoAttackRange * m_autoAttackRange;
 		if((transform.position - m_target.First().transform.position).sqrMagnitude <= rangeSqr)
@@ -118,14 +155,14 @@ public class AutoAttack : MonoBehaviour
 					status.Damage(m_status.GetAttackPower());
 
 					//与えたダメージの表示
-
+					Debug.Log(m_status.GetAttackPower() + "ダメージを与えた！");
 
 					//当たった位置でエフェクトの発生
 					if (m_effect != null) return;
 					Instantiate(m_effect,m_target.First().transform);
 
 					//SE生成
-					if (m_effect != null) return;
+					if (m_se != null) return;
 					SoundEffect.Play3D(m_se, m_target.First().transform.position);
 				}
 			}
@@ -135,21 +172,17 @@ public class AutoAttack : MonoBehaviour
 	public void FarAttack()
 	{
 		//遠距離
-
-		foreach(GameObject target in m_target)
+		foreach (GameObject target in m_target)
 		{
 			//弾を生成
 			GameObject bullet = Instantiate(m_bulletPrefab[0], m_generateTransform.position, Quaternion.identity);
-
-			//SE生成
-			SoundEffect.Play3D(m_se, transform.position);
 
 			//弾のターゲットをAAのターゲットに設定
 			bullet.GetComponent<Homing>().SetStatus(target,m_status.GetAttackPower(),m_effect,m_se);
 		}
 	}
 
-	public void AttackEnd()
+	public void OnAttackEnd()
 	{
 		m_isAttack = false;
 	}

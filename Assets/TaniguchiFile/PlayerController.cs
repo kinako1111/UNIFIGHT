@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 using static UnityEngine.EventSystems.StandaloneInputModule;
 
 public class PlayerController : MonoBehaviour
@@ -75,14 +76,12 @@ public class PlayerController : MonoBehaviour
 		if (m_autoAttack.IsAttack) return;
 		m_characterController.Move(moveDelta);
 
-		// ˆÚ“®“ü—Í‚ª‚ ‚éê‡‚ÍAU‚èŒü‚«“®ì‚às‚¤
-
-		//‘€ì“ü—Í‚©‚çy²ü‚è‚Ì–Ú•WŠp“x[deg]‚ğŒvZ
-		var targetAngleY = -Mathf.Atan2(m_inputMove.y, m_inputMove.x)
-			* Mathf.Rad2Deg + 90;
-		// ƒJƒƒ‰‚ÌŠp“x•ª‚¾‚¯U‚èŒü‚­Šp“x‚ğ•â³
-		targetAngleY += cameraAngleY;
-
+		if (moveVelocity != Vector3.zero)
+		{
+			Quaternion targetRotation = Quaternion.LookRotation(moveVelocity);
+			targetRotation *= Quaternion.Euler(0, 90f, 0); // © ‚±‚±‚Å•â³
+			transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 0.2f);
+		}
 	}
 
 }

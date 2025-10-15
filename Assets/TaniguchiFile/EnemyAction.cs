@@ -29,6 +29,9 @@ public class EnemyAction: MonoBehaviour
 	[Header("攻撃範囲"), SerializeField]
 	float AttackRange;
 
+	[Header("ノックバックするダメージ"), SerializeField]
+	int KnockBackDamage;
+
 	//防衛対象のリスト
 	List<GameObject> m_targetList = new();
 
@@ -41,8 +44,10 @@ public class EnemyAction: MonoBehaviour
 
 	Animator m_animator;
 	float m_coolTime;
+	int m_knockBackCount;
 	bool isMove;
 	bool isAttack = false;
+	bool m_damageAction = false;
 
 	private void Awake()
 	{
@@ -50,6 +55,11 @@ public class EnemyAction: MonoBehaviour
 		m_playerList.AddRange(GameObject.FindGameObjectsWithTag("Player"));
 		m_targetList.AddRange(GameObject.FindGameObjectsWithTag("Target"));
 		m_targetList.AddRange(GameObject.FindGameObjectsWithTag("Player"));
+	}
+
+	private void Start()
+	{
+		m_knockBackCount = KnockBackDamage;
 	}
 
 	private void FixedUpdate()
@@ -89,8 +99,8 @@ public class EnemyAction: MonoBehaviour
 		{
 			isMove = true;
 
-			//攻撃中は移動禁止
-			if(!isAttack)
+			//攻撃中またはダメージアクション中は移動禁止
+			if(!isAttack || !m_damageAction)
 			{
 				m_navmeshAgent.isStopped = false;
 				m_navmeshAgent.SetDestination(m_targetList.Find(target => target.tag == "Target").transform.position);
@@ -123,4 +133,16 @@ public class EnemyAction: MonoBehaviour
 	{
 		m_targetList.Add(target);
 	}
+
+	public void Damagefirst()
+	{
+		m_damageAction = true;
+	}
+
+	public void DamageEnd()
+	{
+		m_damageAction = false;
+		m_knockBackCount = KnockBackDamage;
+	}
+
 }

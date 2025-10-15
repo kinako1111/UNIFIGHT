@@ -66,7 +66,7 @@ public class Status : MonoBehaviour
     string range;
 
     // ç≈ëÂHp
-    public int maxHp;
+    int maxHp;
 
 	void Start()
     {
@@ -160,7 +160,6 @@ public class Status : MonoBehaviour
 	public void Damage(int damage)
     {
         hp -= damage;
-        m_animator.SetTrigger("Damage");
     }
 
     public void Heal(int heal)
