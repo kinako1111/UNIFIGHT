@@ -8,7 +8,7 @@ namespace DamagePointUI
 
 		void OnTriggerEnter(Collider col)
 		{
-			if (col.tag == "Enemy")
+			if (col.CompareTag("Enemy"))
 			{
 				col.transform.root.GetComponent<TakeDamage>().Damage(col);
 			}

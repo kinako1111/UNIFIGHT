@@ -3,10 +3,9 @@ using System.Collections;
 
 public class TakeDamage : MonoBehaviour
 {
-
 	//　DamageUIプレハブ
 	[SerializeField]
-	private GameObject damageUI;
+	GameObject damageUI;
 
 	public void Damage(Collider col)
 	{

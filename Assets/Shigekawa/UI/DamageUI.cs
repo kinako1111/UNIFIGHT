@@ -6,6 +6,10 @@ using TMPro;
 public class DamageUI : MonoBehaviour
 {
 
+
+	[SerializeField]
+	Status m_status;
+
 	private TextMeshProUGUI damageText;
 	//　フェードアウトするスピード
 	private float fadeOutSpeed = 1f;
@@ -23,6 +27,7 @@ public class DamageUI : MonoBehaviour
 		transform.rotation = Camera.main.transform.rotation;
 		transform.position += Vector3.up * moveSpeed * Time.deltaTime;
 
+		damageText.text = m_status.GetAttackPower().ToString();
 		damageText.color = Color.Lerp(damageText.color, new Color(1f, 0f, 0f, 0f), fadeOutSpeed * Time.deltaTime);
 
 		if (damageText.color.a <= 0.1f)
