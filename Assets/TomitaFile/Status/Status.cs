@@ -68,6 +68,9 @@ public class Status : MonoBehaviour
     // Å‘åHp
     int maxHp;
 
+    // ‘¬“x‚ÌText
+    string speedText;
+
 	void Start()
     {
 		//–¼‘O‚ğŒ³‚ÉunitData‚ğæ“¾
@@ -88,6 +91,7 @@ public class Status : MonoBehaviour
         urthDuration = unitData.Urthduration;
         range = unitData.Range;
         maxHp = unitData.Hp;
+        speedText = unitData.Speedtext;
 	}
 
     void FixedUpdate()
@@ -176,5 +180,10 @@ public class Status : MonoBehaviour
     public string GetRange()
     {
         return range;
+    }
+
+    public string GetSpeedText()
+    {
+        return speedText;
     }
 }

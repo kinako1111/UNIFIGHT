@@ -26,9 +26,9 @@ public class CharaStatus : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-		m_statusText[(int)StatusType.Hp].text = "HP / " + m_status.GetMaxHp().ToString();
-		m_statusText[(int)StatusType.Attack].text = "ATK / " +  m_status.GetAttackPower().ToString();
-		m_statusText[(int)StatusType.Range].text =  "RNG / " + m_status.GetRange().ToString();
-		m_statusText[(int)StatusType.Speed].text = "SPD / " + m_status.GetSpeed().ToString();
+		m_statusText[(int)StatusType.Hp].text = "‘Ì—Í / " + m_status.GetMaxHp().ToString();
+		m_statusText[(int)StatusType.Attack].text = "UŒ‚—Í / " +  m_status.GetAttackPower().ToString();
+		m_statusText[(int)StatusType.Range].text =  "Ë’ö / " + m_status.GetRange().ToString();
+		m_statusText[(int)StatusType.Speed].text = "‘¬“x / " + m_status.GetSpeedText().ToString();
 	}
 }

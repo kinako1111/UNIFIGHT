@@ -64,4 +64,8 @@ public class UnitData
   string range;
   public string Range { get {return range; } set { this.range = value;} }
   
+  [SerializeField]
+  string speedtext;
+  public string Speedtext { get {return speedtext; } set { this.speedtext = value;} }
+  
 }
