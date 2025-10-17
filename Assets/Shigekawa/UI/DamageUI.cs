@@ -5,8 +5,6 @@ using TMPro;
 
 public class DamageUI : MonoBehaviour
 {
-
-
 	[SerializeField]
 	Status m_status;
 
