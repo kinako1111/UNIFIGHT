@@ -1,15 +1,19 @@
 using UnityEngine;
-using System.Collections;
 
 public class TakeDamage : MonoBehaviour
 {
-	//　DamageUIプレハブ
-	[SerializeField]
-	GameObject damageUI;
+	[SerializeField] GameObject damageUIPrefab;
 
-	public void Damage(Collider col)
+	public void ShowDamageUI(int damage)
 	{
-		//　DamageUIをインスタンス化。登場位置は接触したコライダの中心からカメラの方向に少し寄せた位置
-		var obj = Instantiate<GameObject>(damageUI, col.bounds.center - Camera.main.transform.forward * 0.2f, Quaternion.identity);
+		var position = transform.position + Vector3.up * 3f;
+		var obj = Instantiate(damageUIPrefab, position, Quaternion.identity);
+		obj.transform.LookAt(Camera.main.transform);
+
+		var damageUI = obj.GetComponent<DamageUI>();
+		if (damageUI != null)
+		{
+			damageUI.SetDamage(damage);
+		}
 	}
 }

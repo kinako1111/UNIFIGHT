@@ -1,23 +1,16 @@
-using UnityEngine;
-using System.Collections;
-using UnityEngine.UI;
 using TMPro;
+using UnityEngine;
 
 public class DamageUI : MonoBehaviour
 {
-	[SerializeField]
-	Status m_status;
-
 	private TextMeshProUGUI damageText;
-	//　フェードアウトするスピード
 	private float fadeOutSpeed = 1f;
-	//　移動値
-	[SerializeField]
-	private float moveSpeed = 0.4f;
+	[SerializeField] private float moveSpeed = 0.4f;
 
-	void Start()
+	public void SetDamage(int damage)
 	{
 		damageText = GetComponentInChildren<TextMeshProUGUI>();
+		damageText.text = damage.ToString();
 	}
 
 	void LateUpdate()
@@ -25,7 +18,6 @@ public class DamageUI : MonoBehaviour
 		transform.rotation = Camera.main.transform.rotation;
 		transform.position += Vector3.up * moveSpeed * Time.deltaTime;
 
-		damageText.text = m_status.GetAttackPower().ToString();
 		damageText.color = Color.Lerp(damageText.color, new Color(1f, 0f, 0f, 0f), fadeOutSpeed * Time.deltaTime);
 
 		if (damageText.color.a <= 0.1f)

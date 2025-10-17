@@ -66,15 +66,17 @@ public class Homing : MonoBehaviour
 				//ダメージ付与
 				status.Damage(m_attackPower);
 
-				//与えたダメージの表示
-
 				//当たった位置でエフェクトの発生
-				Instantiate(m_effect, m_target.transform);
-				Debug.Log(m_effect);
+				if(m_effect != null)
+				{
+					Instantiate(m_effect, m_target.transform);
+				}
 
-				//SE生成
-				SoundEffect.Play3D(m_se, m_target.transform.position);
-				Debug.Log(m_se);
+				if(m_effect != null)
+				{
+					//SE生成
+					SoundEffect.Play3D(m_se, m_target.transform.position);
+				}
 
 				//役目を終えたので破壊
 				Destroy(gameObject);

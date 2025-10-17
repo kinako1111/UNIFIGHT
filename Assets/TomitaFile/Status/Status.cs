@@ -4,186 +4,111 @@ using UnityEngine;
 
 public class Status : MonoBehaviour
 {
-    public enum Name
-    {
-        A,
-        B,
-        C,
-        D,
+	public enum Name
+	{
+		A,
+		B,
+		C,
+		D,
 		Golem,
-        Tower,
-        Length,
-    }
+		Tower,
+		Length,
+	}
 
-    [SerializeField]
-    Unit unit;
+	[SerializeField] Unit unit;
+	[SerializeField] Name m_name;
+	[SerializeField] Animator m_animator;
 
-    [SerializeField]
-    Name m_name;
+	UnitData unitData;
 
-    [SerializeField]
-    Animator m_animator;
-
-    UnitData unitData;
-
-    // キャラ情報
-    string character; 
-
-    // キャラのHp
-    int hp;
-
-    // 攻撃力
-    int attackPower;
-
-    // ダメージ倍率
-    float magnitication;
-
-    // 移動速度
-    float speed;
-
-    // パッシブの時間
-    float passive;
-
-    // スキル1クールタイム
-    float skill1CoolTime;
-
-    // スキル2クールタイム
-    float skill2CoolTime;
-
-    // ウルトクールタイム
-    float urthCoolTime;
-
-    //スキル１持続時間
-    float skill1Duration;
-
-    // スキル2持続時間
-    float skill2Duration;
-
-    // ウルトの持続時間
-    float urthDuration;
-
-    // 射程距離(UIText)
-    string range;
-
-    // 最大Hp
-    int maxHp;
-
-    // 速度のText
-    string speedText;
+	// ステータス情報
+	string character;
+	int hp;
+	int attackPower;
+	float magnitication;
+	float speed;
+	float passive;
+	float skill1CoolTime;
+	float skill2CoolTime;
+	float urthCoolTime;
+	float skill1Duration;
+	float skill2Duration;
+	float urthDuration;
+	string range;
+	int maxHp;
+	string speedText;
 
 	void Start()
-    {
-		//名前を元にunitDataを取得
-        unitData = unit.dataArray[(int)m_name];
+	{
+		// 名前を元にunitDataを取得
+		unitData = unit.dataArray[(int)m_name];
 
-		//unitDataをマスターデータとしてステータスの値を取得
-        character = unitData.Character;
-        hp = unitData.Hp;
-        attackPower = unitData.Attackpower;
-        magnitication = unitData.Magnification;
-        speed = unitData.Speed;
-        passive = unitData.Passive;
+		// unitDataからステータスを初期化
+		character = unitData.Character;
+		hp = unitData.Hp;
+		attackPower = unitData.Attackpower;
+		magnitication = unitData.Magnification;
+		speed = unitData.Speed;
+		passive = unitData.Passive;
 		skill1CoolTime = unitData.Skill1cooltime;
 		skill2CoolTime = unitData.Skill2cooltime;
-        urthCoolTime = unitData.Urthcooltime;
-        skill1Duration = unitData.Skill1duration;
-        skill2Duration = unitData.Skill2duration;
-        urthDuration = unitData.Urthduration;
-        range = unitData.Range;
-        maxHp = unitData.Hp;
-        speedText = unitData.Speedtext;
+		urthCoolTime = unitData.Urthcooltime;
+		skill1Duration = unitData.Skill1duration;
+		skill2Duration = unitData.Skill2duration;
+		urthDuration = unitData.Urthduration;
+		range = unitData.Range;
+		maxHp = unitData.Hp;
+		speedText = unitData.Speedtext;
 	}
 
-    void FixedUpdate()
-    {
-		
+	void FixedUpdate()
+	{
+		// 必要に応じて物理更新処理を追加
 	}
 
-    public string GetCharacter()
-    {
-        return character;
-    }
+	// ステータス取得メソッド
+	public string GetCharacter() => character;
+	public int GetHp() => hp;
+	public int GetAttackPower() => attackPower;
+	public float GetMagnitication() => magnitication;
+	public float GetSpeed() => speed;
+	public float GetPassive() => passive;
+	public float GetSkill1CoolTime() => skill1CoolTime;
+	public float GetSkill2CoolTime() => skill2CoolTime;
+	public float GetUrthCoolTime() => urthCoolTime;
+	public float GetSkill1Duration() => skill1Duration;
+	public float GetSkill2Duration() => skill2Duration;
+	public float GetUrthDuration() => urthDuration;
+	public int GetMaxHp() => maxHp;
+	public string GetRange() => range;
+	public string GetSpeedText() => speedText;
 
-    public int GetHp()
-    {
-        return hp;
-	}
-
-    public int GetAttackPower()
-    {
-        return attackPower;
-    }
-
-    public float GetMagnitication()
-    {
-        return magnitication;
-    }
-
-
-	public float GetSpeed()
-    {
-        return speed;
-    }
-
-    public float GetPassive()
-    {
-        return passive;
-    }
-
-    public float GetSkill1CoolTime()
-    {
-        return skill1CoolTime;
-    }
-
-    public float GetSkill2CoolTime()
-    {
-        return skill2CoolTime;
-    }
-
-    public float GetUrthCoolTime()
-    {
-        return urthCoolTime;
-    }
-
-    public float GetSkill1Duration()
-    {
-        return skill1Duration;
-    }
-
-    public float GetSkill2Duration()
-    {
-        return skill2Duration;
-    }
-
-    public float GetUrthDuration()
-    {
-        return urthDuration;
-    }
-
-
+	// ダメージ処理
 	public void Damage(int damage)
-    {
-        hp -= damage;
-    }
+	{
+		hp -= damage;
+		Debug.Log($"{damage} ダメージを与えた");
 
-    public void Heal(int heal)
-    {
-        hp += heal;
-        m_animator.SetTrigger("Heal");
-    }
+		// DamageUI表示処理（TakeDamageと連携）
+		var takeDamage = GetComponent<TakeDamage>();
+		if (takeDamage != null)
+		{
+			takeDamage.ShowDamageUI(damage);
+		}
 
-    public int GetMaxHp()
-    {
-        return maxHp;
-    }
+		if (hp <= 0)
+		{
+			hp = 0;
+			Debug.Log($"{character} は倒された！");
+			m_animator.SetTrigger("Death");
+			// 死亡処理などを追加可能
+		}
+	}
 
-    public string GetRange()
-    {
-        return range;
-    }
-
-    public string GetSpeedText()
-    {
-        return speedText;
-    }
+	// 回復処理
+	public void Heal(int heal)
+	{
+		hp = Mathf.Min(hp + heal, maxHp);
+		m_animator.SetTrigger("Heal");
+	}
 }

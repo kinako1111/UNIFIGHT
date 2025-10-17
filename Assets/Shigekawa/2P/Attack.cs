@@ -10,7 +10,7 @@ namespace DamagePointUI
 		{
 			if (col.CompareTag("Enemy"))
 			{
-				col.transform.root.GetComponent<TakeDamage>().Damage(col);
+				//col.transform.root.GetComponent<TakeDamage>().Damage(col);
 			}
 		}
 	}

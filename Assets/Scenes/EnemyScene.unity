@@ -436,6 +436,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2300388708654737016, guid: f8e0df10046af924f8af8863a15f6c3e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2825104675015674685, guid: f8e0df10046af924f8af8863a15f6c3e,
+        type: 3}
+      propertyPath: damageUI
+      value: 
+      objectReference: {fileID: 3096846323864570630, guid: da6cd929e9e914041a3fc1cb81ff72c1,
+        type: 3}
     - target: {fileID: 5497763646117837268, guid: f8e0df10046af924f8af8863a15f6c3e,
         type: 3}
       propertyPath: m_Name
@@ -444,7 +455,7 @@ PrefabInstance:
     - target: {fileID: 5497763646117837268, guid: f8e0df10046af924f8af8863a15f6c3e,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7797761016217176053, guid: f8e0df10046af924f8af8863a15f6c3e,
         type: 3}
@@ -642,50 +653,6 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 19a112c3b5aaaa145918db2b13a085de, type: 2}
   m_BuildHeightMesh: 0
---- !u!1 &1379054637
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1379054639}
-  - component: {fileID: 1379054638}
-  m_Layer: 0
-  m_Name: GameObject (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1379054638
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1379054637}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97216c6c64f446f4199629f4cdb7eda7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &1379054639
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1379054637}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -15.216696, y: -16.999334, z: -14.76613}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1470010393
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -698,6 +665,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ShotGunFighter 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 92570622273486377, guid: a359775473c77f841be6fc8c30e5341a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4964483085106734087, guid: a359775473c77f841be6fc8c30e5341a,
         type: 3}
@@ -748,6 +720,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5341925506187492358, guid: a359775473c77f841be6fc8c30e5341a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5422314460498254751, guid: a359775473c77f841be6fc8c30e5341a,
+        type: 3}
+      propertyPath: m_autoAttackCount
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1054,6 +1036,5 @@ SceneRoots:
   - {fileID: 330585546}
   - {fileID: 1852849518}
   - {fileID: 1516468753}
-  - {fileID: 1379054639}
   - {fileID: 822344148}
   - {fileID: 1470010393}

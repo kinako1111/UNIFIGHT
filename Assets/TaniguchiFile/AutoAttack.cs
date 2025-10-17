@@ -97,7 +97,6 @@ public class AutoAttack : MonoBehaviour
 		}
 	}
 
-
 	private void ExecuteAutoAttack()
 	{
 		if (m_isAttack) return;
