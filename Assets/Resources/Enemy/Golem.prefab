@@ -297,6 +297,7 @@ MonoBehaviour:
   m_soundList: []
   m_speed: 0.5
   AttackRange: 3
+  m_collider: {fileID: 8136462291760206172}
   KnockBackDamage: 0
   m_playerList: []
   m_attackCoolTime: 7
@@ -314,7 +315,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unit: {fileID: 11400000, guid: c5ab73f7af931fd468029bc68a544b98, type: 2}
   m_name: 4
-  m_animator: {fileID: 0}
+  m_animator: {fileID: 1842355744016257720}
 --- !u!136 &8136462291760206172
 CapsuleCollider:
   m_ObjectHideFlags: 0

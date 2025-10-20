@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Build;
 using UnityEngine;
 
 public class Status : MonoBehaviour
@@ -37,6 +38,7 @@ public class Status : MonoBehaviour
 	string range;
 	int maxHp;
 	string speedText;
+	bool isDeath;
 
 	void Start()
 	{
@@ -59,6 +61,7 @@ public class Status : MonoBehaviour
 		range = unitData.Range;
 		maxHp = unitData.Hp;
 		speedText = unitData.Speedtext;
+		isDeath = false;
 	}
 
 	void FixedUpdate()
@@ -82,12 +85,20 @@ public class Status : MonoBehaviour
 	public int GetMaxHp() => maxHp;
 	public string GetRange() => range;
 	public string GetSpeedText() => speedText;
+	public bool GetDeath() => isDeath;
 
 	// ダメージ処理
 	public void Damage(int damage)
 	{
+		//死体蹴りはしない
+		if(isDeath)
+		{
+			return;
+		}
+
 		hp -= damage;
 		Debug.Log($"{damage} ダメージを与えた");
+		Debug.Log( hp);
 
 		// DamageUI表示処理（TakeDamageと連携）
 		var takeDamage = GetComponent<TakeDamage>();
@@ -102,6 +113,7 @@ public class Status : MonoBehaviour
 			Debug.Log($"{character} は倒された！");
 			m_animator.SetTrigger("Death");
 			// 死亡処理などを追加可能
+			isDeath = true;
 		}
 	}
 

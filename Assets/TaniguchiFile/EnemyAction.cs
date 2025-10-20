@@ -29,6 +29,9 @@ public class EnemyAction: MonoBehaviour
 	[Header("攻撃範囲"), SerializeField]
 	float AttackRange;
 
+	[Header("自身のコライダー"), SerializeField]
+	Collider m_collider;
+
 	[Header("ノックバックするダメージ"), SerializeField]
 	int KnockBackDamage;
 
@@ -44,10 +47,10 @@ public class EnemyAction: MonoBehaviour
 
 	Animator m_animator;
 	float m_coolTime;
-	int m_knockBackCount;
 	bool isMove;
 	bool isAttack = false;
 	bool m_damageAction = false;
+
 
 	private void Awake()
 	{
@@ -55,17 +58,31 @@ public class EnemyAction: MonoBehaviour
 		m_playerList.AddRange(GameObject.FindGameObjectsWithTag("Player"));
 		m_targetList.AddRange(GameObject.FindGameObjectsWithTag("Target"));
 		m_targetList.AddRange(GameObject.FindGameObjectsWithTag("Player"));
+
 	}
 
 	private void Start()
 	{
-		m_knockBackCount = KnockBackDamage;
+
 	}
 
 	private void FixedUpdate()
 	{
+		if (status.GetDeath())
+		{
+			m_navmeshAgent.isStopped = true;
+
+			//コライダー持ちはコライダーも消す
+			if(m_collider != null)
+			{
+				m_collider.enabled = false;
+			}
+			return;
+		}
+
 		m_navmeshAgent.speed = status.GetSpeed();
 		m_attackCoolTime = status.GetSkill1CoolTime();
+		
 
 		//現在最も近いターゲットを取得
 		GameObject clossTarget = m_targetList.OrderBy(target => Vector3.Distance(target.transform.position, transform.position)).First();
@@ -142,7 +159,5 @@ public class EnemyAction: MonoBehaviour
 	public void DamageEnd()
 	{
 		m_damageAction = false;
-		m_knockBackCount = KnockBackDamage;
 	}
-
 }
