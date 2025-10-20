@@ -81,6 +81,7 @@ public class PlayerController1 : MonoBehaviour
 		
 	}
 
+
 	private void OnEnable()
 	{
 		m_playerInput.actions["Move"].performed += OnMovePerformed;
