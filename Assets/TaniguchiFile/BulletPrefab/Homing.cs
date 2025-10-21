@@ -84,7 +84,6 @@ public class Homing : MonoBehaviour
 		}
 	}
 
-
 	public void SetStatus(GameObject newTarget,int attackPower,GameObject effect,AudioClip se)
 	{
 		m_target = newTarget;

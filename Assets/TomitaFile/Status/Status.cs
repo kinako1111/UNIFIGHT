@@ -96,10 +96,7 @@ public class Status : MonoBehaviour
 		{
 			return;
 		}
-
 		hp -= damage;
-		Debug.Log($"{damage} ダメージを与えた");
-		Debug.Log( hp);
 
 		// DamageUI表示処理（TakeDamageと連携）
 		var takeDamage = GetComponent<TakeDamage>();
