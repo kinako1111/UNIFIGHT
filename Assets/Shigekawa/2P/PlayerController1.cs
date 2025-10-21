@@ -57,14 +57,14 @@ public class PlayerController1 : MonoBehaviour
 		m_playerInput = GetComponent<PlayerInput>();
 		m_animator = GetComponent<Animator>();
 
-		if (playerShooting == null)
-		{
-			playerShooting = GetComponent<PlayerShooting>();
-			if (playerShooting == null)
-			{
-				Debug.LogError("PlayerShooting component not found. Please assign it in the Inspector or ensure it's on the same GameObject.");
-			}
-		}
+		//if (playerShooting == null)
+		//{
+		//	playerShooting = GetComponent<PlayerShooting>();
+		//	if (playerShooting == null)
+		//	{
+		//		Debug.LogError("PlayerShooting component not found. Please assign it in the Inspector or ensure it's on the same GameObject.");
+		//	}
+		//}
 
 		if (Camera.main != null)
 		{

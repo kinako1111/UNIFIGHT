@@ -9,7 +9,8 @@ public class P : MonoBehaviour
     private CharacterController m_characterController;
     private Vector3 m_moveVelocity;
 
-	[SerializeField] Status m_status;
+	//[SerializeField] Status m_status;
+	private float speed = 4f;
 
 	[SerializeField] Slider m_playerSlider;
 
@@ -31,22 +32,22 @@ public class P : MonoBehaviour
 		//Wキーがおされたら
 		if (Input.GetKey(KeyCode.W))
 		{
-			m_characterController.Move(this.gameObject.transform.forward * m_status.GetSpeed() * Time.deltaTime);
+			m_characterController.Move(this.gameObject.transform.forward * speed * Time.deltaTime);
 		}
 		//Sキーがおされたら
 		if (Input.GetKey(KeyCode.S))
 		{
-			m_characterController.Move(this.gameObject.transform.forward * -1f * m_status.GetSpeed() * Time.deltaTime);
+			m_characterController.Move(this.gameObject.transform.forward * -1f * speed * Time.deltaTime);
 		}
 		//Aキーがおされたら
 		if (Input.GetKey(KeyCode.A))
 		{
-			m_characterController.Move(this.gameObject.transform.right * -1 * m_status.GetSpeed() * Time.deltaTime);
+			m_characterController.Move(this.gameObject.transform.right * -1 * speed * Time.deltaTime);
 		}
 		//Dキーがおされたら
 		if (Input.GetKey(KeyCode.D))
 		{
-			m_characterController.Move(this.gameObject.transform.right * m_status.GetSpeed() * Time.deltaTime);
+			m_characterController.Move(this.gameObject.transform.right * speed * Time.deltaTime);
 		}
 
 
@@ -54,21 +55,21 @@ public class P : MonoBehaviour
 		m_characterController.Move(m_moveVelocity * Time.deltaTime);
 	}
 
-	private void OnControllerColliderHit(ControllerColliderHit hit)
-	{
-		int hitDamage = 10;
-		int heal = 1;
+	//private void OnControllerColliderHit(ControllerColliderHit hit)
+	//{
+	//	int hitDamage = 10;
+	//	int heal = 1;
 
-		if(hit.gameObject.CompareTag("Enemy"))
-		{
-			if (m_status.GetHp() <= 0) return;
-			m_status.Damage(hitDamage);
-		}
+	//	if(hit.gameObject.CompareTag("Enemy"))
+	//	{
+	//		if (m_status.GetHp() <= 0) return;
+	//		m_status.Damage(hitDamage);
+	//	}
 
-		if(hit.gameObject.CompareTag("Heal"))
-		{
-			if(m_status.GetMaxHp() <= m_status.GetHp()) return;
-			m_status.Heal(heal);
-		}
-	}
+	//	if(hit.gameObject.CompareTag("Heal"))
+	//	{
+	//		if(m_status.GetMaxHp() <= m_status.GetHp()) return;
+	//		m_status.Heal(heal);
+	//	}
+	//}
 }
