@@ -13,6 +13,7 @@ public class Status : MonoBehaviour
 		D,
 		Golem,
 		Tower,
+		Turret,
 		Length,
 	}
 

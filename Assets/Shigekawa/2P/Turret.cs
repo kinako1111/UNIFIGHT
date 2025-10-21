@@ -34,6 +34,14 @@ public class Turret : MonoBehaviour
 	[Header("弾の生成地点"), SerializeField]
 	Transform m_generateTransform;
 
+	[Header("プレイヤーのTransform"), SerializeField] // ヘッダーを追加し、インスペクターで設定しやすいように
+	Transform m_player;
+
+	[Header("回転速度"), SerializeField] // Slerpの補間値を設定できるように追加。大きめの値が推奨 (例: 5f-15f)
+	float m_rotationSpeed = 10f; // 初期値を10fに変更
+
+	// ----- 内部で使用する変数群 -----
+	// 攻撃範囲内にいる全てのユニットのリスト
 	List<GameObject> m_unitsInRange = new();
 
 	// 実際に攻撃対象となる敵のリスト
@@ -72,6 +80,21 @@ public class Turret : MonoBehaviour
 	{
 		// 毎フレーム、攻撃範囲内の敵を最新の状態に更新する
 		DetectAndSelectTargets();
+
+		// 攻撃対象がいない場合、または攻撃中でない場合はプレイヤーを向く（スムーズに）
+		// 攻撃対象がいる場合は、PerformAttackLogic内でターゲットを向く処理が呼ばれる
+		if (m_currentAttackTargets.Count == 0 && m_player != null)
+		{
+			Vector3 directionToPlayer = (m_player.position - transform.position).normalized;
+			directionToPlayer.y = 0; // Y軸方向の回転は無視し、水平方向のみを考慮する
+
+			if (directionToPlayer != Vector3.zero)
+			{
+				Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
+				transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, m_rotationSpeed * Time.deltaTime); // Time.deltaTimeを追加
+			}
+		}
+
 
 		// 攻撃対象の敵がいて、まだ攻撃コルーチンが開始されていない場合
 		if (m_currentAttackTargets.Count > 0 && m_attackCoroutine == null)
@@ -151,6 +174,7 @@ public class Turret : MonoBehaviour
 	}
 
 	// タレットをターゲットの方向に向ける処理
+	// 攻撃対象がいる場合に、ターゲット方向へ滑らかに向きを変える
 	private void RotateTowardsTarget()
 	{
 		// ターゲットがいなければ何もしない
@@ -164,8 +188,11 @@ public class Turret : MonoBehaviour
 		if (targetDirection != Vector3.zero)
 		{
 			Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-			// 瞬時に方向転換させる
-			transform.rotation = targetRotation;
+			// モデルの向きの補正が必要な場合は、ここで追加（例：X軸が前方のモデルの場合）
+			// targetRotation *= Quaternion.Euler(0, 90f, 0);
+
+			// Slerpを使って滑らかに方向転換させる
+			transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, m_rotationSpeed * Time.deltaTime);
 		}
 	}
 
@@ -186,13 +213,9 @@ public class Turret : MonoBehaviour
 		}
 
 		// 現在の攻撃ターゲットそれぞれに対して処理を行う
-		// m_currentAttackTargetsはDetectAndSelectTargetsで更新されるため、
-		// ここでToList()を使って安全なコピーを作成しておくことで、
-		// ターゲットが途中で変更されてもこのループ内でのコレクション変更エラーを防ぐ
 		foreach (GameObject target in m_currentAttackTargets.ToList())
 		{
 			// ターゲットがnullになっているか、アクティブでなくなっている場合はスキップ
-			// このチェックは、DetectAndSelectTargetsの後に敵が破壊された場合に特に重要
 			if (target == null || !target.activeSelf)
 			{
 				continue; // 次のターゲットへ
@@ -207,7 +230,6 @@ public class Turret : MonoBehaviour
 			{
 				if (m_status != null)
 				{
-					// ★変更★ SetStatusからエフェクトとSEの引数を削除
 					trackingBulletComponent.SetStatus(target, m_status.GetAttackPower());
 				}
 				else
@@ -218,9 +240,27 @@ public class Turret : MonoBehaviour
 			}
 			else
 			{
-				// TrackingBulletコンポーネントが見つからない場合は警告
 				Debug.LogWarning("弾のプレハブにTrackingBulletコンポーネントがありません！");
 				Destroy(bullet); // コンポーネントがないので弾は無効
+			}
+		}
+	}
+
+	// ★追加★ アニメーションイベントなどから呼び出すことを想定
+	public void OnAttackStart()
+	{
+		// アニメーションスタートのタイミングで呼び出す
+		// このメソッドが呼ばれる時点では、m_currentAttackTargetsに攻撃対象がいる想定
+		if (m_currentAttackTargets.Count > 0 && m_currentAttackTargets.First() != null)
+		{
+			// ターゲット方向を向く
+			Vector3 direction = (m_currentAttackTargets.First().transform.position - transform.position).normalized;
+			direction.y = 0; // 水平方向のみを考慮
+
+			if (direction != Vector3.zero)
+			{
+				Quaternion targetRotation = Quaternion.LookRotation(direction);
+				transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, m_rotationSpeed); // m_rotationSpeedを直接使用
 			}
 		}
 	}

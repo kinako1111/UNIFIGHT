@@ -7,6 +7,7 @@ public class TrackingBullet : MonoBehaviour
 
 	[SerializeField] float m_speed = 10f; // 弾の移動速度
 	[SerializeField] float m_trackingStrength = 5f; // ターゲットへの追尾の強さ（数値が大きいほど素早く向きを変える）
+
 	public void SetStatus(GameObject target, int damage)
 	{
 		m_target = target; // Turretが選定したターゲットを設定
