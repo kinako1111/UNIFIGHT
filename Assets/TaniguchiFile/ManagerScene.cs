@@ -5,14 +5,6 @@ using UnityEngine;
 
 public class ManagerScene : MonoBehaviour
 {
-	public enum Scene
-	{
-
-	}
-
-	Scene scene;
-
-
     void Start()
     {
         
