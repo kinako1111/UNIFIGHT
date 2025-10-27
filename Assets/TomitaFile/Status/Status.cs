@@ -12,8 +12,6 @@ public class Status : MonoBehaviour
 		C,
 		D,
 		Golem,
-		Mushroom,
-		Cactus,
 		Tower,
 		Turret,
 		Length,

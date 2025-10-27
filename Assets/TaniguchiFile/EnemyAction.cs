@@ -6,7 +6,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyAction : MonoBehaviour
+public class EnemyAction: MonoBehaviour
 {
 	[SerializeField]
 	Status status;
@@ -14,13 +14,13 @@ public class EnemyAction : MonoBehaviour
 	[Header("Navmesh"), SerializeField]
 	NavMeshAgent m_navmeshAgent;
 
-	[Header("エフェクトのリスト"), SerializeField]
+	[Header("エフェクトのリスト"),SerializeField]
 	List<GameObject> m_effectList = new();
 
 	[Header("攻撃地点のTransform"), SerializeField]
 	List<Transform> m_attackPos = new();
 
-	[Header("サウンドのリスト"), SerializeField]
+	[Header("サウンドのリスト"),SerializeField]
 	List<GameObject> m_soundList = new();
 
 	[Header("敵の速度"), SerializeField]
@@ -73,7 +73,7 @@ public class EnemyAction : MonoBehaviour
 			m_navmeshAgent.isStopped = true;
 
 			//コライダー持ちはコライダーも消す
-			if (m_collider != null)
+			if(m_collider != null)
 			{
 				m_collider.enabled = false;
 			}
@@ -82,7 +82,7 @@ public class EnemyAction : MonoBehaviour
 
 		m_navmeshAgent.speed = status.GetSpeed();
 		m_attackCoolTime = status.GetSkill1CoolTime();
-
+		
 
 		//現在最も近いターゲットを取得
 		GameObject clossTarget = m_targetList.OrderBy(target => Vector3.Distance(target.transform.position, transform.position)).First();
@@ -94,9 +94,9 @@ public class EnemyAction : MonoBehaviour
 			m_navmeshAgent.isStopped = true;
 
 			//攻撃中は向きも変わらない
-			if (!isAttack)
+			if(!isAttack)
 			{
-				transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(clossTarget.transform.position - transform.position), 0.2f);
+				transform.rotation = Quaternion.Lerp(transform.rotation,Quaternion.LookRotation(clossTarget.transform.position - transform.position),0.2f);
 			}
 
 			////対象物を最もヘイト値の高いプレイヤーに変更
@@ -117,7 +117,7 @@ public class EnemyAction : MonoBehaviour
 			isMove = true;
 
 			//攻撃中またはダメージアクション中は移動禁止
-			if (!isAttack || !m_damageAction)
+			if(!isAttack || !m_damageAction)
 			{
 				m_navmeshAgent.isStopped = false;
 				m_navmeshAgent.SetDestination(m_targetList.Find(target => target.tag == "Target").transform.position);
@@ -138,6 +138,8 @@ public class EnemyAction : MonoBehaviour
 		Debug.Log("Golem attack started!");
 		// エフェクト生成やSE再生などの処理
 		GameObject obj = Instantiate(m_effectList.First(), m_attackPos.First());
+
+
 	}
 
 	public void AttackEnd()
@@ -160,5 +162,4 @@ public class EnemyAction : MonoBehaviour
 	{
 		m_damageAction = false;
 	}
-
 }

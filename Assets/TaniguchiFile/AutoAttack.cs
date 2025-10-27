@@ -132,52 +132,69 @@ public class AutoAttack : MonoBehaviour
 		if (direction != Vector3.zero)
 		{
 			Quaternion targetRotation = Quaternion.LookRotation(direction);
-			targetRotation *= Quaternion.Euler(0, 90f, 0); // ← ここで補正
+			targetRotation *= Quaternion.Euler(0, 90f, 0);
 			transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10f);
 		}
 	}
 
+
 	public void CloseAttack()
 	{
-		//近接用
-		//アニメーションの攻撃の当たる瞬間に呼び出す
-		//対象キャラがまだ攻撃範囲内にいる
+		StartCoroutine(RepeatDamageCoroutine());
+	}
+
+	IEnumerator RepeatDamageCoroutine()
+	{
 		float rangeSqr = m_autoAttackRange * m_autoAttackRange;
-		if((transform.position - m_target.First().transform.position).sqrMagnitude <= rangeSqr)
+
+		for (int i = 0; i < m_autoAttackCount; i++)
 		{
-			Status status;
-			if(m_target.First().TryGetComponent(out status))
+			if ((transform.position - m_target.First().transform.position).sqrMagnitude <= rangeSqr)
 			{
-				for(int i = 0; i < m_autoAttackCount; i++)
+				Status status;
+				if (m_target.First().TryGetComponent(out status))
 				{
-					//ダメージ付与
+					// ダメージ付与
 					status.Damage(m_status.GetAttackPower());
 
-					//与えたダメージの表示
+					// ダメージ表示
 					Debug.Log(m_status.GetAttackPower() + "ダメージを与えた！");
 
-					//当たった位置でエフェクトの発生
-					if (m_effect != null) return;
-					Instantiate(m_effect,m_target.First().transform);
+					// エフェクト
+					if (m_effect != null)
+					{
+						Instantiate(m_effect, m_target.First().transform);
+					}
 
-					//SE生成
-					if (m_se != null) return;
-					SoundEffect.Play3D(m_se, m_target.First().transform.position);
+					// SE
+					if (m_se != null)
+					{
+						SoundEffect.Play3D(m_se, m_target.First().transform.position);
+					}
 				}
 			}
+
+			// 攻撃間隔待機
+			yield return new WaitForSeconds(m_autoAttackInterval);
 		}
+
+		// 攻撃終了はアニメーションイベントで呼ばれるので、ここでは呼ばない
 	}
+
 
 	public void FarAttack()
 	{
 		//遠距離
 		foreach (GameObject target in m_target)
 		{
-			//弾を生成
-			GameObject bullet = Instantiate(m_bulletPrefab[0], m_generateTransform.position, Quaternion.identity);
+			if (m_bulletPrefab[0] != null)
+			{
+				//弾を生成
+				GameObject bullet = Instantiate(m_bulletPrefab[0], m_generateTransform.position, Quaternion.identity);
 
-			//弾のターゲットをAAのターゲットに設定
-			bullet.GetComponent<Homing>().SetStatus(target,m_status.GetAttackPower(),m_effect,m_se);
+				//弾のターゲットをAAのターゲットに設定
+				bullet.GetComponent<Homing>().SetStatus(target,m_status.GetAttackPower(),m_effect,m_se);
+			}
 		}
 	}
 
