@@ -7,7 +7,6 @@ public class SelectiManager : MonoBehaviour
 {
     [SerializeField] GameSelectionData gameData;
     [SerializeField] GameObject[] characterPrefabs;
-    [SerializeField] CinemachineVirtualCamera mainCamera;
 
     private GameObject playerInstance;
     // Start is called before the first frame update
@@ -18,7 +17,8 @@ public class SelectiManager : MonoBehaviour
         // ÉvÉåÉCÉÑÅ[Çê∂ê¨
         playerInstance = Instantiate(characterPrefabs[characterId], new Vector3(0, 1, -2), Quaternion.identity);
 
-        //mainCamera.Follow = playerInstance.transform;
-        //mainCamera.LookAt = playerInstance.transform;
-    }
+		CameraLockRotation cameraLock = Camera.main.GetComponent<CameraLockRotation>();
+        cameraLock.target = playerInstance.transform;
+
+	}
 }

@@ -24,10 +24,10 @@ public class EnemyFactory : MonoBehaviour
 	}
 	public void Start()
 	{
-		CreateEnemey((int)EnemyName.Golem, m_factoryPos);
+		CreateEnemy((int)EnemyName.Golem, m_factoryPos);
 	}
 
-	public void CreateEnemey(int name, Transform transform)
+	public void CreateEnemy(int name, Transform transform)
 	{
 		Instantiate(GetEnemyInfo(name), transform);
 	}
