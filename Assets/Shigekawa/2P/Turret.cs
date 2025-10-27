@@ -1,59 +1,54 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
-using System.Linq; // LINQ‚ğg—p‚·‚é‚½‚ß
+using System.Linq; // LINQã‚’ä½¿ç”¨ã™ã‚‹ãŸã‚
 
 using UnityEngine;
 
 public class Turret : MonoBehaviour
 {
-	// UŒ‚”ÍˆÍ‚Ì”¼Œa
-	[Header("UŒ‚”ÍˆÍ"), SerializeField]
+	// æ”»æ’ƒç¯„å›²ã®åŠå¾„
+	[Header("æ”»æ’ƒç¯„å›²"), SerializeField]
 	float m_autoAttackRange = 5f;
 
-	// UŒ‚”ÍˆÍ‚ğ‹Šo“I‚É¦‚·‚½‚ß‚ÌƒIƒuƒWƒFƒNƒg
-	[Header("UŒ‚”ÍˆÍ(Œ©‚½–Ú)"), SerializeField]
-	GameObject m_rangeLooks;
-
-	// ˆê“x‚ÌUŒ‚‚Åƒ_ƒ[ƒW”»’è‚ğ”­¶‚³‚¹‚é‰ñ” (ƒAƒjƒ[ƒ^[‚ª‚È‚¢‚½‚ßA‚±‚Ì’l‚Í’¼Ú“I‚È‰e‹¿‚Í­‚È‚¢‚ªA«—ˆ“I‚ÈŠg’£‚Ì‚½‚ß‚Éc‚·)
-	[Header("UŒ‚‚Ì”­¶‰ñ”  ¦ƒfƒtƒH‚Í1"), SerializeField]
+	// ä¸€åº¦ã®æ”»æ’ƒã§ãƒ€ãƒ¡ãƒ¼ã‚¸åˆ¤å®šã‚’ç™ºç”Ÿã•ã›ã‚‹å›æ•° (ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚¿ãƒ¼ãŒãªã„ãŸã‚ã€ã“ã®å€¤ã¯ç›´æ¥çš„ãªå½±éŸ¿ã¯å°‘ãªã„ãŒã€å°†æ¥çš„ãªæ‹¡å¼µã®ãŸã‚ã«æ®‹ã™)
+	[Header("æ”»æ’ƒã®ç™ºç”Ÿå›æ•°  â€»ãƒ‡ãƒ•ã‚©ã¯1"), SerializeField]
 	int m_autoAttackCount = 1;
 
-	// ˆê“x‚ÉUŒ‚‚Å‚«‚é“G‚Ì”
-	[Header("ˆê“x‚ÉUŒ‚‚Å‚«‚é”"), SerializeField]
+	// ä¸€åº¦ã«æ”»æ’ƒã§ãã‚‹æ•µã®æ•°
+	[Header("ä¸€åº¦ã«æ”»æ’ƒã§ãã‚‹æ•°"), SerializeField]
 	int m_simultaneous = 1;
 
-	// UŒ‚‚ÆUŒ‚‚ÌŠÔ‚Ì‘Ò‚¿ŠÔi•bj
-	[Header("UŒ‚‘¬“x"), SerializeField]
+	// æ”»æ’ƒã¨æ”»æ’ƒã®é–“ã®å¾…ã¡æ™‚é–“ï¼ˆç§’ï¼‰
+	[Header("æ”»æ’ƒé€Ÿåº¦"), SerializeField]
 	float m_autoAttackInterval = 0.75f;
 
-	// ‰“‹——£UŒ‚‚Åg—p‚·‚é’e‚ÌƒvƒŒƒnƒu
-	[Header("’e‚ÌPrefab"), SerializeField]
+	// é è·é›¢æ”»æ’ƒã§ä½¿ç”¨ã™ã‚‹å¼¾ã®ãƒ—ãƒ¬ãƒãƒ–
+	[Header("å¼¾ã®Prefab"), SerializeField]
 	GameObject m_bulletPrefab;
 
-	// ’e‚ğ¶¬‚·‚éˆÊ’u‚ÌTransform
-	[Header("’e‚Ì¶¬’n“_"), SerializeField]
+	// å¼¾ã‚’ç”Ÿæˆã™ã‚‹ä½ç½®ã®Transform
+	[Header("å¼¾ã®ç”Ÿæˆåœ°ç‚¹"), SerializeField]
 	Transform m_generateTransform;
 
-	[Header("ƒvƒŒƒCƒ„[‚ÌTransform"), SerializeField] // ƒwƒbƒ_[‚ğ’Ç‰Á‚µAƒCƒ“ƒXƒyƒNƒ^[‚Åİ’è‚µ‚â‚·‚¢‚æ‚¤‚É
-	Transform m_player;
+	[Header("å›è»¢é€Ÿåº¦"), SerializeField]
+	float m_rotationSpeed = 10f;
 
-	[Header("‰ñ“]‘¬“x"), SerializeField] // Slerp‚Ì•âŠÔ’l‚ğİ’è‚Å‚«‚é‚æ‚¤‚É’Ç‰ÁB‘å‚«‚ß‚Ì’l‚ª„§ (—á: 5f-15f)
-	float m_rotationSpeed = 10f; // ‰Šú’l‚ğ10f‚É•ÏX
+	[Header("ã‚¿ãƒ¬ãƒƒãƒˆæ¶ˆæ»…æ™‚é–“"), SerializeField]
+	float m_turretLifeTime = 10f;
 
-	// ----- “à•”‚Åg—p‚·‚é•Ï”ŒQ -----
-	// UŒ‚”ÍˆÍ“à‚É‚¢‚é‘S‚Ä‚Ìƒ†ƒjƒbƒg‚ÌƒŠƒXƒg
+	// æ”»æ’ƒç¯„å›²å†…ã«ã„ã‚‹å…¨ã¦ã®ãƒ¦ãƒ‹ãƒƒãƒˆã®ãƒªã‚¹ãƒˆ
 	List<GameObject> m_unitsInRange = new();
 
-	// ÀÛ‚ÉUŒ‚‘ÎÛ‚Æ‚È‚é“G‚ÌƒŠƒXƒg
+	// å®Ÿéš›ã«æ”»æ’ƒå¯¾è±¡ã¨ãªã‚‹æ•µã®ãƒªã‚¹ãƒˆ
 	List<GameObject> m_currentAttackTargets = new();
 
-	Status m_status; // ƒ^ƒŒƒbƒg‚ÌƒXƒe[ƒ^ƒXƒRƒ“ƒ|[ƒlƒ“ƒg
+	Status m_status;
 
-	bool m_isAttacking; // Œ»İUŒ‚’†‚©‚Ç‚¤‚©‚ğ¦‚·ƒtƒ‰ƒO
-	private Coroutine m_attackCoroutine; // UŒ‚ƒ‹[ƒv‚ğŠÇ—‚·‚éƒRƒ‹[ƒ`ƒ“
+	bool m_isAttacking; // ç¾åœ¨æ”»æ’ƒä¸­ã‹ã©ã†ã‹ã‚’ç¤ºã™ãƒ•ãƒ©ã‚°
+	private Coroutine m_attackCoroutine; // æ”»æ’ƒãƒ«ãƒ¼ãƒ—ã‚’ç®¡ç†ã™ã‚‹ã‚³ãƒ«ãƒ¼ãƒãƒ³
 
 
-	// Œ»İUŒ‚’†‚Å‚ ‚é‚©ŠO•”‚©‚çQÆ‚·‚é‚½‚ß‚ÌƒvƒƒpƒeƒB
+	// ç¾åœ¨æ”»æ’ƒä¸­ã§ã‚ã‚‹ã‹å¤–éƒ¨ã‹ã‚‰å‚ç…§ã™ã‚‹ãŸã‚ã®ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£
 	public bool IsAttacking => m_isAttacking;
 
 	private void Awake()
@@ -64,167 +59,133 @@ public class Turret : MonoBehaviour
 	private void Start()
 	{
 		m_isAttacking = false;
-		// UŒ‚”ÍˆÍ‚ÌŒ©‚½–Ú‚ÌƒTƒCƒY‚ğAİ’è‚³‚ê‚½UŒ‚”ÍˆÍ‚É‡‚í‚¹‚Ä’²®
-		if (m_rangeLooks != null)
-		{
-			m_rangeLooks.transform.localScale = new Vector3(
-				m_autoAttackRange * 2, // ’¼Œa‚Í”¼Œa‚Ì2”{
-				m_rangeLooks.transform.localScale.y,
-				m_autoAttackRange * 2
-			);
-			m_rangeLooks.SetActive(false); // ‰Šúó‘Ô‚Å‚ÍUŒ‚”ÍˆÍ‚ÌŒ©‚½–Ú‚ğ”ñ•\¦‚É‚·‚é
-		}
+		// ã‚¿ãƒ¬ãƒƒãƒˆæœ¬ä½“ã‚’ã€æŒ‡å®šã—ãŸæ™‚é–“å¾Œã«è‡ªå‹•çš„ã«ç ´æ£„ã™ã‚‹
+		Destroy(gameObject, m_turretLifeTime);
 	}
 
 	void Update()
 	{
-		// –ˆƒtƒŒ[ƒ€AUŒ‚”ÍˆÍ“à‚Ì“G‚ğÅV‚Ìó‘Ô‚ÉXV‚·‚é
+		// æ¯ãƒ•ãƒ¬ãƒ¼ãƒ ã€æ”»æ’ƒç¯„å›²å†…ã®æ•µã‚’æœ€æ–°ã®çŠ¶æ…‹ã«æ›´æ–°ã™ã‚‹
 		DetectAndSelectTargets();
 
-		// UŒ‚‘ÎÛ‚ª‚¢‚È‚¢ê‡A‚Ü‚½‚ÍUŒ‚’†‚Å‚È‚¢ê‡‚ÍƒvƒŒƒCƒ„[‚ğŒü‚­iƒXƒ€[ƒY‚Éj
-		// UŒ‚‘ÎÛ‚ª‚¢‚éê‡‚ÍAPerformAttackLogic“à‚Åƒ^[ƒQƒbƒg‚ğŒü‚­ˆ—‚ªŒÄ‚Î‚ê‚é
-		if (m_currentAttackTargets.Count == 0 && m_player != null)
-		{
-			Vector3 directionToPlayer = (m_player.position - transform.position).normalized;
-			directionToPlayer.y = 0; // Y²•ûŒü‚Ì‰ñ“]‚Í–³‹‚µA…•½•ûŒü‚Ì‚İ‚ğl—¶‚·‚é
-
-			if (directionToPlayer != Vector3.zero)
-			{
-				Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
-				transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, m_rotationSpeed * Time.deltaTime); // Time.deltaTime‚ğ’Ç‰Á
-			}
-		}
-
-
-		// UŒ‚‘ÎÛ‚Ì“G‚ª‚¢‚ÄA‚Ü‚¾UŒ‚ƒRƒ‹[ƒ`ƒ“‚ªŠJn‚³‚ê‚Ä‚¢‚È‚¢ê‡
+		// æ”»æ’ƒå¯¾è±¡ã®æ•µãŒã„ã¦ã€ã¾ã æ”»æ’ƒã‚³ãƒ«ãƒ¼ãƒãƒ³ãŒé–‹å§‹ã•ã‚Œã¦ã„ãªã„å ´åˆ
 		if (m_currentAttackTargets.Count > 0 && m_attackCoroutine == null)
 		{
-			// UŒ‚ƒ‹[ƒv‚ğŠJn‚·‚é
+			// æ”»æ’ƒãƒ«ãƒ¼ãƒ—ã‚’é–‹å§‹ã™ã‚‹
 			m_attackCoroutine = StartCoroutine(AttackLoopCoroutine());
-			m_isAttacking = true; // UŒ‚’†ƒtƒ‰ƒO‚ğ—§‚Ä‚é
+			m_isAttacking = true; // æ”»æ’ƒä¸­ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
 		}
-		// UŒ‚‘ÎÛ‚Ì“G‚ª‚¢‚È‚­‚È‚èA‚©‚ÂUŒ‚ƒRƒ‹[ƒ`ƒ“‚ªÀs’†‚Ìê‡
+		// æ”»æ’ƒå¯¾è±¡ã®æ•µãŒã„ãªããªã‚Šã€ã‹ã¤æ”»æ’ƒã‚³ãƒ«ãƒ¼ãƒãƒ³ãŒå®Ÿè¡Œä¸­ã®å ´åˆ
 		else if (m_currentAttackTargets.Count == 0 && m_attackCoroutine != null)
 		{
-			// UŒ‚ƒRƒ‹[ƒ`ƒ“‚ğ’â~‚·‚é
+			// æ”»æ’ƒã‚³ãƒ«ãƒ¼ãƒãƒ³ã‚’åœæ­¢ã™ã‚‹
 			StopCoroutine(m_attackCoroutine);
-			m_attackCoroutine = null; // ƒRƒ‹[ƒ`ƒ“QÆ‚ğƒNƒŠƒA
-			m_isAttacking = false; // UŒ‚’†ƒtƒ‰ƒO‚ğ‰º‚ë‚·
+			m_attackCoroutine = null; // ã‚³ãƒ«ãƒ¼ãƒãƒ³å‚ç…§ã‚’ã‚¯ãƒªã‚¢
+			m_isAttacking = false; // æ”»æ’ƒä¸­ãƒ•ãƒ©ã‚°ã‚’ä¸‹ã‚ã™
 		}
 	}
 
-	// UŒ‚”ÍˆÍ“à‚Ì“G‚ğŒŸo‚µAƒ^[ƒQƒbƒgƒŠƒXƒg‚ğXV‚·‚éB
+	// æ”»æ’ƒç¯„å›²å†…ã®æ•µã‚’æ¤œå‡ºã—ã€ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãƒªã‚¹ãƒˆã‚’æ›´æ–°ã™ã‚‹ã€‚
 	private void DetectAndSelectTargets()
 	{
-		m_unitsInRange.Clear(); // ŒŸoÏ‚İ‚Ìƒ†ƒjƒbƒgƒŠƒXƒg‚ğƒNƒŠƒA
-		m_currentAttackTargets.Clear(); // Œ»İ‚ÌUŒ‚ƒ^[ƒQƒbƒgƒŠƒXƒg‚ğƒNƒŠƒA
+		m_unitsInRange.Clear(); // æ¤œå‡ºæ¸ˆã¿ã®ãƒ¦ãƒ‹ãƒƒãƒˆãƒªã‚¹ãƒˆã‚’ã‚¯ãƒªã‚¢
+		m_currentAttackTargets.Clear(); // ç¾åœ¨ã®æ”»æ’ƒã‚¿ãƒ¼ã‚²ãƒƒãƒˆãƒªã‚¹ãƒˆã‚’ã‚¯ãƒªã‚¢
 
-		// ƒ^ƒŒƒbƒg‚ÌˆÊ’u‚ğ’†S‚ÉAİ’è‚³‚ê‚½UŒ‚”ÍˆÍ‚Å‹…ó‚ÌÕ“Ë”»’è‚ğs‚¤
+		// ã‚¿ãƒ¬ãƒƒãƒˆã®ä½ç½®ã‚’ä¸­å¿ƒã«ã€è¨­å®šã•ã‚ŒãŸæ”»æ’ƒç¯„å›²ã§çƒçŠ¶ã®è¡çªåˆ¤å®šã‚’è¡Œã†
 		Collider[] hitColliders = Physics.OverlapSphere(transform.position, m_autoAttackRange);
 
-		// ŒŸo‚³‚ê‚½‘S‚Ä‚ÌƒRƒ‰ƒCƒ_[‚Ì’†‚©‚çAğŒ‚É‡‚¤ƒIƒuƒWƒFƒNƒg‚ği‚è‚Ş
-		// 1. ƒRƒ‰ƒCƒ_[‚ª‘®‚·‚éGameObject‚ğæ“¾
-		// 2. ©giƒ^ƒŒƒbƒgj‚ÌGameObject‚ğœŠO
-		// 3. "Enemy"ƒ^ƒO‚ğ‚ÂGameObject‚Ì‚İ‚ğ‘ÎÛ‚Æ‚·‚é
+		// æ¤œå‡ºã•ã‚ŒãŸå…¨ã¦ã®ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®ä¸­ã‹ã‚‰ã€æ¡ä»¶ã«åˆã†ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’çµã‚Šè¾¼ã‚€
+		// 1. ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ãŒå±ã™ã‚‹GameObjectã‚’å–å¾—
+		// 2. è‡ªèº«ï¼ˆã‚¿ãƒ¬ãƒƒãƒˆï¼‰ã®GameObjectã‚’é™¤å¤–
+		// 3. "Enemy"ã‚¿ã‚°ã‚’æŒã¤GameObjectã®ã¿ã‚’å¯¾è±¡ã¨ã™ã‚‹
 		List<GameObject> potentialTargets = hitColliders
 			.Select(collider => collider.gameObject)
 			.Where(gameObject => gameObject != this.gameObject && gameObject.CompareTag("Enemy"))
-			.ToList(); // ˆê“I‚ÈƒŠƒXƒg‚É•ÏŠ·
+			.ToList(); // ä¸€æ™‚çš„ãªãƒªã‚¹ãƒˆã«å¤‰æ›
 
-		// i‚è‚ñ‚¾“G‚Ì’†‚©‚çAƒ^ƒŒƒbƒg‚©‚ç‚Ì‹——£‚ª‹ß‚¢‡‚Éƒ\[ƒg‚·‚é
+		// çµã‚Šè¾¼ã‚“ã æ•µã®ä¸­ã‹ã‚‰ã€ã‚¿ãƒ¬ãƒƒãƒˆã‹ã‚‰ã®è·é›¢ãŒè¿‘ã„é †ã«ã‚½ãƒ¼ãƒˆã™ã‚‹
 		m_unitsInRange = potentialTargets
 			.OrderBy(gameObject => (transform.position - gameObject.transform.position).sqrMagnitude)
 			.ToList();
 
-		// ƒ\[ƒg‚³‚ê‚½“GƒŠƒXƒg‚©‚çA“¯‚ÉUŒ‚‚Å‚«‚é”‚¾‚¯‚ğÀÛ‚ÌUŒ‚ƒ^[ƒQƒbƒg‚Æ‚µ‚Ä‘I’è‚·‚é
+		// ã‚½ãƒ¼ãƒˆã•ã‚ŒãŸæ•µãƒªã‚¹ãƒˆã‹ã‚‰ã€åŒæ™‚ã«æ”»æ’ƒã§ãã‚‹æ•°ã ã‘ã‚’å®Ÿéš›ã®æ”»æ’ƒã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¨ã—ã¦é¸å®šã™ã‚‹
 		for (int i = 0; i < m_simultaneous && i < m_unitsInRange.Count; i++)
 		{
 			m_currentAttackTargets.Add(m_unitsInRange[i]);
 		}
 	}
 
-	// UŒ‚‚ğŒJ‚è•Ô‚·ƒRƒ‹[ƒ`ƒ“B
+	// æ”»æ’ƒã‚’ç¹°ã‚Šè¿”ã™ã‚³ãƒ«ãƒ¼ãƒãƒ³ã€‚
 	IEnumerator AttackLoopCoroutine()
 	{
-		// UŒ‚ƒ^[ƒQƒbƒg‚ª‚¢‚éŠÔ‚Íƒ‹[ƒv‚ğ‘±‚¯‚é
+		// æ”»æ’ƒã‚¿ãƒ¼ã‚²ãƒƒãƒˆãŒã„ã‚‹é–“ã¯ãƒ«ãƒ¼ãƒ—ã‚’ç¶šã‘ã‚‹
 		while (m_currentAttackTargets.Count > 0)
 		{
-			// ÀÛ‚ÌUŒ‚ˆ—‚ğÀs
+			// å®Ÿéš›ã®æ”»æ’ƒå‡¦ç†ã‚’å®Ÿè¡Œ
 			PerformAttackLogic();
 
-			// İ’è‚³‚ê‚½UŒ‚ŠÔŠu‚¾‚¯‘Ò‹@
+			// è¨­å®šã•ã‚ŒãŸæ”»æ’ƒé–“éš”ã ã‘å¾…æ©Ÿ
 			yield return new WaitForSeconds(m_autoAttackInterval);
 		}
-		// ƒ^[ƒQƒbƒg‚ª‚¢‚È‚­‚È‚Á‚ÄƒRƒ‹[ƒ`ƒ“‚ªI—¹‚µ‚½‚çAƒRƒ‹[ƒ`ƒ“QÆ‚ğƒNƒŠƒA‚µAUŒ‚’†ƒtƒ‰ƒO‚ğ‰º‚ë‚·
+		// ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãŒã„ãªããªã£ã¦ã‚³ãƒ«ãƒ¼ãƒãƒ³ãŒçµ‚äº†ã—ãŸã‚‰ã€ã‚³ãƒ«ãƒ¼ãƒãƒ³å‚ç…§ã‚’ã‚¯ãƒªã‚¢ã—ã€æ”»æ’ƒä¸­ãƒ•ãƒ©ã‚°ã‚’ä¸‹ã‚ã™
 		m_attackCoroutine = null;
 		m_isAttacking = false;
 	}
 
-	// ÀÛ‚ÌUŒ‚ƒƒWƒbƒN‚ğÀs‚·‚éB
+	// å®Ÿéš›ã®æ”»æ’ƒãƒ­ã‚¸ãƒƒã‚¯ã‚’å®Ÿè¡Œã™ã‚‹ã€‚
 	private void PerformAttackLogic()
 	{
-		// UŒ‚ƒ^[ƒQƒbƒg‚ª‚¢‚È‚¯‚ê‚Î‰½‚à‚µ‚È‚¢
+		// æ”»æ’ƒã‚¿ãƒ¼ã‚²ãƒƒãƒˆãŒã„ãªã‘ã‚Œã°ä½•ã‚‚ã—ãªã„
 		if (m_currentAttackTargets.Count == 0) return;
 
-		// ƒ^[ƒQƒbƒg‚Ì•ûŒü‚ğŒü‚­ˆ—
+		// ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®æ–¹å‘ã‚’å‘ãå‡¦ç†
 		RotateTowardsTarget();
 
-		// ‰“‹——£UŒ‚‚ÌƒƒWƒbƒN‚ğÀs
+		// é è·é›¢æ”»æ’ƒã®ãƒ­ã‚¸ãƒƒã‚¯ã‚’å®Ÿè¡Œ
 		ExecuteFarAttack();
 	}
 
-	// ƒ^ƒŒƒbƒg‚ğƒ^[ƒQƒbƒg‚Ì•ûŒü‚ÉŒü‚¯‚éˆ—
-	// UŒ‚‘ÎÛ‚ª‚¢‚éê‡‚ÉAƒ^[ƒQƒbƒg•ûŒü‚ÖŠŠ‚ç‚©‚ÉŒü‚«‚ğ•Ï‚¦‚é
+	// ã‚¿ãƒ¬ãƒƒãƒˆã‚’ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®æ–¹å‘ã«å‘ã‘ã‚‹å‡¦ç†
+	// æ”»æ’ƒå¯¾è±¡ãŒã„ã‚‹å ´åˆã«ã€ã‚¿ãƒ¼ã‚²ãƒƒãƒˆæ–¹å‘ã¸æ»‘ã‚‰ã‹ã«å‘ãã‚’å¤‰ãˆã‚‹
 	private void RotateTowardsTarget()
 	{
-		// ƒ^[ƒQƒbƒg‚ª‚¢‚È‚¯‚ê‚Î‰½‚à‚µ‚È‚¢
 		if (m_currentAttackTargets.Count == 0 || m_currentAttackTargets.First() == null) return;
 
-		// Å‰‚Ìƒ^[ƒQƒbƒg‚ÌˆÊ’u‚©‚çƒ^ƒŒƒbƒg‚ÌˆÊ’u‚ğˆø‚¢‚ÄA•ûŒüƒxƒNƒgƒ‹‚ğZo
 		Vector3 targetDirection = (m_currentAttackTargets.First().transform.position - transform.position).normalized;
-		targetDirection.y = 0; // Y²•ûŒü‚Ì‰ñ“]‚Í–³‹‚µA…•½•ûŒü‚Ì‚İ‚ğl—¶‚·‚é
+		targetDirection.y = 0; // æ°´å¹³æ–¹å‘ã®ã¿ã‚’è€ƒæ…®
 
-		// •ûŒüƒxƒNƒgƒ‹‚ªƒ[ƒ‚Å‚È‚¯‚ê‚ÎAƒ^ƒŒƒbƒg‚ğƒ^[ƒQƒbƒg‚Ì•ûŒü‚ÉŒü‚¯‚é
 		if (targetDirection != Vector3.zero)
 		{
 			Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-			// ƒ‚ƒfƒ‹‚ÌŒü‚«‚Ì•â³‚ª•K—v‚Èê‡‚ÍA‚±‚±‚Å’Ç‰Ái—áFX²‚ª‘O•û‚Ìƒ‚ƒfƒ‹‚Ìê‡j
-			// targetRotation *= Quaternion.Euler(0, 90f, 0);
+			// ãƒ¢ãƒ‡ãƒ«ãŒæ™‚è¨ˆå›ã‚Šã«90åº¦ãšã‚Œã¦ã„ã‚‹å ´åˆã®ã‚ªãƒ•ã‚»ãƒƒãƒˆã‚’å¾©æ´»
+			targetRotation *= Quaternion.Euler(0, -90f, 0);
 
-			// Slerp‚ğg‚Á‚ÄŠŠ‚ç‚©‚É•ûŒü“]Š·‚³‚¹‚é
-			transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, m_rotationSpeed * Time.deltaTime);
+			transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, m_rotationSpeed * Time.deltaTime);
 		}
 	}
 
-	// ‰“‹——£UŒ‚‚ÌƒƒWƒbƒN‚ğÀs‚·‚é
+
+	// é è·é›¢æ”»æ’ƒã®ãƒ­ã‚¸ãƒƒã‚¯ã‚’å®Ÿè¡Œã™ã‚‹
 	private void ExecuteFarAttack()
 	{
-		// ’e‚ÌƒvƒŒƒnƒu‚ªİ’è‚³‚ê‚Ä‚¢‚È‚¢ê‡‚ÍŒx‚ğo‚µ‚Äˆ—‚ğI—¹
-		if (m_bulletPrefab == null)
-		{
-			Debug.LogWarning("’e‚ÌƒvƒŒƒnƒu‚ªİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñI");
-			return;
-		}
-		// ’e‚Ì¶¬’n“_‚ªİ’è‚³‚ê‚Ä‚¢‚È‚¢ê‡‚ÍŒx‚ğo‚µ‚Äˆ—‚ğI—¹
-		if (m_generateTransform == null)
-		{
-			Debug.LogWarning("’e‚Ì¶¬’n“_‚ªİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñI");
-			return;
-		}
-
-		// Œ»İ‚ÌUŒ‚ƒ^[ƒQƒbƒg‚»‚ê‚¼‚ê‚É‘Î‚µ‚Äˆ—‚ğs‚¤
+		// ç¾åœ¨ã®æ”»æ’ƒã‚¿ãƒ¼ã‚²ãƒƒãƒˆãã‚Œãã‚Œã«å¯¾ã—ã¦å‡¦ç†ã‚’è¡Œã†
 		foreach (GameObject target in m_currentAttackTargets.ToList())
 		{
-			// ƒ^[ƒQƒbƒg‚ªnull‚É‚È‚Á‚Ä‚¢‚é‚©AƒAƒNƒeƒBƒu‚Å‚È‚­‚È‚Á‚Ä‚¢‚éê‡‚ÍƒXƒLƒbƒv
+			// ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãŒnullã«ãªã£ã¦ã„ã‚‹ã‹ã€ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã§ãªããªã£ã¦ã„ã‚‹å ´åˆã¯ã‚¹ã‚­ãƒƒãƒ—
 			if (target == null || !target.activeSelf)
 			{
-				continue; // Ÿ‚Ìƒ^[ƒQƒbƒg‚Ö
+				continue; // æ¬¡ã®ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¸
 			}
 
-			// ’e‚ÌƒvƒŒƒnƒu‚©‚ç’e‚ğ¶¬
-			GameObject bullet = Instantiate(m_bulletPrefab, m_generateTransform.position, Quaternion.identity);
+			// å¼¾ã®ç”Ÿæˆåœ°ç‚¹ã‹ã‚‰ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¸ã®æ–¹å‘ã‚’è¨ˆç®—
+			Vector3 directionToTarget = (target.transform.position - m_generateTransform.position).normalized;
+			// å¼¾ã®åˆæœŸå›è»¢ã‚’ã€ç”Ÿæˆåœ°ç‚¹ã‹ã‚‰ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¸ã®æ–¹å‘ã«å‘ã‘ã‚‹
+			Quaternion initialBulletRotation = Quaternion.LookRotation(directionToTarget);
 
-			// TrackingBulletƒRƒ“ƒ|[ƒlƒ“ƒg‚ğæ“¾‚µAƒ^[ƒQƒbƒg‚ÆƒXƒe[ƒ^ƒX‚ğİ’è
+			// å¼¾ã®ãƒ—ãƒ¬ãƒãƒ–ã‹ã‚‰å¼¾ã‚’ç”Ÿæˆ
+			GameObject bullet = Instantiate(m_bulletPrefab, m_generateTransform.position, initialBulletRotation);
+
+			// TrackingBulletã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã‚’å–å¾—ã—ã€ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¨ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ã‚’è¨­å®š
 			TrackingBullet trackingBulletComponent = bullet.GetComponent<TrackingBullet>();
 			if (trackingBulletComponent != null)
 			{
@@ -232,35 +193,6 @@ public class Turret : MonoBehaviour
 				{
 					trackingBulletComponent.SetStatus(target, m_status.GetAttackPower());
 				}
-				else
-				{
-					Debug.LogWarning("Turret‚ÌStatusƒRƒ“ƒ|[ƒlƒ“ƒg‚ªİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñI");
-					Destroy(bullet); // Status‚ª‚È‚¢‚Ì‚Å’e‚Í–³Œø
-				}
-			}
-			else
-			{
-				Debug.LogWarning("’e‚ÌƒvƒŒƒnƒu‚ÉTrackingBulletƒRƒ“ƒ|[ƒlƒ“ƒg‚ª‚ ‚è‚Ü‚¹‚ñI");
-				Destroy(bullet); // ƒRƒ“ƒ|[ƒlƒ“ƒg‚ª‚È‚¢‚Ì‚Å’e‚Í–³Œø
-			}
-		}
-	}
-
-	// š’Ç‰Áš ƒAƒjƒ[ƒVƒ‡ƒ“ƒCƒxƒ“ƒg‚È‚Ç‚©‚çŒÄ‚Ño‚·‚±‚Æ‚ğ‘z’è
-	public void OnAttackStart()
-	{
-		// ƒAƒjƒ[ƒVƒ‡ƒ“ƒXƒ^[ƒg‚Ìƒ^ƒCƒ~ƒ“ƒO‚ÅŒÄ‚Ño‚·
-		// ‚±‚Ìƒƒ\ƒbƒh‚ªŒÄ‚Î‚ê‚é“_‚Å‚ÍAm_currentAttackTargets‚ÉUŒ‚‘ÎÛ‚ª‚¢‚é‘z’è
-		if (m_currentAttackTargets.Count > 0 && m_currentAttackTargets.First() != null)
-		{
-			// ƒ^[ƒQƒbƒg•ûŒü‚ğŒü‚­
-			Vector3 direction = (m_currentAttackTargets.First().transform.position - transform.position).normalized;
-			direction.y = 0; // …•½•ûŒü‚Ì‚İ‚ğl—¶
-
-			if (direction != Vector3.zero)
-			{
-				Quaternion targetRotation = Quaternion.LookRotation(direction);
-				transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, m_rotationSpeed); // m_rotationSpeed‚ğ’¼Úg—p
 			}
 		}
 	}
