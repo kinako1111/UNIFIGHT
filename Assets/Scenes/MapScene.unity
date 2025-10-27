@@ -10806,6 +10806,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1519272466}
+  - component: {fileID: 1519272467}
   m_Layer: 0
   m_Name: EnemyGenerator
   m_TagString: Untagged
@@ -10822,12 +10823,33 @@ Transform:
   m_GameObject: {fileID: 1519272465}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.7937865, y: -36.64172, z: 3.6615162}
+  m_LocalPosition: {x: 0, y: 0, z: 21.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1519272467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1519272465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cc05e3c497abce41921f74abbec9968, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waves:
+  - enemyCount: 5
+    spawnInterval: 5
+    isBossWave: 0
+  m_enemyList:
+  - {fileID: 4454989674527170157, guid: e1b0e000caab2814aafda2d35f55153b, type: 3}
+  - {fileID: 3710226344988404384, guid: 56f61502666c16042b993ca3380303e2, type: 3}
+  - {fileID: 4852412419577616934, guid: 77c018eb9451b5648a1c93d752791c4d, type: 3}
+  m_factoryPos: {fileID: 1519272466}
 --- !u!1001 &1523836029
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15897,6 +15919,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Tower
+      objectReference: {fileID: 0}
+    - target: {fileID: 6171298066216231544, guid: 1b09586ba3ae5ae4c9faa943ab317916,
+        type: 3}
+      propertyPath: m_TagString
+      value: Target
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
