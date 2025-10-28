@@ -19,6 +19,9 @@ public class AutoAttack : MonoBehaviour
 	[Header("一度に攻撃できる数"), SerializeField]
 	int m_simultaneous = 1;
 
+	[Header("攻撃一ヒット当たりのダメージ倍率　※％で"), SerializeField]
+	int m_magnification;
+
 	[Header("攻撃速度"), SerializeField]
 	float m_autoAttackInterval = 0.75f;
 
@@ -154,8 +157,8 @@ public class AutoAttack : MonoBehaviour
 				Status status;
 				if (m_target.First().TryGetComponent(out status))
 				{
-					// ダメージ付与
-					status.Damage(m_status.GetAttackPower());
+					// ダメージ付与			※ここの値は１００分率
+					status.Damage(m_status.GetAttackPower() *m_magnification /100);
 
 					// ダメージ表示
 					Debug.Log(m_status.GetAttackPower() + "ダメージを与えた！");
@@ -182,7 +185,7 @@ public class AutoAttack : MonoBehaviour
 	}
 
 
-	public void FarAttack()
+	public void FarBulletAttack()
 	{
 		//遠距離
 		foreach (GameObject target in m_target)

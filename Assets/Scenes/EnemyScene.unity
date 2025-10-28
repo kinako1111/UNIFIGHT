@@ -1335,6 +1335,7 @@ MonoBehaviour:
   m_rangeLooks: {fileID: 2020007384}
   m_autoAttackCount: 1
   m_simultaneous: 1
+  m_magnification: 0
   m_autoAttackInterval: 3
   m_bulletPrefab: []
   m_generateTransform: {fileID: 0}
@@ -1983,6 +1984,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Constraints
       value: 112
+      objectReference: {fileID: 0}
+    - target: {fileID: 8310248811227392308, guid: 13177cf185bec9b4ab739f5f902fcd39,
+        type: 3}
+      propertyPath: m_magnification
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8310248811227392308, guid: 13177cf185bec9b4ab739f5f902fcd39,
         type: 3}
