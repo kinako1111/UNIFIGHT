@@ -6,7 +6,7 @@ public class TakeDamage : MonoBehaviour
 
 	public void ShowDamageUI(int damage)
 	{
-		var position = transform.position + Vector3.up * 3f;
+		var position = transform.position + Vector3.up * 5f;
 		var obj = Instantiate(damageUIPrefab, position, Quaternion.identity);
 		obj.transform.LookAt(Camera.main.transform);
 

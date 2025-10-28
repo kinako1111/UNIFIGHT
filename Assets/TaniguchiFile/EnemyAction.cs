@@ -68,6 +68,7 @@ public class EnemyAction: MonoBehaviour
 
 	private void FixedUpdate()
 	{
+
 		if (status.GetDeath())
 		{
 			m_navmeshAgent.isStopped = true;
@@ -117,7 +118,7 @@ public class EnemyAction: MonoBehaviour
 			isMove = true;
 
 			//攻撃中またはダメージアクション中は移動禁止
-			if(!isAttack || !m_damageAction)
+			if(!isAttack && !m_damageAction)
 			{
 				m_navmeshAgent.isStopped = false;
 				m_navmeshAgent.SetDestination(m_targetList.Find(target => target.tag == "Target").transform.position);
@@ -138,8 +139,6 @@ public class EnemyAction: MonoBehaviour
 		Debug.Log("Golem attack started!");
 		// エフェクト生成やSE再生などの処理
 		GameObject obj = Instantiate(m_effectList.First(), m_attackPos.First());
-
-
 	}
 
 	public void AttackEnd()
@@ -156,6 +155,7 @@ public class EnemyAction: MonoBehaviour
 	public void Damagefirst()
 	{
 		m_damageAction = true;
+		m_navmeshAgent.isStopped = true;
 	}
 
 	public void DamageEnd()

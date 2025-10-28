@@ -20,6 +20,7 @@ public class Status : MonoBehaviour
 	[SerializeField] Unit unit;
 	[SerializeField] Name m_name;
 	[SerializeField] Animator m_animator;
+	[Header("ダメージモーション開始までのダメージのカウント"),SerializeField]int KnockBackDamage;
 
 	UnitData unitData;
 
@@ -40,6 +41,7 @@ public class Status : MonoBehaviour
 	int maxHp;
 	string speedText;
 	bool isDeath;
+	int m_knockBackDamageCount;
 
 	void Start()
 	{
@@ -63,11 +65,19 @@ public class Status : MonoBehaviour
 		maxHp = unitData.Hp;
 		speedText = unitData.Speedtext;
 		isDeath = false;
+		m_knockBackDamageCount = KnockBackDamage;
 	}
 
 	void FixedUpdate()
 	{
 		// 必要に応じて物理更新処理を追加
+
+		//ノックバックまでのカウントが０の時
+		if(m_knockBackDamageCount < 0)
+		{
+			m_animator.SetTrigger("Damage");
+			m_knockBackDamageCount = KnockBackDamage;
+		}
 	}
 
 	// ステータス取得メソッド
@@ -97,6 +107,7 @@ public class Status : MonoBehaviour
 			return;
 		}
 		hp -= damage;
+		m_knockBackDamageCount -= damage;
 
 		// DamageUI表示処理（TakeDamageと連携）
 		var takeDamage = GetComponent<TakeDamage>();

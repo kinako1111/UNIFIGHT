@@ -1,0 +1,46 @@
+diff a/Assets/Shigekawa/UI/DamageUI.cs b/Assets/Shigekawa/UI/DamageUI.cs	(rejected hunks)
+@@ -6,20 +6,42 @@
+ 	private TextMeshProUGUI damageText;
+ 	private float fadeOutSpeed = 1f;
+ 	[SerializeField] private float moveSpeed = 0.4f;
++	[SerializeField] private float randomOffsetRange = 0.5f; // X�EY�����̃����_���͈�
+ 
+-	public void SetDamage(int damage)
++	void Awake()
+ 	{
++		// TextMeshProUGUI ��擾
+ 		damageText = GetComponentInChildren<TextMeshProUGUI>();
+-		damageText.text = damage.ToString();
++	}
++
++	public void SetDamage(int damage)
++	{
++		if (damageText != null)
++		{
++			damageText.text = damage.ToString();
++		}
++
++		// �����_���ȃI�t�Z�b�g�iX:���E, Y:�㉺�j��Z������0
++		float offsetX = Random.Range(-randomOffsetRange, randomOffsetRange);
++		float offsetY = Random.Range(-randomOffsetRange, randomOffsetRange);
++
++		transform.position += new Vector3(offsetX, offsetY, 0f);
+ 	}
+ 
+ 	void LateUpdate()
+ 	{
++		if (damageText == null) return;
++
++		// �J�����̕���������i�r���{�[�h�j
+ 		transform.rotation = Camera.main.transform.rotation;
++
++		// ��Ɉړ�
+ 		transform.position += Vector3.up * moveSpeed * Time.deltaTime;
+ 
++		// ���X�ɓ����ɂ���
+ 		damageText.color = Color.Lerp(damageText.color, new Color(1f, 0f, 0f, 0f), fadeOutSpeed * Time.deltaTime);
+ 
++		// �����ɂȂ�����폜
+ 		if (damageText.color.a <= 0.1f)
+ 		{
+ 			Destroy(gameObject);
