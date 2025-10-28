@@ -319,7 +319,7 @@ GameObject:
   - component: {fileID: 6468613956760743202}
   m_Layer: 8
   m_Name: Asalt
-  m_TagString: Player
+  m_TagString: Target
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -436,6 +436,7 @@ MonoBehaviour:
   m_rangeLooks: {fileID: 6848090803721606838}
   m_autoAttackCount: 1
   m_simultaneous: 1
+  m_magnification: 0
   m_autoAttackInterval: 0.01
   m_bulletPrefab: []
   m_generateTransform: {fileID: 0}

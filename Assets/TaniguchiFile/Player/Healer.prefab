@@ -372,7 +372,7 @@ GameObject:
   - component: {fileID: 6925803759355626465}
   m_Layer: 8
   m_Name: Healer
-  m_TagString: Player
+  m_TagString: Target
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -459,6 +459,7 @@ MonoBehaviour:
   m_rangeLooks: {fileID: 6837074242846898798}
   m_autoAttackCount: 1
   m_simultaneous: 1
+  m_magnification: 0
   m_autoAttackInterval: 0.7
   m_bulletPrefab:
   - {fileID: 297142082120475545, guid: 59e00b600107faf4985b13c91cc6fa68, type: 3}

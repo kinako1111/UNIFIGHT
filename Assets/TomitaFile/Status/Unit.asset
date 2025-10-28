@@ -91,7 +91,7 @@ MonoBehaviour:
     range: "\u77ED\u8DDD\u96E2"
     speedtext: "\u4F4E\u901F"
   - id: 101
-    character: mushroom
+    character: Mushroom
     hp: 10
     attackpower: 2
     magnification: 1
@@ -104,6 +104,21 @@ MonoBehaviour:
     skill2duration: 0
     urthduration: 0
     range: "\u666E\u901A"
+    speedtext: "\u306A\u3057"
+  - id: 102
+    character: Cactus
+    hp: 10
+    attackpower: 1
+    magnification: 1
+    speed: 2
+    passive: 0
+    skill1cooltime: 0
+    skill2cooltime: 0
+    urthcooltime: 0
+    skill1duration: 0
+    skill2duration: 0
+    urthduration: 0
+    range: "\u306A\u3057"
     speedtext: "\u306A\u3057"
   - id: 0
     character: tower

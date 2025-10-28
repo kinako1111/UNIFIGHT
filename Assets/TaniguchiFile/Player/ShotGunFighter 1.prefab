@@ -1298,7 +1298,7 @@ GameObject:
   - component: {fileID: 12085267868044841}
   m_Layer: 8
   m_Name: ShotGunFighter 1
-  m_TagString: Player
+  m_TagString: Target
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1387,6 +1387,7 @@ MonoBehaviour:
   m_rangeLooks: {fileID: 7388132409882130741}
   m_autoAttackCount: 5
   m_simultaneous: 1
+  m_magnification: 0
   m_autoAttackInterval: 0.75
   m_bulletPrefab: []
   m_generateTransform: {fileID: 5393925004318717065}

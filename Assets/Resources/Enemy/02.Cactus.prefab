@@ -207,14 +207,14 @@ GameObject:
   m_Component:
   - component: {fileID: 2125801955449618529}
   - component: {fileID: 7751105097878343034}
+  - component: {fileID: 8750000088715564527}
   - component: {fileID: 7508004888651655941}
   - component: {fileID: 2856161409072201720}
   - component: {fileID: 2769583846777781342}
   - component: {fileID: 952638766391090953}
-  - component: {fileID: 8750000088715564527}
   m_Layer: 0
   m_Name: 02.Cactus
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -257,6 +257,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8750000088715564527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4852412419577616934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34ee6c2f8bd73ad4b82d3a3809742258, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_status: {fileID: 7508004888651655941}
+  m_waveEnemyHp: 2
+  m_waveEnemyAttack: 1
+  m_destroyEnemy: 5
 --- !u!114 &7508004888651655941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -340,21 +356,6 @@ CapsuleCollider:
   m_Height: 1.5
   m_Direction: 1
   m_Center: {x: 0, y: 0.5, z: 0}
---- !u!114 &8750000088715564527
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4852412419577616934}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34ee6c2f8bd73ad4b82d3a3809742258, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_status: {fileID: 7508004888651655941}
-  m_waveEnemyHp: 2
-  m_waveEnemyAttack: 1
 --- !u!1 &5008528901627027040
 GameObject:
   m_ObjectHideFlags: 0

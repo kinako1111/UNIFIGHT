@@ -11,10 +11,21 @@ public class EnemyStatus : MonoBehaviour
 	[SerializeField] float m_waveEnemyHp;
 	[SerializeField] float m_waveEnemyAttack;
 
+	[SerializeField] float m_destroyEnemy; // 仮
+
 	public void ScaleSatus(int waveNumber)
 	{
 		// ウェーブが上がるごとにステータスアップ
 		float hp = m_status.GetHp() + waveNumber * m_waveEnemyHp;
 		float attack = m_status.GetAttackPower() + waveNumber * m_waveEnemyAttack;
+	}
+
+	private void FixedUpdate()
+	{
+		m_destroyEnemy -= Time.deltaTime;
+		if (m_destroyEnemy <= 0)
+		{
+			Destroy(gameObject);
+		}
 	}
 }
