@@ -55,15 +55,15 @@ public class EnemyFactory : MonoBehaviour
 	{
 		m_isSpawning = true;
 
-		if(wave.isBossWave)
+		if (wave.isBossWave)
 		{
 			CreateEnemy((int)EnemyName.Golem, m_factoryPos);
 		}
 		else
 		{
-			for(int i = 0; i <= wave.enemyCount; i++)
+			for (int i = 0; i <= wave.enemyCount; i++)
 			{
-				GameObject enemy = CreateEnemy(Random.Range(1,3), m_factoryPos);
+				GameObject enemy = CreateEnemy(Random.Range(1, 3), m_factoryPos);
 				enemy.GetComponent<EnemyStatus>().ScaleSatus(m_currentWave + 1);
 				yield return new WaitForSeconds(wave.spawnInterval);
 			}
