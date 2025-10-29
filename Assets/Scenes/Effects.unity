@@ -1070,6 +1070,7 @@ MonoBehaviour:
   unit: {fileID: 11400000, guid: c5ab73f7af931fd468029bc68a544b98, type: 2}
   m_name: 0
   m_animator: {fileID: 1697177683}
+  KnockBackDamage: 0
 --- !u!114 &1697177681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1591,7 +1592,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 2df1ea06c14f28748917984473e6adc7, type: 2}
+      objectReference: {fileID: 9100000, guid: 847ab56464f8a13489b5a4b5591ac416, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
