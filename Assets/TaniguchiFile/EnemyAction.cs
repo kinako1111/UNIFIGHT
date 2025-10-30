@@ -90,7 +90,6 @@ public class EnemyAction: MonoBehaviour
 			return;
 		}
 
-		m_navmeshAgent.speed = status.GetSpeed();
 		m_attackCoolTime = status.GetSkill1CoolTime();
 		
 
