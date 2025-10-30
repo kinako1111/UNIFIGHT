@@ -19,7 +19,7 @@ public class EnemyStatus : MonoBehaviour
 		float hp = m_status.GetHp() + waveNumber * m_waveEnemyHp;
 		float attack = m_status.GetAttackPower() + waveNumber * m_waveEnemyAttack;
 	}
-
+	/*
 	private void FixedUpdate()
 	{
 		m_destroyEnemy -= Time.deltaTime;
@@ -28,4 +28,5 @@ public class EnemyStatus : MonoBehaviour
 			Destroy(gameObject);
 		}
 	}
+	*/
 }
