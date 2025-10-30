@@ -8,6 +8,12 @@ using UnityEngine.AI;
 
 public class EnemyAction: MonoBehaviour
 {
+	enum AttackList
+	{
+		PhysicalAttack,
+	}
+
+
 	[SerializeField]
 	Status status;
 
@@ -21,7 +27,7 @@ public class EnemyAction: MonoBehaviour
 	List<Transform> m_attackPos = new();
 
 	[Header("サウンドのリスト"),SerializeField]
-	List<GameObject> m_soundList = new();
+	List<AudioClip> m_soundList = new();
 
 	[Header("敵の速度"), SerializeField]
 	float m_speed;
@@ -31,6 +37,9 @@ public class EnemyAction: MonoBehaviour
 
 	[Header("自身のコライダー"), SerializeField]
 	Collider m_collider;
+
+	[Header("攻撃のコライダー"),SerializeField]
+	List<Collider> m_colliderList = new();
 
 	[Header("ノックバックするダメージ"), SerializeField]
 	int KnockBackDamage;
@@ -138,7 +147,26 @@ public class EnemyAction: MonoBehaviour
 	{
 		Debug.Log("Golem attack started!");
 		// エフェクト生成やSE再生などの処理
-		GameObject obj = Instantiate(m_effectList.First(), m_attackPos.First());
+
+		//攻撃のコライダーを追加
+		m_colliderList[(int)AttackList.PhysicalAttack].enabled = true;
+
+		//当たった位置でエフェクトの発生
+		if (m_effectList.Count() != 0)
+		{
+			Instantiate(m_effectList[(int)AttackList.PhysicalAttack], m_attackPos[(int)AttackList.PhysicalAttack].transform);
+		}
+
+		if (m_soundList.Count() != 0)
+		{
+			//SE生成
+			SoundEffect.Play3D(m_soundList[(int)AttackList.PhysicalAttack], m_attackPos[(int)AttackList.PhysicalAttack].transform.position);
+		}
+	}
+
+	public void AttackHitEnd()
+	{
+		m_colliderList[(int)AttackList.PhysicalAttack].enabled = false;
 	}
 
 	public void AttackEnd()
