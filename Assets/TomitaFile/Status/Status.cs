@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor.Build;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Status : MonoBehaviour
 {
@@ -12,6 +14,10 @@ public class Status : MonoBehaviour
 		C,
 		D,
 		Golem,
+		Necro,
+		Skelton,
+		Mushroom,
+		Cactus,
 		Tower,
 		Turret,
 		Length,
@@ -66,6 +72,8 @@ public class Status : MonoBehaviour
 		speedText = unitData.Speedtext;
 		isDeath = false;
 		m_knockBackDamageCount = KnockBackDamage;
+
+		
 	}
 
 	void FixedUpdate()
@@ -73,7 +81,7 @@ public class Status : MonoBehaviour
 		// 必要に応じて物理更新処理を追加
 
 		//ノックバックまでのカウントが０の時
-		if(m_knockBackDamageCount < 0)
+		if (m_knockBackDamageCount < 0)
 		{
 			m_animator.SetTrigger("Damage");
 			m_knockBackDamageCount = KnockBackDamage;
@@ -104,9 +112,10 @@ public class Status : MonoBehaviour
 		//死体蹴りはしない
 		if(isDeath)
 		{
-			return;
+			
 		}
 		hp -= damage;
+		Debug.Log(damage);
 		m_knockBackDamageCount -= damage;
 
 		// DamageUI表示処理（TakeDamageと連携）
@@ -121,8 +130,10 @@ public class Status : MonoBehaviour
 			hp = 0;
 			Debug.Log($"{character} は倒された！");
 			m_animator.SetTrigger("Death");
+			Destroy(gameObject, 2f);
 			// 死亡処理などを追加可能
 			isDeath = true;
+			Debug.Log(isDeath);
 		}
 	}
 

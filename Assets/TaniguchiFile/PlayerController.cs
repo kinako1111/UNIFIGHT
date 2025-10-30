@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
+//using UnityEngine.UIElements;
 using static UnityEngine.EventSystems.StandaloneInputModule;
 
 public class PlayerController : MonoBehaviour
@@ -15,13 +17,16 @@ public class PlayerController : MonoBehaviour
 	Vector3 revisionRotation;
 
 	Animator m_animator;
-	Status m_status;
+	[SerializeField] Status m_status;
 	Vector2 m_inputMove;
 
 	PlayerInput m_playerInput;
 	Rigidbody m_rigidbody;
 	Camera m_targetCamera;
 	AutoAttack m_autoAttack;
+
+	[SerializeField] Slider m_slider;
+	[SerializeField] TextMeshProUGUI m_hptext;
 
 	private void Awake()
 	{
@@ -59,6 +64,11 @@ public class PlayerController : MonoBehaviour
 
 	private void FixedUpdate()
 	{
+		m_slider.maxValue = m_status.GetMaxHp();
+		m_slider.value = m_status.GetHp();
+		m_hptext.text = m_status.GetHp().ToString() + " / " + m_status.GetMaxHp().ToString();
+
+
 		// カメラの向き（角度[deg]）取得
 		var cameraAngleY = m_targetCamera.transform.eulerAngles.y;
 
