@@ -11391,7 +11391,7 @@ MonoBehaviour:
   - enemyCount: 1
     spawnInterval: 3
     isBossWave: 1
-  m_waveManager: {fileID: 1712232732}
+  m_waveManager: {fileID: 0}
   m_enemyList: []
   m_factoryPos:
   - {fileID: 110590161}
@@ -13193,7 +13193,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1712232733}
-  - component: {fileID: 1712232732}
+  - component: {fileID: 1712232734}
   m_Layer: 0
   m_Name: WaveManager
   m_TagString: Untagged
@@ -13201,20 +13201,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &1712232732
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1712232731}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fa902e74b9ebfa4abfd33ee5b1bcb7a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_waveText: {fileID: 1301942672}
-  m_textActive: {fileID: 1712232731}
 --- !u!4 &1712232733
 Transform:
   m_ObjectHideFlags: 0
@@ -13231,6 +13217,20 @@ Transform:
   - {fileID: 547825054}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1712232734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1712232731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fa902e74b9ebfa4abfd33ee5b1bcb7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_waveText: {fileID: 1301942672}
+  m_textActive: {fileID: 1712232731}
 --- !u!4 &1712989018 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 620605901897258654, guid: caaf60fa388f3a044963957c6c86d353,
