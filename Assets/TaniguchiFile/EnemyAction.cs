@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using TMPro;
+
 //using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class EnemyAction: MonoBehaviour
 {
@@ -60,6 +63,8 @@ public class EnemyAction: MonoBehaviour
 	bool isAttack = false;
 	bool m_damageAction = false;
 
+	[SerializeField] Slider m_slider;
+
 
 	private void Awake()
 	{
@@ -72,11 +77,13 @@ public class EnemyAction: MonoBehaviour
 
 	private void Start()
 	{
-
+		m_slider = GetComponentInChildren<Slider>();
 	}
 
 	private void FixedUpdate()
 	{
+		m_slider.maxValue = status.GetMaxHp();
+		m_slider.value = status.GetHp();
 
 		if (status.GetDeath())
 		{

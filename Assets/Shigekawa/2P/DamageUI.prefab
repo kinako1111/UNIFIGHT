@@ -263,8 +263,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ef5ef81f63629041a2c7442af4b13a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_status: {fileID: 8727173946308431163}
   moveSpeed: 0.4
+  randomOffsetRange: 0.5
 --- !u!114 &8727173946308431163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -280,3 +280,4 @@ MonoBehaviour:
   unit: {fileID: 11400000, guid: c5ab73f7af931fd468029bc68a544b98, type: 2}
   m_name: 0
   m_animator: {fileID: 0}
+  KnockBackDamage: 0

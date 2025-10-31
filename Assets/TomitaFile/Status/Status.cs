@@ -112,7 +112,7 @@ public class Status : MonoBehaviour
 		//€‘ÌR‚è‚Í‚µ‚È‚¢
 		if(isDeath)
 		{
-			
+			return;
 		}
 		hp -= damage;
 		Debug.Log(damage);
@@ -133,7 +133,7 @@ public class Status : MonoBehaviour
 			Destroy(gameObject, 2f);
 			// €–Sˆ—‚È‚Ç‚ğ’Ç‰Á‰Â”\
 			isDeath = true;
-			Debug.Log(isDeath);
+			Debug.Log("aa");
 		}
 	}
 

@@ -8763,7 +8763,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameData: {fileID: 11400000, guid: 82f541923975c434994039f849c06b6a, type: 2}
   characterPrefabs:
-  - {fileID: 2214278176618037557, guid: 13177cf185bec9b4ab739f5f902fcd39, type: 3}
+  - {fileID: 2287190611394248375, guid: ffe702d9d280bd7439f4f93ede098c79, type: 3}
   - {fileID: 4026575479493717847, guid: 6b66f0db2d412f04c8d390641a94853e, type: 3}
   - {fileID: 1947077543429934961, guid: 2f780cf9c0fb29d418c544aae85c1d9f, type: 3}
   - {fileID: 9134497885762573885, guid: 9c68c709ca32c624a90d664143fb5023, type: 3}
@@ -11382,8 +11382,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waves:
-  - enemyCount: 20
-    spawnInterval: 1
+  - enemyCount: 10
+    spawnInterval: 3
     isBossWave: 0
   - enemyCount: 5
     spawnInterval: 3
@@ -11391,7 +11391,7 @@ MonoBehaviour:
   - enemyCount: 1
     spawnInterval: 3
     isBossWave: 1
-  m_waveManager: {fileID: 0}
+  m_waveManager: {fileID: 1712232734}
   m_enemyList: []
   m_factoryPos:
   - {fileID: 110590161}
@@ -16732,6 +16732,46 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 482282303905911166, guid: 511a475c0d2b5594c93e66da97ead673,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 598743614407673119, guid: 511a475c0d2b5594c93e66da97ead673,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 710267352196412406, guid: 511a475c0d2b5594c93e66da97ead673,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1054806923289805244, guid: 511a475c0d2b5594c93e66da97ead673,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 2739111042566877593, guid: 511a475c0d2b5594c93e66da97ead673,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 2804763597696718526, guid: 511a475c0d2b5594c93e66da97ead673,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 2926770064822499729, guid: 511a475c0d2b5594c93e66da97ead673,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061542013665156106, guid: 511a475c0d2b5594c93e66da97ead673,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 4851736289820575161, guid: 511a475c0d2b5594c93e66da97ead673,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -16786,6 +16826,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Tower
+      objectReference: {fileID: 0}
+    - target: {fileID: 5196877853652737795, guid: 511a475c0d2b5594c93e66da97ead673,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 8498540865834665643, guid: 511a475c0d2b5594c93e66da97ead673,
         type: 3}
