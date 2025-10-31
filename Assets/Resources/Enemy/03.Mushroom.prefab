@@ -1005,7 +1005,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   status: {fileID: 4267027972489121895}
   m_navmeshAgent: {fileID: 8109525798912958164}
-  m_effectList: []
+  m_effectList:
+  - {fileID: 3918758554841386925, guid: b41a128fa6be74e4ba984d8c9b81fd33, type: 3}
   m_attackPos:
   - {fileID: 2603584871589019242}
   m_soundList: []
