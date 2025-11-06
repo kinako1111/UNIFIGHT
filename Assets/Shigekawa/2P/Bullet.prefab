@@ -13,8 +13,7 @@ GameObject:
   - component: {fileID: 4064020846562501648}
   - component: {fileID: 3031189907453723006}
   - component: {fileID: 4215491462937906946}
-  - component: {fileID: 1098642820412544507}
-  - component: {fileID: 5119031790150001571}
+  - component: {fileID: 8415620405867094346}
   m_Layer: 0
   m_Name: Bullet
   m_TagString: Bullet
@@ -135,7 +134,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &1098642820412544507
+--- !u!114 &8415620405867094346
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -147,18 +146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7400f5e3fd3fb74d8a1fd640726d7d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifeTime: 3
---- !u!114 &5119031790150001571
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8175064702610430627}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ffcaf1f906ef5641aabf711c7b43efb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_speed: 10
-  m_trackingStrength: 5
+  lifeTime: 10000
+  attackPower: 10
+  trackingSpeed: 10
+  trackingStrength: 5
