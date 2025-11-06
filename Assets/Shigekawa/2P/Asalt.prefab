@@ -954,6 +954,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_speed: 5
   revisionRotation: {x: 0, y: 90, z: 0}
+  m_status: {fileID: 2037961320255511379}
 --- !u!114 &3168835886751668177
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -968,10 +969,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_autoAttackRange: 7.5
   m_rangeLooks: {fileID: 9075492342375806658}
-  m_autoAttackCount: 1
+  m_autoAttackCount: 10
   m_simultaneous: 1
-  m_magnification: 12
-  m_autoAttackInterval: 0.01
+  m_magnification: 1000
+  m_autoAttackInterval: 0.1
   m_bulletPrefab: []
   m_generateTransform: {fileID: 0}
   m_effect: {fileID: 0}

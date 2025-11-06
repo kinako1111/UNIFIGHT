@@ -8,6 +8,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
+//using UnityEngine.UIElements;
 
 public class EnemyAction: MonoBehaviour
 {
@@ -17,8 +18,8 @@ public class EnemyAction: MonoBehaviour
 	}
 
 
-	[SerializeField]
-	Status status;
+	
+	[SerializeField] Status status;
 
 	[Header("Navmesh"), SerializeField]
 	NavMeshAgent m_navmeshAgent;
@@ -63,7 +64,10 @@ public class EnemyAction: MonoBehaviour
 	bool isAttack = false;
 	bool m_damageAction = false;
 
+	bool isBossWave = false;
+
 	[SerializeField] Slider m_slider;
+	[SerializeField] EnemyFactory m_factory;
 
 
 	private void Awake()
@@ -72,12 +76,6 @@ public class EnemyAction: MonoBehaviour
 		m_playerList.AddRange(GameObject.FindGameObjectsWithTag("Player"));
 		m_targetList.AddRange(GameObject.FindGameObjectsWithTag("Target"));
 		m_targetList.AddRange(GameObject.FindGameObjectsWithTag("Player"));
-
-	}
-
-	private void Start()
-	{
-		m_slider = GetComponentInChildren<Slider>();
 	}
 
 	private void FixedUpdate()
@@ -195,5 +193,10 @@ public class EnemyAction: MonoBehaviour
 	public void DamageEnd()
 	{
 		m_damageAction = false;
+	}
+
+	public void SetSlider(Slider slider)
+	{
+		m_slider = slider;
 	}
 }

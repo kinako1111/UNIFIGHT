@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class EnemyFactory : MonoBehaviour
 {
-	private enum EnemyName
+	public enum EnemyName
 	{
 		Golem,
 		Mushroom,
@@ -21,6 +23,9 @@ public class EnemyFactory : MonoBehaviour
 
 	[SerializeField] Wave[] waves;
 	[SerializeField] WaveManager m_waveManager;
+	[SerializeField] GameObject m_bossSlider;
+	[SerializeField] Canvas m_canvas;
+
 	private int m_currentWave = 0;
 	private bool m_isSpawning = false;
 
@@ -31,6 +36,9 @@ public class EnemyFactory : MonoBehaviour
 	Transform[] m_factoryPos;
 
 	[SerializeField] float m_waveDelay = 5f;
+	[SerializeField] bool m_bossWave = false;
+
+	private GameObject bossSlider;
 
 	private void Awake()
 	{
@@ -57,6 +65,13 @@ public class EnemyFactory : MonoBehaviour
 		{
 			StartCoroutine(WaitAndStartNextWave());
 		}
+
+		if(m_bossWave && GameObject.FindGameObjectsWithTag("Enemy").Length <= 0)
+		{
+			m_bossWave = false;
+			Destroy(bossSlider);
+		}
+		
 	}
 
 	// ウェーブ
@@ -81,7 +96,13 @@ public class EnemyFactory : MonoBehaviour
 		// もしボスのウェーブだったら
 		if (wave.isBossWave)
 		{
-			CreateEnemy((int)EnemyName.Golem, m_factoryPos[Random.Range(0, m_factoryPos.Length)]);
+			GameObject boss = CreateEnemy((int)EnemyName.Golem, m_factoryPos[Random.Range(0, m_factoryPos.Length)]);
+			
+		    bossSlider = Instantiate(m_bossSlider, m_canvas.transform);
+			Slider slider = bossSlider.GetComponent<Slider>();
+			boss.GetComponent<EnemyAction>().SetSlider(slider);
+
+			m_bossWave = true;
 		}
 		else
 		{

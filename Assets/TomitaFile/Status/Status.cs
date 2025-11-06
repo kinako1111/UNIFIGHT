@@ -133,7 +133,6 @@ public class Status : MonoBehaviour
 			Destroy(gameObject, 2f);
 			// €–Sˆ—‚È‚Ç‚ğ’Ç‰Á‰Â”\
 			isDeath = true;
-			Debug.Log("aa");
 		}
 	}
 
