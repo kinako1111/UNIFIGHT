@@ -37,6 +37,7 @@ public class Homing : MonoBehaviour
 		{
 			Debug.Log("ターゲットがいません");
 			Destroy(gameObject);
+			return;
 		}
 
 		//追跡処理

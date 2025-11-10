@@ -25,9 +25,9 @@ public class Status : MonoBehaviour
 
 	[SerializeField] Unit unit;
 	[SerializeField] Name m_name;
-	[SerializeField] Animator m_animator;
 	[Header("ダメージモーション開始までのダメージのカウント"),SerializeField]int KnockBackDamage;
 
+	Animator m_animator;
 	UnitData unitData;
 
 	// ステータス情報
@@ -48,6 +48,11 @@ public class Status : MonoBehaviour
 	string speedText;
 	bool isDeath;
 	int m_knockBackDamageCount;
+
+	private void Awake()
+	{
+		m_animator = GetComponent<Animator>();
+	}
 
 	void Start()
 	{
