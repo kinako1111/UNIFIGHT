@@ -26,6 +26,7 @@ public class Status : MonoBehaviour
 	[SerializeField] Unit unit;
 	[SerializeField] Name m_name;
 	[Header("ダメージモーション開始までのダメージのカウント"),SerializeField]int KnockBackDamage;
+	[SerializeField] Collider m_collider;
 
 	Animator m_animator;
 	UnitData unitData;
@@ -52,6 +53,7 @@ public class Status : MonoBehaviour
 	private void Awake()
 	{
 		m_animator = GetComponent<Animator>();
+		m_collider = GetComponent<Collider>();
 	}
 
 	void Start()
@@ -78,7 +80,10 @@ public class Status : MonoBehaviour
 		isDeath = false;
 		m_knockBackDamageCount = KnockBackDamage;
 
-		
+		if(m_collider == null)
+		{
+			m_collider = gameObject.AddComponent<Collider>();
+		}
 	}
 
 	void FixedUpdate()
@@ -135,10 +140,16 @@ public class Status : MonoBehaviour
 			hp = 0;
 			Debug.Log($"{character} は倒された！");
 			m_animator.SetTrigger("Death");
-			Destroy(gameObject);
+			//Destroy(gameObject);
 			// 死亡処理などを追加可能
 			isDeath = true;
 		}
+	}
+
+	void DeathAnimation()
+	{
+		m_collider.enabled = false;
+		Destroy(gameObject, 2f);
 	}
 
 	// 回復処理
