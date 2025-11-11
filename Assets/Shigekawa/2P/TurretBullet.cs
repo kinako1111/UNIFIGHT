@@ -3,7 +3,7 @@ using UnityEngine;
 public class TurretBullet : MonoBehaviour
 {
 	[Header("弾が自動で消滅するまでの時間 (秒)"), SerializeField]
-	private float lifeTime = 3f; 
+	private float lifeTime = 3f;
 	[Header("ターゲットに与えるダメージ量"), SerializeField]
 	int attackPower = 10;
 
@@ -12,7 +12,7 @@ public class TurretBullet : MonoBehaviour
 	[Header("ターゲットに向かってどれくらいの速さで向きを変えるか"), SerializeField]
 	float trackingStrength = 5f;
 
-	private GameObject m_target; 
+	private GameObject m_target;
 	private Rigidbody rb;
 
 	void Awake()
@@ -38,7 +38,7 @@ public class TurretBullet : MonoBehaviour
 		trackingSpeed = speed;
 		trackingStrength = strength;
 		attackPower = power;
-		this.lifeTime = bulletLifeTime; 
+		this.lifeTime = bulletLifeTime;
 		rb.velocity = Vector3.zero;
 	}
 
@@ -51,8 +51,9 @@ public class TurretBullet : MonoBehaviour
 			return;
 		}
 
-		if (m_target == null || !m_target.activeSelf)
+		if (m_target == null || m_target.GetComponent<Status>().GetHp() <= 0) 
 		{
+			Debug.Log("ターゲットがいません、または非アクティブです。弾を破棄します。");
 			Destroy(gameObject);
 			return;
 		}
@@ -75,7 +76,7 @@ public class TurretBullet : MonoBehaviour
 			}
 			Destroy(gameObject);
 		}
-		else if (other.CompareTag("Enemy"))
+		else if (other.CompareTag("Enemy")) // "Enemy"タグを持つオブジェクトにもダメージを与える場合
 		{
 			Status enemyStatus;
 			if (other.gameObject.TryGetComponent(out enemyStatus))
@@ -84,7 +85,7 @@ public class TurretBullet : MonoBehaviour
 			}
 			Destroy(gameObject);
 		}
-		else if (!other.isTrigger)
+		else if (!other.isTrigger) // ターゲット以外の非トリガーコライダーに当たった場合
 		{
 			Destroy(gameObject);
 		}

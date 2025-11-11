@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class SkillAttackSkill1 : MonoBehaviour
+public class AssaultSkill1: MonoBehaviour
 {
 	enum Type
 	{
