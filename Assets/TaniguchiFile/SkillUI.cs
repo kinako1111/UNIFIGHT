@@ -90,7 +90,7 @@ public class SkillUI : MonoBehaviour
 			m_isCooldown = true;
 			m_currentCooldown = m_skillCooldownTime;
 		}
-
+		m_animator.SetTrigger("Use");
 		m_approvalSkill = false;
 	}
 

@@ -11,5 +11,4 @@ public class SkillPoisonArea : MonoBehaviour
 	{
 		Instantiate(m_poisonArea,pos,Quaternion.identity);
 	}
-
 }

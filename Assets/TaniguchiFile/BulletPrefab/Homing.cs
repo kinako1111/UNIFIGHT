@@ -33,7 +33,7 @@ public class Homing : MonoBehaviour
 	void Update()
 	{
 		//ターゲットがいなくなった場合いらないので破棄
-		if (m_target == null) 
+		if (m_target == null || m_target.GetComponent<Status>().GetHp() <= 0) 
 		{
 			Debug.Log("ターゲットがいません");
 			Destroy(gameObject);

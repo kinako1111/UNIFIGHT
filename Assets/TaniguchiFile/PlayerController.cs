@@ -61,6 +61,7 @@ public class PlayerController : MonoBehaviour
 
 	private void FixedUpdate()
 	{
+		if (m_status.GetDeath()) return;
 		// カメラの向き（角度[deg]）取得
 		var cameraAngleY = m_targetCamera.transform.eulerAngles.y;
 
