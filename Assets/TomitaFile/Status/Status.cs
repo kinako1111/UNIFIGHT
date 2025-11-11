@@ -135,7 +135,7 @@ public class Status : MonoBehaviour
 			hp = 0;
 			Debug.Log($"{character} ‚Í“|‚³‚ê‚½I");
 			m_animator.SetTrigger("Death");
-			Destroy(gameObject, 2f);
+			Destroy(gameObject);
 			// €–Sˆ—‚È‚Ç‚ğ’Ç‰Á‰Â”\
 			isDeath = true;
 		}
