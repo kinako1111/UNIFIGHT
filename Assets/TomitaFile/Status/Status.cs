@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
-//using UnityEditor.Build;
+using TMPro; 
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,7 +24,7 @@ public class Status : MonoBehaviour
 
 	[SerializeField] Unit unit;
 	[SerializeField] Name m_name;
-	[Header("ダメージモーション開始までのダメージのカウント"),SerializeField]int KnockBackDamage;
+	[SerializeField] int KnockBackDamage;
 	[SerializeField] Collider m_collider;
 
 	Animator m_animator;
@@ -46,9 +45,12 @@ public class Status : MonoBehaviour
 	float urthDuration;
 	string range;
 	int maxHp;
-	string speedText;
 	bool isDeath;
 	int m_knockBackDamageCount;
+
+	// 速度変更効果を管理するための辞書 
+	private Dictionary<object, float> m_speedModifiers = new Dictionary<object, float>();
+
 
 	private void Awake()
 	{
@@ -66,7 +68,7 @@ public class Status : MonoBehaviour
 		hp = unitData.Hp;
 		attackPower = unitData.Attackpower;
 		magnitication = unitData.Magnification;
-		speed = unitData.Speed;
+		speed = unitData.Speed; 
 		passive = unitData.Passive;
 		skill1CoolTime = unitData.Skill1cooltime;
 		skill2CoolTime = unitData.Skill2cooltime;
@@ -76,21 +78,17 @@ public class Status : MonoBehaviour
 		urthDuration = unitData.Urthduration;
 		range = unitData.Range;
 		maxHp = unitData.Hp;
-		speedText = unitData.Speedtext;
 		isDeath = false;
 		m_knockBackDamageCount = KnockBackDamage;
 
-		if(m_collider == null)
+		if (m_collider == null)
 		{
-			m_collider = gameObject.AddComponent<Collider>();
+			m_collider = gameObject.AddComponent<Collider>(); 
 		}
 	}
 
 	void FixedUpdate()
 	{
-		// 必要に応じて物理更新処理を追加
-
-		//ノックバックまでのカウントが０の時
 		if (m_knockBackDamageCount < 0)
 		{
 			m_animator.SetTrigger("Damage");
@@ -98,12 +96,11 @@ public class Status : MonoBehaviour
 		}
 	}
 
-	// ステータス取得メソッド
+	// --- ステータス取得メソッド ---
 	public string GetCharacter() => character;
 	public int GetHp() => hp;
 	public int GetAttackPower() => attackPower;
 	public float GetMagnitication() => magnitication;
-	public float GetSpeed() => speed;
 	public float GetPassive() => passive;
 	public float GetSkill1CoolTime() => skill1CoolTime;
 	public float GetSkill2CoolTime() => skill2CoolTime;
@@ -113,14 +110,11 @@ public class Status : MonoBehaviour
 	public float GetUrthDuration() => urthDuration;
 	public int GetMaxHp() => maxHp;
 	public string GetRange() => range;
-	public string GetSpeedText() => speedText;
 	public bool GetDeath() => isDeath;
 
-	// ダメージ処理
 	public void Damage(int damage)
 	{
-		//死体蹴りはしない
-		if(isDeath)
+		if (isDeath)
 		{
 			return;
 		}
@@ -128,8 +122,7 @@ public class Status : MonoBehaviour
 		Debug.Log(damage);
 		m_knockBackDamageCount -= damage;
 
-		// DamageUI表示処理（TakeDamageと連携）
-		var takeDamage = GetComponent<TakeDamage>();
+		var takeDamage = GetComponent<TakeDamage>(); // TakeDamageが常に存在するとは限らない
 		if (takeDamage != null)
 		{
 			takeDamage.ShowDamageUI(damage);
@@ -140,15 +133,16 @@ public class Status : MonoBehaviour
 			hp = 0;
 			Debug.Log($"{character} は倒された！");
 			m_animator.SetTrigger("Death");
-			//Destroy(gameObject);
-			// 死亡処理などを追加可能
 			isDeath = true;
 		}
 	}
 
-	void DeathAnimation()
+	void DeathAnimation() // Animatorから呼び出される想定のメソッド
 	{
-		m_collider.enabled = false;
+		if (m_collider != null) // nullチェックを追加
+		{
+			m_collider.enabled = false;
+		}
 		Destroy(gameObject, 2f);
 	}
 
@@ -157,5 +151,45 @@ public class Status : MonoBehaviour
 	{
 		hp = Mathf.Min(hp + heal, maxHp);
 		m_animator.SetTrigger("Heal");
+	}
+
+	// 速度低下効果を適用するメソッド
+	public void ApplySpeedModifier(float multiplier, object source)
+	{
+		if (m_speedModifiers.ContainsKey(source))
+		{
+			m_speedModifiers[source] = multiplier;
+		}
+		else
+		{
+			m_speedModifiers.Add(source, multiplier);
+		}
+	}
+
+	// 速度低下効果を解除するメソッド
+	public void RemoveSpeedModifier(object source)
+	{
+		if (m_speedModifiers.ContainsKey(source))
+		{
+			m_speedModifiers.Remove(source);
+		}
+	}
+
+	// 現在の実際の移動速度（基本速度にすべての速度変更効果を適用したもの）を返すメソッド
+	public float GetActualSpeed()
+	{
+		float currentEffectiveMultiplier = 1.0f;
+
+		if (m_speedModifiers.Count > 0)
+		{
+			foreach (float multiplier in m_speedModifiers.Values)
+			{
+				if (multiplier < currentEffectiveMultiplier)
+				{
+					currentEffectiveMultiplier = multiplier;
+				}
+			}
+		}
+		return speed * currentEffectiveMultiplier; // 元の speed に計算された乗数をかけて返す
 	}
 }

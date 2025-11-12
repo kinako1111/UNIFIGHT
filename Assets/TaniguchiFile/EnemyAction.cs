@@ -10,31 +10,26 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 //using UnityEngine.UIElements;
 
-public class EnemyAction: MonoBehaviour
+public class EnemyAction : MonoBehaviour
 {
 	enum AttackList
 	{
 		PhysicalAttack,
 	}
 
-
-	
 	[SerializeField] Status status;
 
 	[Header("Navmesh"), SerializeField]
 	NavMeshAgent m_navmeshAgent;
 
-	[Header("エフェクトのリスト"),SerializeField]
+	[Header("エフェクトのリスト"), SerializeField]
 	List<GameObject> m_effectList = new();
 
 	[Header("攻撃地点のTransform"), SerializeField]
 	List<Transform> m_attackPos = new();
 
-	[Header("サウンドのリスト"),SerializeField]
+	[Header("サウンドのリスト"), SerializeField]
 	List<AudioClip> m_soundList = new();
-
-	[Header("敵の速度"), SerializeField]
-	float m_speed;
 
 	[Header("攻撃範囲"), SerializeField]
 	float AttackRange;
@@ -42,7 +37,7 @@ public class EnemyAction: MonoBehaviour
 	[Header("自身のコライダー"), SerializeField]
 	Collider m_collider;
 
-	[Header("攻撃のコライダー"),SerializeField]
+	[Header("攻撃のコライダー"), SerializeField]
 	List<Collider> m_colliderList = new();
 
 	[Header("ノックバックするダメージ"), SerializeField]
@@ -80,7 +75,7 @@ public class EnemyAction: MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		if(m_slider != null)
+		if (m_slider != null)
 		{
 			m_slider.maxValue = status.GetMaxHp();
 			m_slider.value = status.GetHp();
@@ -91,7 +86,7 @@ public class EnemyAction: MonoBehaviour
 			m_navmeshAgent.isStopped = true;
 
 			//コライダー持ちはコライダーも消す
-			if(m_collider != null)
+			if (m_collider != null)
 			{
 				m_collider.enabled = false;
 			}
@@ -99,7 +94,14 @@ public class EnemyAction: MonoBehaviour
 		}
 
 		m_attackCoolTime = status.GetSkill1CoolTime();
-		
+
+		// Statusコンポーネントから現在の実効速度を取得してNavMeshAgentに設定する
+		if (m_navmeshAgent != null && status != null)
+		{
+			m_navmeshAgent.speed = status.GetActualSpeed();
+		}
+
+
 
 		//現在最も近いターゲットを取得
 		GameObject clossTarget = m_targetList.OrderBy(target => Vector3.Distance(target.transform.position, transform.position)).First();
@@ -111,15 +113,10 @@ public class EnemyAction: MonoBehaviour
 			m_navmeshAgent.isStopped = true;
 
 			//攻撃中は向きも変わらない
-			if(!isAttack)
+			if (!isAttack)
 			{
-				transform.rotation = Quaternion.Lerp(transform.rotation,Quaternion.LookRotation(clossTarget.transform.position - transform.position),0.2f);
+				transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(clossTarget.transform.position - transform.position), 0.2f);
 			}
-
-			////対象物を最もヘイト値の高いプレイヤーに変更
-			////ヘイト値　：　攻撃範囲-プレイヤーの距離＋個々の値
-			////攻撃範囲内のプレイヤー取得　ー＞　ヘイト値計算
-			//List<GameObject> playerList = m_playerList.FindAll(target => Vector3.Distance(target.transform.position, transform.position) > m_navmeshAgent.stoppingDistance);
 
 			//クールタイム終了と同時に攻撃
 			m_coolTime -= Time.deltaTime;
@@ -133,7 +130,7 @@ public class EnemyAction: MonoBehaviour
 			isMove = true;
 
 			//攻撃中またはダメージアクション中は移動禁止
-			if(!isAttack && !m_damageAction)
+			if (!isAttack && !m_damageAction)
 			{
 				m_navmeshAgent.isStopped = false;
 				m_navmeshAgent.SetDestination(m_targetList.Find(target => target.tag == "Target").transform.position);
@@ -152,9 +149,7 @@ public class EnemyAction: MonoBehaviour
 	public void AttackHit()
 	{
 		Debug.Log("Golem attack started!");
-		// エフェクト生成やSE再生などの処理
 
-		//攻撃のコライダーを追加
 		m_colliderList[(int)AttackList.PhysicalAttack].enabled = true;
 
 		//当たった位置でエフェクトの発生

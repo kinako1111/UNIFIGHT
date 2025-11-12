@@ -18,9 +18,8 @@ public class AssaultSkill1: MonoBehaviour
 	[Header("スキルの範囲"), SerializeField]
 	GameObject m_skillBasePoint;
 
-	[Header("スキルの感度"), SerializeField]
-	[Range(0.1f, 3.0f)]
-	float m_skillSensitivity = 1.0f;
+	[Header("スキルを置く範囲"), SerializeField]
+	float m_skillSensitivity = 0.5f;
 
 	[Header("スキルの最大範囲"), SerializeField]
 	float m_skillRange = 5.0f;
@@ -31,7 +30,7 @@ public class AssaultSkill1: MonoBehaviour
 
 	// スキルクールダウン時間 (秒)
 	[Header("スキルのクールダウン時間 (秒)"), SerializeField]
-	float m_skillCooldownTime = 10.0f; // ★10秒に設定
+	float m_skillCooldownTime = 10.0f; 
 
 	Vector2 m_skillDirection;
 	float m_strength;
