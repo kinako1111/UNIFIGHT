@@ -9,12 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83aa56adb7e8d604882842b7fb28c901, type: 3}
+  m_Script: {fileID: 0}
   m_Name: SkillData
-  m_EditorClassIdentifier: 
-  skillName: 
-  skillPrefab: {fileID: 0}
-  skillType: 0
-  skillRange: 0
-  skillSensitivity: 0
-  cooldownTime: 0
+  m_EditorClassIdentifier: Assembly-CSharp::SkillData
+  SheetName: Assets/TaniguchiFile/SkillData.xlsx
+  WorksheetName: SkillData
+  dataArray:
+  - id: 1
+    skillname: "\u30A8\u30B9\u30AF\u30FC\u30C9"
+    skillexplanation: "\u6575\u304C\u901A\u308C\u306A\u3044\u58C1\u3092\u51FA\u3059"
+    skilltype: 0
+    skillcategory: 4
+    skillrange: 5
+    cooldown: 10

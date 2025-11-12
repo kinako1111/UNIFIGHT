@@ -2,7 +2,16 @@ using Unity.Properties;
 using UnityEngine;
 
 public class Homing : MonoBehaviour
-{	
+{
+	private enum Type
+	{
+		Poison,
+		Heal,
+		SpeedBuff,
+	}
+
+	[Header("弾の種類"), SerializeField] Type m_bulletType;
+
 	[Header("弾速"),SerializeField]
 	float speed = 10f;
 
@@ -51,11 +60,6 @@ public class Homing : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		//敵よりも先に自身の射出場所の当たり判定と衝突している
-		Debug.Log("OnTriggerEnter 呼び出し");
-		Debug.Log("衝突したオブジェクト: " + other);
-		Debug.Log("ターゲット: " + m_target.name);
-
 		//衝突先がターゲットの場合
 		if (other.gameObject == m_target)
 		{
@@ -64,8 +68,24 @@ public class Homing : MonoBehaviour
 			if (m_target.TryGetComponent(out status))
 			{
 				Debug.Log("ステータススクリプト取得");
+
 				//ダメージ付与
-				status.Damage(m_attackPower);
+				switch (m_bulletType)
+				{
+					case Type.Poison:
+					status.Damage(m_attackPower);
+						break;
+
+					case Type.Heal:
+						status.Heal(m_attackPower);
+						break;
+
+					case Type.SpeedBuff:
+						
+						break;
+
+				}
+
 
 				//当たった位置でエフェクトの発生
 				if(m_effect != null)

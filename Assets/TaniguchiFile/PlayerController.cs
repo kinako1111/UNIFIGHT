@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
 	Vector3 revisionRotation;
 
 	Animator m_animator;
-	[SerializeField] Status m_status;
+	Status m_status;
 	Vector2 m_inputMove;
 
 	PlayerInput m_playerInput;

@@ -44,6 +44,7 @@ public class Status : MonoBehaviour
 	float skill2Duration;
 	float urthDuration;
 	string range;
+	string speedText;
 	int maxHp;
 	bool isDeath;
 	int m_knockBackDamageCount;
@@ -80,6 +81,7 @@ public class Status : MonoBehaviour
 		maxHp = unitData.Hp;
 		isDeath = false;
 		m_knockBackDamageCount = KnockBackDamage;
+		speedText = unitData.Speedtext;
 
 		if (m_collider == null)
 		{
@@ -111,6 +113,7 @@ public class Status : MonoBehaviour
 	public int GetMaxHp() => maxHp;
 	public string GetRange() => range;
 	public bool GetDeath() => isDeath;
+	public string GetSpeedText() => speedText;
 
 	public void Damage(int damage)
 	{
