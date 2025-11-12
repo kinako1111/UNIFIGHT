@@ -989,8 +989,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unit: {fileID: 11400000, guid: c5ab73f7af931fd468029bc68a544b98, type: 2}
   m_name: 7
-  m_animator: {fileID: 295281962093100966}
   KnockBackDamage: 0
+  m_collider: {fileID: 787873532661815812}
 --- !u!114 &2225039179348754349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1019,6 +1019,7 @@ MonoBehaviour:
   m_playerList: []
   m_attackCoolTime: 0
   m_slider: {fileID: 4421616688347387733}
+  m_factory: {fileID: 0}
 --- !u!54 &5756326939519973609
 Rigidbody:
   m_ObjectHideFlags: 0

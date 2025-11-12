@@ -302,7 +302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
+  m_IgnoreReversedGraphics: 0
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
@@ -319,7 +319,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -348,7 +348,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -8581,36 +8581,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b79cff24a945d443a18808484ee1e0d, type: 3}
---- !u!114 &1120081298 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5819317685303511714, guid: 4b79cff24a945d443a18808484ee1e0d,
-    type: 3}
-  m_PrefabInstance: {fileID: 1120081297}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &1120081299 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4924568904729829933, guid: 4b79cff24a945d443a18808484ee1e0d,
     type: 3}
   m_PrefabInstance: {fileID: 1120081297}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1120081300 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3711182124192083972, guid: 4b79cff24a945d443a18808484ee1e0d,
-    type: 3}
-  m_PrefabInstance: {fileID: 1120081297}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1125832146
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11483,6 +11459,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waves:
+  - enemyCount: 10
+    spawnInterval: 3
+    isBossWave: 0
+  - enemyCount: 10
+    spawnInterval: 3
+    isBossWave: 0
   - enemyCount: 1
     spawnInterval: 3
     isBossWave: 1
@@ -11490,7 +11472,6 @@ MonoBehaviour:
   m_bossSlider: {fileID: 5146421358785179435, guid: 70845057efed26d4a9caba5ca1da22c1,
     type: 3}
   m_canvas: {fileID: 8826006}
-  m_boss: {fileID: 4454989674527170157, guid: e1b0e000caab2814aafda2d35f55153b, type: 3}
   m_enemyList: []
   m_factoryPos:
   - {fileID: 110590161}
@@ -11502,6 +11483,7 @@ MonoBehaviour:
   - {fileID: 1381466141}
   - {fileID: 189446804}
   m_waveDelay: 5
+  m_bossWave: 0
 --- !u!1001 &1523836029
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12500,18 +12482,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db3508b8701b0244f80ee8694e278e86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 8175064702610430627, guid: 27b65c279d79bbf408c222f066bb4787,
-    type: 3}
-  firePoint: {fileID: 1392851012}
-  shootRate: 0.5
-  baseBulletSpeed: 20
-  maxAmmo: 20
-  reloadDuration: 3
-  aimLineRenderer: {fileID: 1623194381}
-  aimLineLength: 10
-  aimLineStartColor: {r: 0, g: 0, b: 1, a: 1}
-  aimLineEndColor: {r: 0, g: 1, b: 1, a: 1}
-  aimLineWidth: 0.1
 --- !u!114 &1623194383
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12526,8 +12496,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unit: {fileID: 11400000, guid: c5ab73f7af931fd468029bc68a544b98, type: 2}
   m_name: 1
-  m_animator: {fileID: 1623194385}
   KnockBackDamage: 0
+  m_collider: {fileID: 0}
 --- !u!114 &1623194384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12540,13 +12510,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cec933ee56bb634a9f217972dbf4741, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerShooting: {fileID: 1623194382}
-  m_status: {fileID: 1623194383}
-  gravity: 15
-  turnSpeed: 10
-  skill2BulletSpeedMultiplier: 1.5
-  m_playerSlider: {fileID: 1120081300}
-  m_hpText: {fileID: 1120081298}
 --- !u!95 &1623194385
 Animator:
   serializedVersion: 5
@@ -14187,8 +14150,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unit: {fileID: 11400000, guid: c5ab73f7af931fd468029bc68a544b98, type: 2}
   m_name: 0
-  m_animator: {fileID: 0}
   KnockBackDamage: 0
+  m_collider: {fileID: 0}
 --- !u!1001 &1854930435
 PrefabInstance:
   m_ObjectHideFlags: 0
