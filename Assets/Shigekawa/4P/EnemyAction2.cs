@@ -30,7 +30,8 @@ public class EnemyAction2 : MonoBehaviour
 	List<AudioClip> m_soundList = new();
 
 	[Header("“G‚Ì‘¬“x"), SerializeField]
-	float m_speed; 
+	float m_speed;
+
 	[Header("UŒ‚”ÍˆÍ"), SerializeField]
 	float AttackRange;
 

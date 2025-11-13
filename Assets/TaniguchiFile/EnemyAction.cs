@@ -95,14 +95,6 @@ public class EnemyAction : MonoBehaviour
 
 		m_attackCoolTime = status.GetSkill1CoolTime();
 
-		// Statusコンポーネントから現在の実効速度を取得してNavMeshAgentに設定する
-		if (m_navmeshAgent != null && status != null)
-		{
-			m_navmeshAgent.speed = status.GetActualSpeed();
-		}
-
-
-
 		//現在最も近いターゲットを取得
 		GameObject clossTarget = m_targetList.OrderBy(target => Vector3.Distance(target.transform.position, transform.position)).First();
 

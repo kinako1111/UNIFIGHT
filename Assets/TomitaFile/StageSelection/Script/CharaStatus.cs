@@ -29,6 +29,6 @@ public class CharaStatus : MonoBehaviour
 		m_statusText[(int)StatusType.Hp].text = "‘Ì—Í / " + m_status.GetMaxHp().ToString();
 		m_statusText[(int)StatusType.Attack].text = "UŒ‚—Í / " +  m_status.GetAttackPower().ToString();
 		m_statusText[(int)StatusType.Range].text =  "Ë’ö / " + m_status.GetRange().ToString();
-		m_statusText[(int)StatusType.Speed].text = "‘¬“x / " + m_status.GetSpeedText().ToString();
+		//m_statusText[(int)StatusType.Speed].text = "‘¬“x / " + m_status.GetSpeedText().ToString();
 	}
 }
