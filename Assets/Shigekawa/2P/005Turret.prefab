@@ -154,11 +154,14 @@ MonoBehaviour:
   m_autoAttackCount: 1
   m_simultaneous: 1
   m_autoAttackInterval: 0.75
-  m_bulletPrefab: {fileID: 8175064702610430627, guid: 7cda1bea89925544fb87d768485796e7,
+  m_bulletPrefab: {fileID: 529188204377458079, guid: ab8e7dad3f3d9f1448656053030ca26b,
     type: 3}
   m_generateTransform: {fileID: 1530080286228649596}
   m_rotationSpeed: 1000
   m_turretLifeTime: 10
+  m_bulletSpeed: 10
+  m_bulletTrackingStrength: 5
+  m_bulletLifeTime: 3
 --- !u!114 &5261984379588424411
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,5 +175,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unit: {fileID: 11400000, guid: c5ab73f7af931fd468029bc68a544b98, type: 2}
-  m_name: 6
-  m_animator: {fileID: 0}
+  m_name: 10
+  KnockBackDamage: 0
+  m_collider: {fileID: 0}
