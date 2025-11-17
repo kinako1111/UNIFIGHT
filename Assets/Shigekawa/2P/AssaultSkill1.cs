@@ -30,7 +30,9 @@ public class AssaultSkill1: MonoBehaviour
 
 	// スキルクールダウン時間 (秒)
 	[Header("スキルのクールダウン時間 (秒)"), SerializeField]
-	float m_skillCooldownTime = 10.0f; 
+	float m_skillCooldownTime = 10.0f;
+
+	[SerializeField] SkillPrint charge;
 
 	Vector2 m_skillDirection;
 	float m_strength;
@@ -134,18 +136,24 @@ public class AssaultSkill1: MonoBehaviour
 		m_skillBasePoint.SetActive(false);
 		m_approvalSkill = false;
 	}
+	float _cooldown()
+	{
 
+		if (!m_isCoolingDown) return 1f;
+
+		float elapsed = Time.time - (m_nextSkillReadyTime - m_skillCooldownTime);
+		float progress = elapsed / m_skillCooldownTime;
+		return Mathf.Clamp01(progress);
+
+
+	}
 	private void FixedUpdate()
 	{
-		// クールダウン中かどうかの状態を更新
-		if (m_isCoolingDown)
-		{
-			if (Time.time >= m_nextSkillReadyTime)
+			if (m_isCoolingDown &&Time.time >= m_nextSkillReadyTime)
 			{
 				m_isCoolingDown = false;
 				Debug.Log("スキルが使用可能になりました！");
 			}
-		}
 
 		// スキル承認中でない、またはクールダウン中の場合は処理をスキップ
 		if (!m_approvalSkill || m_isCoolingDown) return;
@@ -205,11 +213,19 @@ public class AssaultSkill1: MonoBehaviour
 				}
 				break;
 		}
+		
+	}
+
+	private void Update()
+	{
+		charge.UpdateClock(_cooldown());
 	}
 	private void StartCooldown()
 	{
 		m_isCoolingDown = true;
 		m_nextSkillReadyTime = Time.time + m_skillCooldownTime;
+		charge.UpdateClock(0f); // 発動直後にゲージを0に
 		Debug.Log("クールダウン開始: " + m_skillCooldownTime + "秒");
+
 	}
 }
