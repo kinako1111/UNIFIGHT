@@ -51,12 +51,11 @@ public class Poison : MonoBehaviour
 		float elapsed = 0f;
 		while (elapsed < m_duration)
 		{
-			var status = enemy.GetComponent<Status>();
-			if (status != null)
+			Status status;
+			if(TryGetComponent(out status))
 			{
 				status.Damage(m_poisonDamage);
 			}
-
 			yield return new WaitForSeconds(1f);
 			elapsed += 1f;
 		}

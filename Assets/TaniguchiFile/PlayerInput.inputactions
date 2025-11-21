@@ -42,9 +42,18 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "SkillButton",
+                    "name": "Skill1",
                     "type": "Button",
                     "id": "ffa35551-fb21-44be-bedd-695d2df46d48",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Skill2",
+                    "type": "Button",
+                    "id": "541a0a90-f206-4a69-a2e6-d74c3b62f477",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -54,6 +63,24 @@
                     "name": "SkillCancel",
                     "type": "Button",
                     "id": "892cff48-d13c-4609-9fed-aa28350443eb",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "NextBullet",
+                    "type": "Button",
+                    "id": "3635360b-d048-4563-b349-b51ed22096f5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "BackBullet",
+                    "type": "Button",
+                    "id": "535f57b8-5ae7-4d82-ac9b-e90d861f167a",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -287,6 +314,17 @@
                     "path": "<Gamepad>/rightStick",
                     "interactions": "",
                     "processors": "",
+                    "groups": "Gamepad",
+                    "action": "SkillDirection",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d54b0e53-e151-4302-9e4a-1af455e5a5ee",
+                    "path": "<Mouse>/radius",
+                    "interactions": "",
+                    "processors": "",
                     "groups": "",
                     "action": "SkillDirection",
                     "isComposite": false,
@@ -298,19 +336,85 @@
                     "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Skill1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c1ab6b4f-93be-4c2e-9331-399d89101225",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
                     "groups": "",
-                    "action": "SkillButton",
+                    "action": "Skill1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "35690b00-bcd5-4c2c-8b97-9ec36cd6d346",
-                    "path": "<Gamepad>/buttonNorth",
+                    "path": "<Gamepad>/rightStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "SkillCancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d8345f05-3a9e-4e3a-a058-c034902dced9",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "SkillCancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0040fa94-b5d7-4a55-a081-c95579e37768",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Skill2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ab31ee88-87f1-4ef3-96fd-b4b23a239291",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Skill2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5c0e70c2-108b-4cca-878f-6ec6503fabe7",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "NextBullet",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ae0468a7-c9b8-4fca-aa14-845347ca9635",
+                    "path": "<Gamepad>/dpad/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "BackBullet",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

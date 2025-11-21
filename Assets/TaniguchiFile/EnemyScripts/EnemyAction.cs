@@ -93,8 +93,6 @@ public class EnemyAction : MonoBehaviour
 			return;
 		}
 
-		m_attackCoolTime = status.GetSkill1CoolTime();
-
 		//現在最も近いターゲットを取得
 		GameObject clossTarget = m_targetList.OrderBy(target => Vector3.Distance(target.transform.position, transform.position)).First();
 
@@ -133,6 +131,8 @@ public class EnemyAction : MonoBehaviour
 
 	void OnAttack()
 	{
+		//クールタイムが０の時アニメーションがループする
+		if (isAttack) return;
 		isAttack = true;
 		m_animator.SetTrigger("Attack");
 		m_coolTime = m_attackCoolTime;

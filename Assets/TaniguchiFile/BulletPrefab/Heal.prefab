@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2979718536582409654}
-  m_Layer: 8
+  m_Layer: 7
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ PrefabInstance:
     - target: {fileID: -2144990787317247848, guid: 1254a746c47fe834aaa1364ee8857c19,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1254a746c47fe834aaa1364ee8857c19,
         type: 3}
@@ -127,12 +127,17 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 1254a746c47fe834aaa1364ee8857c19,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1254a746c47fe834aaa1364ee8857c19,
+        type: 3}
+      propertyPath: m_TagString
+      value: Bullet
       objectReference: {fileID: 0}
     - target: {fileID: 5947445232178429439, guid: 1254a746c47fe834aaa1364ee8857c19,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6395661069393561081, guid: 1254a746c47fe834aaa1364ee8857c19,
         type: 3}
@@ -185,7 +190,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2282438430799935778
 MonoBehaviour:

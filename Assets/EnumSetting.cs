@@ -2,7 +2,8 @@ public enum SkillType
 {
 	Point,		//位置指定スキル
 	Target,		//対象指定スキル
-	Direction	//方向指定スキル
+	Direction,	//方向指定スキル
+	Self,		//自身指定スキル
 }
 
 public enum SkillCategory

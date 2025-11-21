@@ -10,7 +10,8 @@ public class Homing : MonoBehaviour
 		SpeedBuff,
 	}
 
-	[Header("弾の種類"), SerializeField] Type m_bulletType;
+	[Header("弾の種類"), SerializeField] 
+	Type m_bulletType;
 
 	[Header("弾速"),SerializeField]
 	float speed = 10f;
@@ -52,7 +53,6 @@ public class Homing : MonoBehaviour
 		//追跡処理
 		// ターゲット方向のXZベクトルを計算
 		Vector3 direction = m_target.transform.position - transform.position;
-		direction.y = 0; // Y軸の動きを無視
 		direction.Normalize();
 		// Rigidbody に速度を設定
 		m_rb.velocity = direction * speed;
@@ -77,7 +77,7 @@ public class Homing : MonoBehaviour
 						break;
 
 					case Type.Heal:
-						status.Heal(m_attackPower);
+						
 						break;
 
 					case Type.SpeedBuff:
@@ -103,6 +103,8 @@ public class Homing : MonoBehaviour
 				Destroy(gameObject);
 			}
 		}
+		//壁に当たったら貫通しない
+		if (other.CompareTag("Wall")) Destroy(gameObject);
 	}
 
 	public void SetStatus(GameObject newTarget,int attackPower,GameObject effect,AudioClip se)

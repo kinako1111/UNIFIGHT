@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.GraphicsBuffer;
 
 public class AutoAttack : MonoBehaviour
 {
+	[Header("攻撃方法(弾の生成有無)"), SerializeField]
+	bool m_CreateBullet = false;
+
 	[Header("攻撃範囲"), SerializeField]
 	float m_autoAttackRange;
 
@@ -47,7 +51,7 @@ public class AutoAttack : MonoBehaviour
 	bool m_isAttack;
 	private bool m_isFirePressed = false;
 	private Coroutine m_attackCoroutine;
-
+	int m_currentBullet = 0;
 
 	public bool IsAttack => m_isAttack;
 
@@ -87,6 +91,28 @@ public class AutoAttack : MonoBehaviour
 		{
 			StopCoroutine(m_attackCoroutine);
 			m_attackCoroutine = null;
+		}
+
+
+		// 弾の切り替え
+		if (m_CreateBullet)
+		{
+			if (m_playerInput.actions["NextBullet"].triggered)
+			{
+				m_currentBullet += 1;
+				if(m_currentBullet >= m_bulletPrefab.Count)
+				{
+					m_currentBullet = 0;
+				}
+				Debug.Log(m_currentBullet);
+			}
+			else if (m_playerInput.actions["BackBullet"].triggered)
+			{
+				m_currentBullet -= 1;
+				//切り替え後、弾の数を下回ったら最後尾のバレットへ
+				if (m_currentBullet < 0) m_currentBullet = m_bulletPrefab.Count -1;
+				Debug.Log(m_currentBullet);
+			}
 		}
 	}
 
@@ -190,10 +216,10 @@ public class AutoAttack : MonoBehaviour
 		//遠距離
 		foreach (GameObject target in m_target)
 		{
-			if (m_bulletPrefab[0] != null)
+			if (m_bulletPrefab[m_currentBullet] != null)
 			{
 				//弾を生成
-				GameObject bullet = Instantiate(m_bulletPrefab[0], m_generateTransform.position, Quaternion.identity);
+				GameObject bullet = Instantiate(m_bulletPrefab[m_currentBullet], m_generateTransform.position, Quaternion.identity);
 
 				//弾のターゲットをAAのターゲットに設定
 				bullet.GetComponent<Homing>().SetStatus(target,m_status.GetAttackPower(),m_effect,m_se);

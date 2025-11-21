@@ -94,9 +94,6 @@ public class EnemyAction2 : MonoBehaviour
 			return;
 		}
 
-		m_attackCoolTime = status.GetSkill1CoolTime();
-
-
 		//現在最も近いターゲットを取得
 		GameObject clossTarget = m_targetList.OrderBy(target => Vector3.Distance(target.transform.position, transform.position)).First();
 
