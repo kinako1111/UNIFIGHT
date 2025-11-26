@@ -7,14 +7,15 @@ public class AreaEffect : MonoBehaviour, ISkill
 	[SerializeField] string m_skillName = "   ";
 	[SerializeField] SkillType m_skillType;
 	[SerializeField] GameObject m_skillUI;
-	[SerializeField] float m_skillRange;
+	[Header("‰~Œ`‚Ì‚½‚ßA”’l‚Íˆê‚Â"),SerializeField] float m_skillRange;
 	[SerializeField] float m_skillDistance;
 
 	public string SkillName => m_skillName;
 	public float CoolDownTime => m_cooldownTime;
 	public SkillType SkillType => m_skillType;
 	public GameObject SkillUI => m_skillUI;
-	public float SkillRange => m_skillRange;
+	public float SkillRangeX => m_skillRange;
+	public float SkillRangeZ => m_skillRange;
 	public float SkillDistance => m_skillDistance;
 
 	public void Execute(Vector3 position, Quaternion rotation, GameObject target)

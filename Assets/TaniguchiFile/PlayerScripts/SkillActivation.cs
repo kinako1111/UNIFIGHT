@@ -1,50 +1,43 @@
+
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class SkillActivation : MonoBehaviour
 {
 	[Header("スキル一覧 ※プレイヤーにアタッチする等の実体化必須"), SerializeField]
-	List<MonoBehaviour> skillComponents ; // InspectorでISkillを持つコンポーネントを登録
+	List<MonoBehaviour> skillComponents; // InspectorでISkillを持つコンポーネントを登録
 
 	[Header("スキル一覧"), SerializeField]
 	List<ISkill> skills = new List<ISkill>();
 
 	int currentSkillIndex = 0;
 	bool m_approvalSkill;
-	bool m_isCooldown = false;
-	float m_currentCooldown = 0f;
 
 	PlayerInput m_playerInput;
 	Animator m_animator;
+
+	// スキルごとのクールタイム管理
+	Dictionary<ISkill, float> cooldownTimers = new Dictionary<ISkill, float>();
 
 	private void Awake()
 	{
 		m_playerInput = GetComponent<PlayerInput>();
 		m_animator = GetComponent<Animator>();
 
-		// MonoBehaviourからISkillにキャストしてリスト化
 		foreach (MonoBehaviour comp in skillComponents)
 		{
 			if (comp is ISkill skill)
 			{
 				skills.Add(skill);
+				cooldownTimers[skill] = 0f; // 初期化
 			}
 		}
 	}
 
 	private void Start()
 	{
-		foreach (ISkill skill in skills)
-		{
-			skill.SkillUI.SetActive(false);
-			if(skill.SkillType == SkillType.Point)
-			{
-				skill.SkillUI.transform.localScale =
-					new Vector3(skill.SkillRange,0.01f,skill.SkillRange);
-			}
-		}
+
 	}
 
 	private void OnEnable()
@@ -68,118 +61,110 @@ public class SkillActivation : MonoBehaviour
 	void OnPreparation(int skillIndex)
 	{
 		if (skillIndex >= skills.Count) return;
-		if (m_isCooldown) return;
 
-		currentSkillIndex = skillIndex; // ボタンに応じてスキル選択
-		skills[currentSkillIndex].SkillUI.SetActive(true);
+		ISkill skill = skills[skillIndex];
+		if (cooldownTimers[skill] > 0f) return; // クールタイム中なら発動不可
+
+		currentSkillIndex = skillIndex;
+
+		//UIの大きさを変更 自身対象スキルならなくてもよし
+		if (skills[currentSkillIndex].SkillType == SkillType.Self) return;
+		skill.SkillUI.transform.localScale = new Vector3(skill.SkillRangeX, 0.01f, skill.SkillRangeZ);
+		skill.SkillUI.SetActive(true);
 		m_approvalSkill = true;
 	}
 
-
 	void OnReleasedSkill(InputAction.CallbackContext context)
 	{
-		skills[currentSkillIndex].SkillUI.SetActive(false);
+		ISkill skill = skills[currentSkillIndex];
+		if(skill.SkillType == SkillType.Point || skill.SkillType == SkillType.Direction)
+		{
+			skill.SkillUI.SetActive(false);
 
-		if (m_approvalSkill && !m_isCooldown)
+			skill.SkillUI.transform.position = new Vector3(
+				transform.position.x,
+				skill.SkillUI.transform.position.y,
+				transform.position.z);
+		}
+
+		if (m_approvalSkill && cooldownTimers[skill] <= 0f)
 		{
 			ReleasedSkill();
-			// クールタイム開始
-			m_isCooldown = true;
-			m_currentCooldown = skills[currentSkillIndex].CoolDownTime;
+			cooldownTimers[skill] = skill.CoolDownTime; // 個別クールタイム開始
 		}
 
 		m_animator.SetTrigger("Use");
 		m_approvalSkill = false;
-
-		//スキルUIの位置をデフォルトに戻す
-		skills[currentSkillIndex].SkillUI.transform.position = new Vector3(
-			transform.position.x,
-			skills[currentSkillIndex].SkillUI.transform.position.y,
-			transform.position.z);
 	}
 
 	void OnSkillCancel(InputAction.CallbackContext context)
 	{
-		skills[currentSkillIndex].SkillUI.SetActive(false);
+		ISkill skill = skills[currentSkillIndex];
+		skill.SkillUI.SetActive(false);
 		m_approvalSkill = false;
 
-		//スキルUIの位置をデフォルトに戻す
-		skills[currentSkillIndex].SkillUI.transform.position = new Vector3(
+		skill.SkillUI.transform.position = new Vector3(
 			transform.position.x,
-			skills[currentSkillIndex].SkillUI.transform.position.y,
+			skill.SkillUI.transform.position.y,
 			transform.position.z);
 	}
 
 	void ReleasedSkill()
 	{
-		// 現在選択中のスキルを発動
-		switch (skills[currentSkillIndex].SkillType)
+		ISkill skill = skills[currentSkillIndex];
+		switch (skill.SkillType)
 		{
 			case SkillType.Point:
-				skills[currentSkillIndex].Execute(skills[currentSkillIndex].SkillUI.transform.position);
+				skill.Execute(skill.SkillUI.transform.position);
 				break;
-
 			case SkillType.Direction:
-				skills[currentSkillIndex].Execute(transform.position, skills[currentSkillIndex].SkillUI.transform.rotation);
+				skill.Execute(transform.position, skill.SkillUI.transform.rotation);
 				break;
-
 			case SkillType.Target:
-
 				break;
-
 			case SkillType.Self:
-				skills[currentSkillIndex].Execute(transform.position, default, gameObject);
+				skill.Execute(transform.position, default, gameObject);
 				break;
 		}
 	}
 
 	private void FixedUpdate()
 	{
-		// クールタイム処理
-		if (m_isCooldown)
+		// クールタイム更新
+		List<ISkill> keys = new List<ISkill>(cooldownTimers.Keys);
+		foreach (ISkill skill in keys)
 		{
-			m_currentCooldown -= Time.fixedDeltaTime;
-			if (m_currentCooldown <= 0f)
+			if (cooldownTimers[skill] > 0f)
 			{
-				m_isCooldown = false;
+				cooldownTimers[skill] -= Time.fixedDeltaTime;
+				if (cooldownTimers[skill] < 0f) cooldownTimers[skill] = 0f;
 			}
-			return;
 		}
 
 		if (!m_approvalSkill) return;
 
-		// スキルタイプに応じて位置や方向を更新
 		Vector2 skillDirection = m_playerInput.actions["SkillDirection"].ReadValue<Vector2>();
 		float strength = skillDirection.magnitude;
 
-		switch (skills[currentSkillIndex].SkillType)
+		ISkill currentSkill = skills[currentSkillIndex];
+		switch (currentSkill.SkillType)
 		{
 			case SkillType.Direction:
 				if (strength > 0.2f)
 				{
 					Vector3 direction = new Vector3(skillDirection.x, 0, skillDirection.y);
-					skills[currentSkillIndex].SkillUI.transform.rotation = Quaternion.LookRotation(direction);
+					currentSkill.SkillUI.transform.rotation = Quaternion.LookRotation(direction);
 				}
 				break;
-
 			case SkillType.Point:
 				if (strength > 0.1f)
 				{
-					skills[currentSkillIndex].SkillUI.transform.position = new Vector3(
-						skillDirection.x * skills[currentSkillIndex].SkillDistance + transform.position.x,
-						skills[currentSkillIndex].SkillUI.transform.position.y,
-						skillDirection.y * skills[currentSkillIndex].SkillDistance + transform.position.z
+					currentSkill.SkillUI.transform.position = new Vector3(
+						skillDirection.x * currentSkill.SkillDistance + transform.position.x,
+						currentSkill.SkillUI.transform.position.y,
+						skillDirection.y * currentSkill.SkillDistance + transform.position.z
 					);
 				}
-				break;
-
-			case SkillType.Target:
-				// TODO: Raycastでターゲット指定処理を追加
-				//対象オブジェクトを強調表示
-				break;
-
-			case SkillType.Self:
-				// TODO: 自身の強調表示
 				break;
 		}
 	}

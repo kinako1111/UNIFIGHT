@@ -5,7 +5,8 @@ public interface ISkill
 	float CoolDownTime { get; }
 	SkillType SkillType { get; }
 	GameObject SkillUI { get; }
-	float SkillRange { get; }
+	float SkillRangeX { get; }
+	float SkillRangeZ { get; }
 	float SkillDistance { get; }
 
 	void Execute(Vector3 position, Quaternion rotation = default, GameObject target = null);

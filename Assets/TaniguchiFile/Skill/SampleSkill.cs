@@ -7,7 +7,8 @@ public class SampleSkill : MonoBehaviour, ISkill
 	[SerializeField] string m_skillName = "   ";
 	[SerializeField] SkillType m_skillType;
 	[SerializeField] GameObject m_skillUI;
-	[SerializeField] float m_skillRange;
+	[SerializeField] float m_skillRangeX;
+	[SerializeField] float m_skillRangeZ;
 	[SerializeField] float m_skillDistance;
 
 
@@ -15,7 +16,8 @@ public class SampleSkill : MonoBehaviour, ISkill
 	public float CoolDownTime => m_cooldownTime;
 	public SkillType SkillType => m_skillType;
 	public GameObject SkillUI => m_skillUI;
-	public float SkillRange => m_skillRange;
+	public float SkillRangeX => m_skillRangeX;
+	public float SkillRangeZ => m_skillRangeZ;
 	public float SkillDistance => m_skillDistance;
 
 	public void Execute(Vector3 position, Quaternion rotation, GameObject target)

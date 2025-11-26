@@ -32,6 +32,7 @@ public class Status : MonoBehaviour
 	// ステータス情報
 	string character;
 	int hp;
+	int baseAttackPower;
 	int attackPower;
 	float magnitication;
 	float passive;
@@ -52,12 +53,13 @@ public class Status : MonoBehaviour
 		// unitDataからステータスを初期化
 		character = unitData.Character;
 		hp = unitData.Hp;
-		attackPower = unitData.Attackpower;
+		baseAttackPower = unitData.Attackpower;
 		magnitication = unitData.Magnification;
 		passive = unitData.Passive;
 		range = unitData.Range;
 		maxHp = unitData.Hp;
 		isDeath = false;
+		attackPower = baseAttackPower;
 	}
 
 	// --- ステータス取得メソッド ---
@@ -97,6 +99,7 @@ public class Status : MonoBehaviour
 	// 回復処理
 	public void Heal(int heal)
 	{
+		if (isDeath) return;
 		hp = Mathf.Min(hp + heal, maxHp);
 		m_animator.SetTrigger("Heal");
 	}

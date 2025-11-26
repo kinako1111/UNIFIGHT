@@ -2606,7 +2606,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4090131653976606770}
   - component: {fileID: 2048771692040710831}
-  - component: {fileID: 8407726400515303783}
   - component: {fileID: 8407726400515303782}
   - component: {fileID: 5933713898466633164}
   - component: {fileID: 7364292102362227178}
@@ -2616,6 +2615,9 @@ GameObject:
   - component: {fileID: 6925803759669898442}
   - component: {fileID: 532878595656158209}
   - component: {fileID: 1870268036754141634}
+  - component: {fileID: 8407726400515303783}
+  - component: {fileID: 8407726400515303784}
+  - component: {fileID: 8407726400515303785}
   m_Layer: 8
   m_Name: Healer
   m_TagString: Player
@@ -4354,6 +4356,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4039094895606692800}
   - {fileID: 5427283138822291148}
   m_Father: {fileID: 4090131653976606770}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4754,11 +4757,11 @@ Transform:
   m_GameObject: {fileID: 6837074242523747653}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.1, z: 0}
   m_LocalScale: {x: 10, y: 0.01, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4090131653976606770}
+  m_Father: {fileID: 3517372609033213613}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4045949021248548236
 GameObject:
@@ -4836,7 +4839,6 @@ Transform:
   - {fileID: 238419210716688917}
   - {fileID: 8247592309326347890}
   - {fileID: 725970350442463278}
-  - {fileID: 4039094895606692800}
   - {fileID: 3517372609033213613}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -9285,7 +9287,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillComponents:
-  - {fileID: 8407726400515303783}
+  - {fileID: 8407726400515303785}
+  - {fileID: 8407726400515303784}
 --- !u!114 &8407726400515303783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9298,14 +9301,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34b33cbf5cb4a5b4ca7d9077ca474ccf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_prefab: {fileID: 7062806617379088084, guid: 45d1aa1880958664eb01acb27998e0fb,
+  m_prefab: {fileID: 7062806617379088084, guid: b25836fa85e58334e8fefbbd2653ea47,
     type: 3}
-  m_cooldownTime: 5
-  m_skillName: "\u30DD\u30A4\u30BA\u30F3\u30A8\u30EA\u30A2"
+  m_cooldownTime: 3
+  m_skillName: "\u72EC\u6CBC"
   m_skillType: 0
   m_skillUI: {fileID: 2291947159161646287}
   m_skillRange: 5
-  m_skillDistance: 10
+  m_skillDistance: 5
+--- !u!114 &8407726400515303784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1947077543140876378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34b33cbf5cb4a5b4ca7d9077ca474ccf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_prefab: {fileID: 7770790425274435511, guid: 3c8da764cae398444b895da4aa5d6bb7,
+    type: 3}
+  m_cooldownTime: 5
+  m_skillName: "\u305F\u308C\u3063\u3068"
+  m_skillType: 0
+  m_skillUI: {fileID: 2291947159161646287}
+  m_skillRange: 2
+  m_skillDistance: 1
+--- !u!114 &8407726400515303785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1947077543140876378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fea786384ca43242be67f78a1a7fb9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_prefab: {fileID: 0}
+  m_cooldownTime: 5
+  m_skillName: "\u653B\u6483\u529B\u30D0\u30D5"
+  m_skillType: 3
+  m_skillUI: {fileID: 0}
+  m_skillRangeX: 0
+  m_skillRangeZ: 0
+  m_skillDistance: 0
 --- !u!1 &8418410462230874902
 GameObject:
   m_ObjectHideFlags: 0
