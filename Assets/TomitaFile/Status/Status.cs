@@ -1,6 +1,7 @@
+
 using System.Collections;
 using System.Collections.Generic;
-using TMPro; 
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,11 +9,10 @@ public class Status : MonoBehaviour
 {
 	public enum Name
 	{
-		//オブジェクト追加ごとに一つ増やすこと
-		A,
-		B,
-		C,
-		D,
+		Asult,
+		ShotGun,
+		Healer,
+		Sniper,
 		Golem,
 		Necro,
 		Skelton,
@@ -28,14 +28,13 @@ public class Status : MonoBehaviour
 
 	Animator m_animator;
 	UnitData unitData;
+	StatusEffectManager effectManager; // ★ Manager参照追加
 
 	// ステータス情報
 	string character;
 	int hp;
-	int baseAttackPower;
-	int attackPower;
-	float magnitication;
-	float passive;
+	int baseAttackPower; // 基本値
+	int attackPower;     // 現在値（フォールバック用）
 	string range;
 	int maxHp;
 	bool isDeath;
@@ -43,20 +42,16 @@ public class Status : MonoBehaviour
 	private void Awake()
 	{
 		m_animator = GetComponent<Animator>();
+		effectManager = GetComponent<StatusEffectManager>(); // ★ 自動取得
 	}
 
 	void Start()
 	{
-		// 名前を元にunitDataを取得
 		unitData = unit.dataArray[(int)m_name];
 
-		// unitDataからステータスを初期化
 		character = unitData.Character;
 		hp = unitData.Hp;
 		baseAttackPower = unitData.Attackpower;
-		magnitication = unitData.Magnification;
-		passive = unitData.Passive;
-		range = unitData.Range;
 		maxHp = unitData.Hp;
 		isDeath = false;
 		attackPower = baseAttackPower;
@@ -65,23 +60,45 @@ public class Status : MonoBehaviour
 	// --- ステータス取得メソッド ---
 	public string GetCharacter() => character;
 	public int GetHp() => hp;
-	public int GetAttackPower() => attackPower;
-	public float GetMagnitication() => magnitication;
-	public float GetPassive() => passive;
+
+	/// <summary>
+	/// 攻撃力取得（Manager経由で状態異常を反映）
+	/// </summary>
+	public int GetAttackPower()
+	{
+		if (effectManager != null)
+		{
+			float modified = effectManager.CalculateAttackPower(baseAttackPower);
+			return Mathf.RoundToInt(modified);
+		}
+		return attackPower; // Manager未設定時は従来値
+	}
+
 	public int GetMaxHp() => maxHp;
 	public string GetRange() => range;
 	public bool GetDeath() => isDeath;
 
+	// 攻撃力の外部変更（フォールバック用）
+	public void SetAttackPower(int newPower)
+	{
+		if (isDeath) return;
+		attackPower = Mathf.Max(0, newPower);
+	}
+
+	public void ResetAttackPower()
+	{
+		if (isDeath) return;
+		attackPower = baseAttackPower;
+	}
+
 	public void Damage(int damage)
 	{
-		if (isDeath)
-		{
-			return;
-		}
+		if (isDeath) return;
+
 		hp -= damage;
 		Debug.Log(damage);
 
-		var takeDamage = GetComponent<TakeDamage>(); // TakeDamageが常に存在するとは限らない
+		var takeDamage = GetComponent<TakeDamage>();
 		if (takeDamage != null)
 		{
 			takeDamage.ShowDamageUI(damage);
@@ -91,12 +108,11 @@ public class Status : MonoBehaviour
 		{
 			hp = 0;
 			m_animator.SetTrigger("Death");
-			Destroy(gameObject,2f);	//仮置きで２ｆ
+			Destroy(gameObject, 2f);
 			isDeath = true;
 		}
 	}
 
-	// 回復処理
 	public void Heal(int heal)
 	{
 		if (isDeath) return;

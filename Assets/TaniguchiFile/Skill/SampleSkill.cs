@@ -23,10 +23,5 @@ public class SampleSkill : MonoBehaviour, ISkill
 	public void Execute(Vector3 position, Quaternion rotation, GameObject target)
 	{
 		//実装したいスキルの処理を記述
-		if (m_prefab != null)
-		{
-			GameObject obj = Instantiate(m_prefab, position, rotation);
-			Destroy(obj, 10f);
-		}
 	}
 }

@@ -66,12 +66,12 @@ public class SkillActivation : MonoBehaviour
 		if (cooldownTimers[skill] > 0f) return; // クールタイム中なら発動不可
 
 		currentSkillIndex = skillIndex;
+		m_approvalSkill = true;
 
 		//UIの大きさを変更 自身対象スキルならなくてもよし
 		if (skills[currentSkillIndex].SkillType == SkillType.Self) return;
 		skill.SkillUI.transform.localScale = new Vector3(skill.SkillRangeX, 0.01f, skill.SkillRangeZ);
 		skill.SkillUI.SetActive(true);
-		m_approvalSkill = true;
 	}
 
 	void OnReleasedSkill(InputAction.CallbackContext context)
@@ -80,11 +80,6 @@ public class SkillActivation : MonoBehaviour
 		if(skill.SkillType == SkillType.Point || skill.SkillType == SkillType.Direction)
 		{
 			skill.SkillUI.SetActive(false);
-
-			skill.SkillUI.transform.position = new Vector3(
-				transform.position.x,
-				skill.SkillUI.transform.position.y,
-				transform.position.z);
 		}
 
 		if (m_approvalSkill && cooldownTimers[skill] <= 0f)
@@ -100,7 +95,7 @@ public class SkillActivation : MonoBehaviour
 	void OnSkillCancel(InputAction.CallbackContext context)
 	{
 		ISkill skill = skills[currentSkillIndex];
-		skill.SkillUI.SetActive(false);
+		skill.SkillUI.SetActive(false); 
 		m_approvalSkill = false;
 
 		skill.SkillUI.transform.position = new Vector3(
@@ -124,6 +119,7 @@ public class SkillActivation : MonoBehaviour
 				break;
 			case SkillType.Self:
 				skill.Execute(transform.position, default, gameObject);
+				Debug.Log("セルフスキル");
 				break;
 		}
 	}

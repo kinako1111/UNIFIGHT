@@ -392,6 +392,8 @@ GameObject:
   - component: {fileID: 656029183}
   - component: {fileID: 656029182}
   - component: {fileID: 656029181}
+  - component: {fileID: 656029187}
+  - component: {fileID: 656029186}
   m_Layer: 6
   m_Name: Cube (1)
   m_TagString: Enemy
@@ -499,6 +501,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &656029186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 656029180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0f74c86516415941b799f67c7076137, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageUIPrefab: {fileID: 8802386729067888466, guid: b38c4dcc9d25ab9439b1b85b5bf40f0d,
+    type: 3}
+--- !u!114 &656029187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 656029180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ef5ef81f63629041a2c7442af4b13a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 0.4
+  randomOffsetRange: 0.5
 --- !u!114 &854274093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9287,7 +9317,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillComponents:
-  - {fileID: 8407726400515303785}
+  - {fileID: 8407726400515303783}
   - {fileID: 8407726400515303784}
 --- !u!114 &8407726400515303783
 MonoBehaviour:
@@ -9318,17 +9348,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1947077543140876378}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34b33cbf5cb4a5b4ca7d9077ca474ccf, type: 3}
+  m_Script: {fileID: 11500000, guid: 2fea786384ca43242be67f78a1a7fb9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_prefab: {fileID: 7770790425274435511, guid: 3c8da764cae398444b895da4aa5d6bb7,
+  m_prefab: {fileID: 6108195706035121270, guid: 6f692cd2d2d5eb84ab790976eccc0bae,
     type: 3}
   m_cooldownTime: 5
-  m_skillName: "\u305F\u308C\u3063\u3068"
-  m_skillType: 0
-  m_skillUI: {fileID: 2291947159161646287}
-  m_skillRange: 2
-  m_skillDistance: 1
+  m_skillName: "\u653B\u6483\u529B\u30D0\u30D5"
+  m_skillType: 3
+  m_skillUI: {fileID: 0}
+  m_skillRange: 0
+  m_skillDistance: 0
+  m_buffRate: 1.2
+  m_buffTime: 5
 --- !u!114 &8407726400515303785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9338,17 +9370,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1947077543140876378}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fea786384ca43242be67f78a1a7fb9a, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a4305f04b6d7d049a69bd39f16df7fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_prefab: {fileID: 0}
-  m_cooldownTime: 5
-  m_skillName: "\u653B\u6483\u529B\u30D0\u30D5"
-  m_skillType: 3
-  m_skillUI: {fileID: 0}
-  m_skillRangeX: 0
-  m_skillRangeZ: 0
-  m_skillDistance: 0
+  status: {fileID: 1747541905725636204}
 --- !u!1 &8418410462230874902
 GameObject:
   m_ObjectHideFlags: 0
