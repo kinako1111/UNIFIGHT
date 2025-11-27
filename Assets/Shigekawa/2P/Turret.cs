@@ -1,174 +1,144 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq; // LINQを使用するため
+﻿using UnityEngine;
 
-using UnityEngine;
-
+// 範囲内の敵を索敵し、敵の方を向いて自動で弾を発射する砲台のクラス
 public class Turret : MonoBehaviour
 {
-	// 攻撃範囲の半径
 	[Header("攻撃範囲"), SerializeField]
-	float m_autoAttackRange = 5f;
+	private float m_attackRange = 10f;
 
-	// 一度の攻撃でダメージ判定を発生させる回数 (アニメーターがないため、この値は直接的な影響は少ないが、将来的な拡張のために残す)
-	[Header("攻撃の発生回数  ※デフォは1"), SerializeField]
-	int m_autoAttackCount = 1; // 現状、TrackingBulletが1発で処理するため、この値は直接的な影響なし
+	[Header("発射間隔（秒）"), SerializeField]
+	private float m_fireInterval = 1.0f;
 
-	// 一度に攻撃できる敵の数
-	[Header("一度に攻撃できる数"), SerializeField]
-	int m_simultaneous = 1;
+	[Header("タレットの消滅時間"), SerializeField]
+	private float m_lifeTime = 10f;
 
-	// 攻撃と攻撃の間の待ち時間（秒）
-	[Header("攻撃速度"), SerializeField]
-	float m_autoAttackInterval = 0.75f;
-
-	// 遠距離攻撃で使用する弾のプレハブ
 	[Header("弾のPrefab"), SerializeField]
-	GameObject m_bulletPrefab;
+	private GameObject m_bulletPrefab;
 
-	// 弾を生成する位置のTransform
-	[Header("弾の生成地点"), SerializeField]
-	Transform m_generateTransform;
+	[Header("弾の生成地点（銃口）"), SerializeField]
+	private Transform m_muzzlePoint;
 
-	[Header("回転速度"), SerializeField]
-	float m_rotationSpeed = 10f;
+	[Header("敵のレイヤー設定")]
+	[SerializeField] private LayerMask m_enemyLayer;
 
-	[Header("タレット消滅時間"), SerializeField]
-	float m_turretLifeTime = 10f;
+	[Header("弾のエフェクト・SE設定")]
+	[SerializeField] private GameObject m_bulletHitEffect;
+	[SerializeField] private AudioClip m_bulletHitSe;
 
-	// TurretBulletが持つプロパティの一部をTurretから設定できるようにするためのフィールド
-	[Header("弾のプロパティ"), SerializeField]
-	float m_bulletSpeed = 10f;
-	[SerializeField]
-	float m_bulletTrackingStrength = 5f;
-	[SerializeField]
-	float m_bulletLifeTime = 3f; // TurretBulletのライフタイムをここでも設定できるようにする
+	[Header("モデルの向き補正（90, -90, 180などで調整）")]
+	[SerializeField] private float m_angleCorrection = 0f;
 
-	// 攻撃範囲内にいる全てのユニットのリスト
-	List<GameObject> m_unitsInRange = new();
+	// ★追加：1秒間に何度回転するか（大きいほど速く振り向く）
+	[Header("旋回速度（度/秒）")]
+	[SerializeField] private float m_turnSpeed = 120f;
 
-	// 実際に攻撃対象となる敵のリスト
-	List<GameObject> m_currentAttackTargets = new();
+	private int m_turretAttackPower = 10;
 
-	Status m_status;
-
-	bool m_isAttacking; // 現在攻撃中かどうかを示すフラグ
-	private Coroutine m_attackCoroutine; // 攻撃ループを管理するコルーチン
-
-
-	// 現在攻撃中であるか外部から参照するためのプロパティ
-	public bool IsAttacking => m_isAttacking;
-
-	private void Awake()
-	{
-		m_status = GetComponent<Status>();
-	}
+	private float m_fireTimer;
+	private GameObject m_currentTarget;
 
 	private void Start()
 	{
-		m_isAttacking = false;
-		// タレット本体を、指定した時間後に自動的に破棄する
-		Destroy(gameObject, m_turretLifeTime);
+		Destroy(gameObject, m_lifeTime);
+		m_fireTimer = m_fireInterval;
 	}
 
-	void Update()
+	private void Update()
 	{
-		DetectAndSelectTargets();
+		UpdateTarget();
 
-		if (m_currentAttackTargets.Count > 0 && m_attackCoroutine == null)
+		if (m_currentTarget != null)
 		{
-			m_attackCoroutine = StartCoroutine(AttackLoopCoroutine());
-			m_isAttacking = true;
-		}
-		else if (m_currentAttackTargets.Count == 0 && m_attackCoroutine != null)
-		{
-			StopCoroutine(m_attackCoroutine);
-			m_attackCoroutine = null;
-			m_isAttacking = false;
-		}
-	}
+			RotateTowardsTarget();
 
-	private void DetectAndSelectTargets()
-	{
-		m_unitsInRange.Clear();
-		m_currentAttackTargets.Clear();
-
-		Collider[] hitColliders = Physics.OverlapSphere(transform.position, m_autoAttackRange);
-
-		List<GameObject> potentialTargets = hitColliders
-			.Select(collider => collider.gameObject)
-			.Where(gameObject => gameObject != this.gameObject && gameObject.CompareTag("Enemy"))
-			.ToList();
-
-		m_unitsInRange = potentialTargets
-			.OrderBy(gameObject => (transform.position - gameObject.transform.position).sqrMagnitude)
-			.ToList();
-
-		for (int i = 0; i < m_simultaneous && i < m_unitsInRange.Count; i++)
-		{
-			m_currentAttackTargets.Add(m_unitsInRange[i]);
+			// 発射間隔を計測し、時間が来たら発射する
+			m_fireTimer += Time.deltaTime;
+			if (m_fireTimer >= m_fireInterval)
+			{
+				Fire();
+				m_fireTimer = 0f;
+			}
 		}
 	}
 
-	IEnumerator AttackLoopCoroutine()
-	{
-		while (m_currentAttackTargets.Count > 0)
-		{
-			PerformAttackLogic();
-			yield return new WaitForSeconds(m_autoAttackInterval);
-		}
-		m_attackCoroutine = null;
-		m_isAttacking = false;
-	}
-
-	private void PerformAttackLogic()
-	{
-		if (m_currentAttackTargets.Count == 0) return;
-
-		RotateTowardsTarget();
-		ExecuteFarAttack();
-	}
-
+	// ★修正：ターゲットに向かって滑らかに回転する処理
 	private void RotateTowardsTarget()
 	{
-		if (m_currentAttackTargets.Count == 0 || m_currentAttackTargets.First() == null) return;
+		if (m_currentTarget == null) return;
 
-		Vector3 targetDirection = (m_currentAttackTargets.First().transform.position - transform.position).normalized;
-		targetDirection.y = 0;
+		// ターゲットへの方向ベクトルを計算（高さYは無視して水平にする）
+		Vector3 direction = m_currentTarget.transform.position - transform.position;
+		direction.y = 0; // 水平方向のみ
 
-		if (targetDirection != Vector3.zero)
+		// 方向がゼロでない場合のみ回転させる
+		if (direction != Vector3.zero)
 		{
-			Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-			targetRotation *= Quaternion.Euler(0, -90f, 0);
+			// 1. 最終的に向きたい角度（ゴール）を計算
+			//    敵の方向への回転 * 補正角度
+			Quaternion lookRotation = Quaternion.LookRotation(direction);
+			Quaternion targetRotation = lookRotation * Quaternion.Euler(0, m_angleCorrection, 0);
 
-			transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, m_rotationSpeed * Time.deltaTime);
+			// 2. 現在の角度からゴールの角度へ、指定した速度で徐々に回転させる
+			transform.rotation = Quaternion.RotateTowards(
+				transform.rotation,
+				targetRotation,
+				m_turnSpeed * Time.deltaTime
+			);
 		}
 	}
 
-
-	private void ExecuteFarAttack()
+	private void UpdateTarget()
 	{
-		foreach (GameObject target in m_currentAttackTargets.ToList())
+		// 今のターゲットが有効かチェック
+		if (m_currentTarget != null)
 		{
-			if (target == null || !target.activeSelf)
+			float dist = Vector3.Distance(transform.position, m_currentTarget.transform.position);
+			Status s = m_currentTarget.GetComponent<Status>();
+
+			if (dist > m_attackRange || s == null || s.GetHp() <= 0)
 			{
-				continue;
+				m_currentTarget = null;
 			}
+		}
 
-			Vector3 directionToTarget = (target.transform.position - m_generateTransform.position).normalized;
-			Quaternion initialBulletRotation = Quaternion.LookRotation(directionToTarget);
+		// ターゲットがいなければ、一番近い敵を探す
+		if (m_currentTarget == null)
+		{
+			Collider[] hits = Physics.OverlapSphere(transform.position, m_attackRange, m_enemyLayer);
+			float closestDist = Mathf.Infinity;
 
-			GameObject bullet = Instantiate(m_bulletPrefab, m_generateTransform.position, initialBulletRotation);
-
-			TurretBullet turretBulletComponent = bullet.GetComponent<TurretBullet>();
-			if (turretBulletComponent != null)
+			foreach (var hit in hits)
 			{
-				if (m_status != null)
+				Status s = hit.GetComponent<Status>();
+				if (s != null && s.GetHp() > 0)
 				{
-					// TurretBulletのInitializeメソッドにm_bulletLifeTimeも渡す
-					turretBulletComponent.Initialize(target, m_bulletSpeed, m_bulletTrackingStrength, m_status.GetAttackPower(), m_bulletLifeTime);
+					float d = Vector3.Distance(transform.position, hit.transform.position);
+					if (d < closestDist)
+					{
+						closestDist = d;
+						m_currentTarget = hit.gameObject;
+					}
 				}
 			}
 		}
+	}
+
+	private void Fire()
+	{
+		if (m_bulletPrefab == null || m_muzzlePoint == null) return;
+
+		// 弾を生成（回転は補正済みの本体ではなく、銃口の向きに合わせる）
+		GameObject bulletObj = Instantiate(m_bulletPrefab, m_muzzlePoint.position, m_muzzlePoint.rotation);
+
+		TurretBullet bulletScript = bulletObj.GetComponent<TurretBullet>();
+		if (bulletScript != null)
+		{
+			bulletScript.SetStatus(m_currentTarget, m_turretAttackPower, m_bulletHitEffect, m_bulletHitSe);
+		}
+	}
+
+	public void SetAttackPower(int power)
+	{
+		m_turretAttackPower = power;
 	}
 }

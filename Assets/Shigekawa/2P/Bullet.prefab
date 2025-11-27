@@ -89,11 +89,11 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c22bde34a38c3564db0129437a37c059,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 292609474074646110}
+      addedObject: {fileID: 1614827053781174788}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c22bde34a38c3564db0129437a37c059,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1614827053781174788}
+      addedObject: {fileID: 292609474074646110}
   m_SourcePrefab: {fileID: 100100000, guid: c22bde34a38c3564db0129437a37c059, type: 3}
 --- !u!1 &529188204377458079 stripped
 GameObject:
@@ -116,28 +116,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.10533786, y: 0.10533786, z: 0.18756558}
   m_Center: {x: 0, y: 0.0000000055879354, z: 0.0039767325}
---- !u!114 &292609474074646110
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 529188204377458079}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7400f5e3fd3fb74d8a1fd640726d7d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lifeTime: 3
-  attackPower: 10
-  trackingSpeed: 10
-  trackingStrength: 5
 --- !u!54 &1614827053781174788
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -165,3 +149,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &292609474074646110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 529188204377458079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7400f5e3fd3fb74d8a1fd640726d7d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_speed: 15
+  m_deathTime: 1
+  m_obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 1783

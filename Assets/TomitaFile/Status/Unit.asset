@@ -16,7 +16,7 @@ MonoBehaviour:
   WorksheetName: Unit
   dataArray:
   - id: 1
-    character: A
+    character: Asult
     hp: 100
     attackpower: 100
     magnification: 1.2
@@ -31,7 +31,7 @@ MonoBehaviour:
     range: "\u8D85\u9577\u8DDD\u96E2"
     speedtext: "\u9AD8\u901F"
   - id: 2
-    character: B
+    character: ShotGun
     hp: 50
     attackpower: 10
     magnification: 2
@@ -46,7 +46,7 @@ MonoBehaviour:
     range: "\u77ED\u8DDD\u96E2"
     speedtext: "\u666E\u901A"
   - id: 3
-    character: C
+    character: Healer
     hp: 60
     attackpower: 30
     magnification: 2.5
@@ -61,7 +61,7 @@ MonoBehaviour:
     range: "\u666E\u901A"
     speedtext: "\u8D85\u4F4E\u901F"
   - id: 4
-    character: D
+    character: Sniper
     hp: 30
     attackpower: 40
     magnification: 1.3

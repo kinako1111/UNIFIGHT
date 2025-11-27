@@ -1,93 +1,132 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class TurretBullet : MonoBehaviour
 {
-	[Header("弾が自動で消滅するまでの時間 (秒)"), SerializeField]
-	private float lifeTime = 3f;
-	[Header("ターゲットに与えるダメージ量"), SerializeField]
-	int attackPower = 10;
+	[Header("弾速"), SerializeField]
+	private float m_speed = 15f;
 
-	[Header("追尾弾が移動する速度"), SerializeField]
-	float trackingSpeed = 10f;
-	[Header("ターゲットに向かってどれくらいの速さで向きを変えるか"), SerializeField]
-	float trackingStrength = 5f;
+	[Header("消えるまでの時間"), SerializeField]
+	private float m_deathTime = 3f;
 
+	[Header("障害物レイヤー（Everything推奨）"), SerializeField]
+	private LayerMask m_obstacleLayer = -1;
+
+	// 生成時にセットされる変数
 	private GameObject m_target;
-	private Rigidbody rb;
+	private int m_attackPower;
+	private GameObject m_effect;
+	private AudioClip m_se;
 
-	void Awake()
+	private Rigidbody m_rb;
+
+	// ★追加：自分で寿命をカウントするためのタイマー
+	private float m_lifeTimer = 0f;
+
+	private void Awake()
 	{
-		rb = GetComponent<Rigidbody>();
-		if (rb == null)
-		{
-			rb = gameObject.AddComponent<Rigidbody>();
-		}
-		rb.isKinematic = true;
-
-		Collider col = GetComponent<Collider>();
-		if (col == null)
-		{
-			col = gameObject.AddComponent<SphereCollider>();
-		}
-		col.isTrigger = true;
+		m_rb = GetComponent<Rigidbody>();
+		m_rb.isKinematic = false;
 	}
 
-	public void Initialize(GameObject target, float speed, float strength, int power, float bulletLifeTime)
+	private void Start()
 	{
-		m_target = target;
-		trackingSpeed = speed;
-		trackingStrength = strength;
-		attackPower = power;
-		this.lifeTime = bulletLifeTime;
-		rb.velocity = Vector3.zero;
+		// ★削除：これだとタイミングがズレることがあるので消します
+		// Destroy(gameObject, m_deathTime);
 	}
 
-	void Update()
+	private void FixedUpdate()
 	{
-		lifeTime -= Time.deltaTime;
-		if (lifeTime <= 0)
+		// ★追加：ここで時間を計り、寿命が来たら即座に処理を打ち切る
+		m_lifeTimer += Time.fixedDeltaTime;
+		if (m_lifeTimer >= m_deathTime)
+		{
+			Destroy(gameObject);
+			return; // ★重要：ここで return することで、下の移動処理や判定をさせない
+		}
+
+		// ターゲットが消滅している、またはStatusで死亡判定なら弾を消す
+		if (m_target == null)
 		{
 			Destroy(gameObject);
 			return;
 		}
 
-		if (m_target == null || m_target.GetComponent<Status>().GetHp() <= 0) 
+		Status targetStatus = m_target.GetComponent<Status>();
+		if (targetStatus != null && targetStatus.GetHp() <= 0)
 		{
-			Debug.Log("ターゲットがいません、または非アクティブです。弾を破棄します。");
 			Destroy(gameObject);
 			return;
 		}
 
-		Vector3 directionToTarget = (m_target.transform.position - transform.position).normalized;
-		Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
-		transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, trackingStrength * Time.deltaTime);
+		Vector3 direction = (m_target.transform.position - transform.position).normalized;
+		m_rb.velocity = direction * m_speed;
 
-		transform.Translate(Vector3.forward * trackingSpeed * Time.deltaTime, Space.Self);
+		if (direction != Vector3.zero)
+		{
+			transform.rotation = Quaternion.LookRotation(direction);
+		}
+
+		// Raycast判定
+		DetectObstacle(direction);
+	}
+
+	private void DetectObstacle(Vector3 direction)
+	{
+		float step = m_speed * Time.fixedDeltaTime;
+		float rayDistance = step * 1.2f;
+
+		if (Physics.Raycast(transform.position, direction, out RaycastHit hit, rayDistance, m_obstacleLayer, QueryTriggerInteraction.Collide))
+		{
+			if (hit.collider.gameObject == m_target) return;
+			if (hit.collider.gameObject == gameObject) return;
+
+			HitProcess();
+		}
 	}
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if (m_target != null && other.gameObject == m_target)
+		if (other.gameObject == m_target)
 		{
-			Status targetStatus;
-			if (other.gameObject.TryGetComponent(out targetStatus))
+			Status status = m_target.GetComponent<Status>();
+			if (status != null)
 			{
-				targetStatus.Damage(attackPower);
+				status.Damage(m_attackPower);
+				HitEffect();
 			}
-			Destroy(gameObject);
 		}
-		else if (other.CompareTag("Enemy")) // "Enemy"タグを持つオブジェクトにもダメージを与える場合
+		else if (other.CompareTag("Wall"))
 		{
-			Status enemyStatus;
-			if (other.gameObject.TryGetComponent(out enemyStatus))
-			{
-				enemyStatus.Damage(attackPower);
-			}
-			Destroy(gameObject);
+			HitProcess();
 		}
-		else if (!other.isTrigger) // ターゲット以外の非トリガーコライダーに当たった場合
+	}
+
+	private void HitProcess()
+	{
+		Destroy(gameObject);
+	}
+
+	private void HitEffect()
+	{
+		if (m_effect != null)
 		{
-			Destroy(gameObject);
+			Instantiate(m_effect, transform.position, Quaternion.identity);
 		}
+
+		if (m_se != null)
+		{
+			AudioSource.PlayClipAtPoint(m_se, transform.position);
+		}
+
+		Destroy(gameObject);
+	}
+
+	public void SetStatus(GameObject target, int attackPower, GameObject effect, AudioClip se)
+	{
+		m_target = target;
+		m_attackPower = attackPower;
+		m_effect = effect;
+		m_se = se;
 	}
 }
