@@ -85,6 +85,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Pin",
+                    "type": "Button",
+                    "id": "2aeb568a-1fbc-4752-bcdc-0f85a1ca4a88",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "PinCancel",
+                    "type": "Button",
+                    "id": "7fe039df-704c-4bde-a9cf-c67877746229",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -415,6 +433,28 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "BackBullet",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d3362943-d8fc-4b41-be19-17fbccdeef4d",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Pin",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cc59baeb-d699-449b-8644-c3c91553efe0",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "PinCancel",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

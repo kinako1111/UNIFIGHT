@@ -28,6 +28,9 @@ public class ShotGunSkill1 : MonoBehaviour
 	Vector2 m_aimDirectionInput; // スティックの入力方向
 	float m_aimStrength;         // スティックの傾き度合い
 
+
+	[SerializeField] SkillPrint charge;
+
 	bool m_isSkillPreparing; // スキル準備中かどうか (照準表示中)
 
 	PlayerInput m_playerInput;
@@ -137,17 +140,24 @@ public class ShotGunSkill1 : MonoBehaviour
 		m_isSkillPreparing = false; // 準備中フラグを下ろす
 		Debug.Log("スモークスキルをキャンセルしました。");
 	}
+	float _cooldown()
+	{
 
+		if (!m_isCoolingDown) return 1f;
+
+		float elapsed = Time.time - (m_nextSkillReadyTime - m_skillCooldownTime);
+		float progress = elapsed / m_skillCooldownTime;
+		return Mathf.Clamp01(progress);
+
+
+	}
 	private void FixedUpdate()
 	{
 		// クールダウン中かどうかの状態を更新
-		if (m_isCoolingDown)
+		if (m_isCoolingDown && Time.time >= m_nextSkillReadyTime)
 		{
-			if (Time.time >= m_nextSkillReadyTime)
-			{
 				m_isCoolingDown = false;
 				Debug.Log("スモークスキルが使用可能になりました！");
-			}
 		}
 
 		// スキル準備中でない、クールダウン中の場合、または照準用GameObjectがなければ処理をスキップ
@@ -185,12 +195,18 @@ public class ShotGunSkill1 : MonoBehaviour
 				m_skillAimPoint.transform.position.y,
 				transform.position.z);
 		}
-	}
 
+		
+	}
+	private void Update()
+	{
+		charge.UpdateClock(_cooldown());
+	}
 	private void StartCooldown()
 	{
 		m_isCoolingDown = true;
 		m_nextSkillReadyTime = Time.time + m_skillCooldownTime;
+		charge.UpdateClock(0f); // 発動直後にゲージを0に
 		Debug.Log("スモークスキルのクールダウン開始: " + m_skillCooldownTime + "秒");
 	}
 }
