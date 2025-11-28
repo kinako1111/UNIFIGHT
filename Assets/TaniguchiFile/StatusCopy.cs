@@ -28,7 +28,7 @@ public class StatusCopy : MonoBehaviour
 
 	Animator m_animator;
 	UnitData unitData;
-	StatusEffectManager effectManager; // ★ Manager参照追加
+	StatusEffectManagerModel effectManager; // ★ Manager参照追加
 
 	// ステータス情報
 	string character;
@@ -42,7 +42,7 @@ public class StatusCopy : MonoBehaviour
 	private void Awake()
 	{
 		m_animator = GetComponent<Animator>();
-		effectManager = GetComponent<StatusEffectManager>(); // ★ 自動取得
+		effectManager = GetComponent<StatusEffectManagerModel>(); // ★ 自動取得
 	}
 
 	void Start()

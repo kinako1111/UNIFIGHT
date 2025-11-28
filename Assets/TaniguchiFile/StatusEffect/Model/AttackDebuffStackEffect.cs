@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// 攻撃力デバフ（1層ごとに -x%）。例：perStackReduce=0.10f, MaxStacks=5 → 最大 -50%
 /// </summary>
-public class AttackDebuffStackEffect : StatusEffectBaseStackable
+public class AttackDebuffStackEffect : StatusEffectBaseStackableModel
 {
 	private readonly float perStackReduce; // -10%なら 0.10f
 

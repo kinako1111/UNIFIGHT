@@ -9,7 +9,7 @@ public interface ISlowEffect
 /// <summary>
 /// スロー（1層ごとに -x% 速度）。例：perStackSlow=0.15, MaxStacks=3 → 最大 -45%
 /// </summary>
-public class SlowStackEffect : StatusEffectBaseStackable, ISlowEffect
+public class SlowStackEffect : StatusEffectBaseStackableModel, ISlowEffect
 {
 	private readonly float perStackSlow;
 

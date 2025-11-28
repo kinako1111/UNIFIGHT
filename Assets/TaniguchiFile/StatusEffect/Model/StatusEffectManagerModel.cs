@@ -5,9 +5,9 @@ using UnityEngine;
 /// <summary>
 /// 状態異常の辞書管理。Key単位でスタック増減。
 /// </summary>
-public class StatusEffectManager : MonoBehaviour
+public class StatusEffectManagerModel : MonoBehaviour
 {
-	private readonly Dictionary<string, IStatusEffect> _effectsByKey = new();
+	private readonly Dictionary<string, IStatusEffectModel> _effectsByKey = new();
 	private Status _status;
 
 	private void Awake()
@@ -32,7 +32,7 @@ public class StatusEffectManager : MonoBehaviour
 	/// <summary>
 	/// 新規効果を「同Keyならスタック増加」で扱う。新規Keyなら追加。
 	/// </summary>
-	public void AddOrStack(IStatusEffect effect, int stacksToAdd = 1, float? perStackDuration = null)
+	public void AddOrStack(IStatusEffectModel effect, int stacksToAdd = 1, float? perStackDuration = null)
 	{
 		if (effect == null || string.IsNullOrEmpty(effect.Key)) return;
 
@@ -85,5 +85,5 @@ public class StatusEffectManager : MonoBehaviour
 	}
 
 	// UIやデバッグ用
-	public IReadOnlyDictionary<string, IStatusEffect> GetActiveEffects() => _effectsByKey;
+	public IReadOnlyDictionary<string, IStatusEffectModel> GetActiveEffects() => _effectsByKey;
 }

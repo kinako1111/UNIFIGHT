@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// 汎用DOT（1層ごとに dmg/tick を加算）。属性別キーを使いたい場合はKeyを "Poison" 等に。
 /// </summary>
-public class DamageOverTimeStackEffect : StatusEffectBaseStackable
+public class DamageOverTimeStackEffect : StatusEffectBaseStackableModel
 {
 	public DamageType Type { get; private set; }
 

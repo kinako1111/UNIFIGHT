@@ -131,8 +131,8 @@ public class Homing : MonoBehaviour
 					);
 
 					// Managerを取得（なければ追加）
-					var manager = status.GetComponent<StatusEffectManager>();
-					if (manager == null) manager = status.gameObject.AddComponent<StatusEffectManager>();
+					var manager = status.GetComponent<StatusEffectManagerModel>();
+					if (manager == null) manager = status.gameObject.AddComponent<StatusEffectManagerModel>();
 
 					// 同名Key="Poison" の層管理。DOTは各層独立減衰（PerStackDecay=true）が扱いやすい
 					var dot = new DamageOverTimeStackEffect(

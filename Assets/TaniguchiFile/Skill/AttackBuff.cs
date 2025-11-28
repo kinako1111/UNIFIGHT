@@ -39,10 +39,10 @@ public class AttackBuff : MonoBehaviour, ISkill
 		var status = target.GetComponent<Status>();
 		if (status == null || status.GetDeath()) return;
 
-		var manager = target.GetComponent<StatusEffectManager>();
+		var manager = target.GetComponent<StatusEffectManagerModel>();
 		if (manager == null)
 		{
-			manager = target.AddComponent<StatusEffectManager>();
+			manager = target.AddComponent<StatusEffectManagerModel>();
 		}
 
 		// 攻撃力 +m_buffRate を m_buffTime 秒（スタック対応）

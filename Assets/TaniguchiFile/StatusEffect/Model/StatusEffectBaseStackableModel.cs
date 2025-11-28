@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// スタック対応の基底クラス。SharedDuration と PerStackDecay をサポート。
 /// </summary>
-public abstract class StatusEffectBaseStackable : IStatusEffect
+public abstract class StatusEffectBaseStackableModel : IStatusEffectModel
 {
 	public string Key { get; private set; }
 	public string DisplayName { get; private set; }
@@ -36,7 +36,7 @@ public abstract class StatusEffectBaseStackable : IStatusEffect
 		}
 	}
 
-	protected StatusEffectBaseStackable(
+	protected StatusEffectBaseStackableModel(
 		Status owner, string key, string displayName,
 		int initialStacks, int maxStacks,
 		bool perStackDecay, float initialDuration)

@@ -1,4 +1,5 @@
-public interface IStatusEffect
+
+public interface IStatusEffectModel
 {
 	// 識別用キー（同名扱いのためのキー）。例："Poison", "ATK_BUFF"
 	string Key { get; }

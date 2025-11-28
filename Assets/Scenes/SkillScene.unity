@@ -539,10 +539,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 656029180}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a4305f04b6d7d049a69bd39f16df7fe, type: 3}
+  m_Script: {fileID: 11500000, guid: fdae43f226c78ae4c82ac17f930b7caf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  status: {fileID: 656029181}
 --- !u!114 &854274093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -710,6 +709,7 @@ GameObject:
   - component: {fileID: 1084030363}
   - component: {fileID: 1084030362}
   - component: {fileID: 1084030361}
+  - component: {fileID: 1084030367}
   m_Layer: 10
   m_Name: Cube
   m_TagString: Target
@@ -838,6 +838,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1084030367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1084030360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdae43f226c78ae4c82ac17f930b7caf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1373599159 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4924568904729829933, guid: 4b79cff24a945d443a18808484ee1e0d,
@@ -2661,7 +2673,6 @@ GameObject:
   - component: {fileID: 1870268036754141634}
   - component: {fileID: 8407726400515303783}
   - component: {fileID: 8407726400515303784}
-  - component: {fileID: 8407726400515303785}
   m_Layer: 8
   m_Name: Healer
   m_TagString: Player
@@ -9376,19 +9387,6 @@ MonoBehaviour:
   m_skillDistance: 0
   m_buffRate: 1.2
   m_buffTime: 5
---- !u!114 &8407726400515303785
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1947077543140876378}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a4305f04b6d7d049a69bd39f16df7fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  status: {fileID: 1747541905725636204}
 --- !u!1 &8418410462230874902
 GameObject:
   m_ObjectHideFlags: 0
@@ -10506,7 +10504,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a4305f04b6d7d049a69bd39f16df7fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  status: {fileID: 1116812592516650028}
 --- !u!1 &9074817755161932051
 GameObject:
   m_ObjectHideFlags: 0

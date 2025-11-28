@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// 攻撃力バフ（1層ごとに +x% を加算）。例：perStackAdd=0.10f, MaxStacks=5 → 最大 +50%
 /// </summary>
-public class AttackBuffStackEffect : StatusEffectBaseStackable
+public class AttackBuffStackEffect : StatusEffectBaseStackableModel
 {
 	private readonly float perStackAdd; // +10%なら 0.10f
 
