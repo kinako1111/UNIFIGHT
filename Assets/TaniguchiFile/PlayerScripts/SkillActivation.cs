@@ -77,10 +77,7 @@ public class SkillActivation : MonoBehaviour
 	void OnReleasedSkill(InputAction.CallbackContext context)
 	{
 		ISkill skill = skills[currentSkillIndex];
-		if(skill.SkillType == SkillType.Point || skill.SkillType == SkillType.Direction)
-		{
-			skill.SkillUI.SetActive(false);
-		}
+
 
 		if (m_approvalSkill && cooldownTimers[skill] <= 0f)
 		{
@@ -90,18 +87,28 @@ public class SkillActivation : MonoBehaviour
 
 		m_animator.SetTrigger("Use");
 		m_approvalSkill = false;
+		if (skill.SkillUI != null)
+		{
+			skill.SkillUI.SetActive(false);
+			skill.SkillUI.transform.position = new Vector3(
+			transform.position.x,
+			skill.SkillUI.transform.position.y,
+			transform.position.z);
+		}
 	}
 
 	void OnSkillCancel(InputAction.CallbackContext context)
 	{
 		ISkill skill = skills[currentSkillIndex];
-		skill.SkillUI.SetActive(false); 
 		m_approvalSkill = false;
-
-		skill.SkillUI.transform.position = new Vector3(
+		if (skill.SkillUI != null)
+		{
+			skill.SkillUI.SetActive(false);
+			skill.SkillUI.transform.position = new Vector3(
 			transform.position.x,
 			skill.SkillUI.transform.position.y,
 			transform.position.z);
+		}
 	}
 
 	void ReleasedSkill()

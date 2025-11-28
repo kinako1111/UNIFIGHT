@@ -850,6 +850,7 @@ GameObject:
   - component: {fileID: 3916566198208903765}
   - component: {fileID: -2836167040269233122}
   - component: {fileID: 3691719640950274552}
+  - component: {fileID: 3525206435113954663}
   m_Layer: 6
   m_Name: 01.Golem
   m_TagString: Enemy
@@ -938,7 +939,6 @@ MonoBehaviour:
   m_attackPos:
   - {fileID: 802381403594153973}
   m_soundList: []
-  m_speed: 0.5
   AttackRange: 5
   m_collider: {fileID: 8136462291760206172}
   m_colliderList:
@@ -962,8 +962,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unit: {fileID: 11400000, guid: c5ab73f7af931fd468029bc68a544b98, type: 2}
   m_name: 4
-  KnockBackDamage: 100
-  m_collider: {fileID: 8136462291760206172}
 --- !u!136 &8136462291760206172
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1042,6 +1040,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AttackPos: {fileID: 8995343910796732979}
   m_status: {fileID: -5933094812344859915}
+--- !u!114 &3525206435113954663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4454989674527170157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a4305f04b6d7d049a69bd39f16df7fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  status: {fileID: -5933094812344859915}
 --- !u!1 &4923529282322520057
 GameObject:
   m_ObjectHideFlags: 0

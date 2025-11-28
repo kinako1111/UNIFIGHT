@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Status : MonoBehaviour
+public class StatusCopy : MonoBehaviour
 {
 	public enum Name
 	{

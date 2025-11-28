@@ -947,6 +947,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 4952591900822120166}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ddb95ed53876a924694d8ce9c41edcab,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 230096655005396367}
   m_SourcePrefab: {fileID: 100100000, guid: ddb95ed53876a924694d8ce9c41edcab, type: 3}
 --- !u!1 &3710226344988404384 stripped
 GameObject:
@@ -989,8 +993,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unit: {fileID: 11400000, guid: c5ab73f7af931fd468029bc68a544b98, type: 2}
   m_name: 7
-  KnockBackDamage: 0
-  m_collider: {fileID: 787873532661815812}
 --- !u!114 &2225039179348754349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1010,7 +1012,6 @@ MonoBehaviour:
   m_attackPos:
   - {fileID: 2603584871589019242}
   m_soundList: []
-  m_speed: 1
   AttackRange: 2
   m_collider: {fileID: 787873532661815812}
   m_colliderList:
@@ -1120,6 +1121,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageUIPrefab: {fileID: 8802386729067888466, guid: b38c4dcc9d25ab9439b1b85b5bf40f0d,
     type: 3}
+--- !u!114 &230096655005396367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3710226344988404384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a4305f04b6d7d049a69bd39f16df7fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  status: {fileID: 4267027972489121895}
 --- !u!4 &4050582800479563802 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ddb95ed53876a924694d8ce9c41edcab,

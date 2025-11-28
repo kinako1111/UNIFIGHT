@@ -20,13 +20,10 @@ public class AreaEffect : MonoBehaviour, ISkill
 
 	public void Execute(Vector3 position, Quaternion rotation, GameObject target)
 	{
-		Debug.Log("エリアスキル");
 		if (m_prefab != null)
 		{
 			GameObject obj = Instantiate(m_prefab, position, rotation);
 			Destroy(obj, 10f);
-			Debug.Log(transform.position);
-			Debug.Log(position);
 		}
 	}
 }

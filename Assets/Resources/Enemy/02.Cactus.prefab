@@ -267,6 +267,7 @@ GameObject:
   - component: {fileID: 2156500304502174391}
   - component: {fileID: 841626618231999972}
   - component: {fileID: 4120518686806060272}
+  - component: {fileID: -4761076885882205186}
   m_Layer: 6
   m_Name: 02.Cactus
   m_TagString: Enemy
@@ -328,8 +329,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unit: {fileID: 11400000, guid: c5ab73f7af931fd468029bc68a544b98, type: 2}
   m_name: 8
-  KnockBackDamage: 0
-  m_collider: {fileID: 952638766391090953}
 --- !u!114 &2856161409072201720
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -349,7 +348,6 @@ MonoBehaviour:
   m_attackPos:
   - {fileID: 4255645330966219997}
   m_soundList: []
-  m_speed: 1
   AttackRange: 2
   m_collider: {fileID: 952638766391090953}
   m_colliderList:
@@ -459,6 +457,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageUIPrefab: {fileID: 8802386729067888466, guid: b38c4dcc9d25ab9439b1b85b5bf40f0d,
     type: 3}
+--- !u!114 &-4761076885882205186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4852412419577616934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a4305f04b6d7d049a69bd39f16df7fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  status: {fileID: 7508004888651655941}
 --- !u!1 &5008528901627027040
 GameObject:
   m_ObjectHideFlags: 0

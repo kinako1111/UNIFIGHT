@@ -1,6 +1,10 @@
-using Unity.Properties;
+﻿
 using UnityEngine;
 
+/// <summary>
+/// 追尾弾：衝突時に「攻撃者の攻撃力ぶんの即時ダメージ」→「攻撃者攻撃力の割合/秒のDOT（毒属性）」を付与。
+/// スタック対応：Key="Poison" 同名扱いで層数を増加。上限=poisonMaxStacks。
+/// </summary>
 public class Homing : MonoBehaviour
 {
 	private enum Type
@@ -10,108 +14,218 @@ public class Homing : MonoBehaviour
 		SpeedBuff,
 	}
 
-	[Header("�e�̎��"), SerializeField] 
-	Type m_bulletType;
+	[Header("弾の種類"), SerializeField]
+	private Type m_bulletType = Type.Poison;
 
-	[Header("�e��"),SerializeField]
-	float speed = 10f;
+	[Header("弾速"), SerializeField]
+	private float speed = 10f;
 
-	[Header("�R�Ȃ�O���̍���"),SerializeField]
-	float arcHeight = 0f;
+	[Header("山なり軌道の高さ（未使用なら0）"), SerializeField]
+	private float arcHeight = 0f;
 
-	[Header("������܂ł̎���"), SerializeField]
-	int m_deathTime = 3;
+	[Header("消えるまでの時間(秒)"), SerializeField]
+	private int m_deathTime = 3;
 
-	//�������ɕʃI�u�W�F�N�g����X�e�[�^�X��������
-	GameObject m_target;
-	int m_attackPower;
-	GameObject m_effect;
-	AudioClip m_se;
-	Rigidbody m_rb;
+	[Header("毒の継続時間(秒)"), SerializeField]
+	private float poisonDuration = 5f;
+
+	[Header("毒の係数（攻撃力の割合/秒）"), SerializeField, Tooltip("例: 0.30 → 攻撃力の30%/秒")]
+	private float poisonScalePerSecond = 0.30f;
+
+	[Header("毒の最大スタック数"), SerializeField]
+	private int poisonMaxStacks = 3;
+
+	[Header("毒のTick間隔(秒)"), SerializeField]
+	private float poisonTickInterval = 1.0f;
+
+	// --- 実行時パラメータ ---
+	private GameObject m_target;        // 追尾対象（敵）
+
+	private int m_attackPower;          // フォールバック用（owner不在時）
+	private Status m_ownerStatus;       // 任意：攻撃者（プレイヤー等）のStatus（最新ATKを参照）
+
+	private GameObject m_effect;        // ヒット時エフェクト
+	private AudioClip m_se;             // ヒット時SE
+	private Rigidbody m_rb;
 
 	private void Awake()
 	{
 		m_rb = GetComponent<Rigidbody>();
 	}
 
-	void Start()
+	private void Start()
 	{
-		//��莞�Ԉȓ��Ƀq�b�g���Ȃ��Ɣj��
-		Destroy(gameObject, 3);
+		// 寿命で自壊
+		Destroy(gameObject, m_deathTime);
 	}
 
-	void Update()
+	private void Update()
 	{
-		//�^�[�Q�b�g�����Ȃ��Ȃ����ꍇ����Ȃ��̂Ŕj��
-		if (m_target == null || m_target.GetComponent<Status>().GetHp() <= 0) 
+		// ターゲットが無効なら破棄
+		if (m_target == null)
 		{
-			Debug.Log("�^�[�Q�b�g�����܂���");
 			Destroy(gameObject);
 			return;
 		}
 
-		//�ǐՏ���
-		// �^�[�Q�b�g������XZ�x�N�g�����v�Z
-		Vector3 direction = m_target.transform.position - transform.position;
-		direction.Normalize();
-		// Rigidbody �ɑ��x��ݒ�
-		m_rb.velocity = direction * speed;
+		// ターゲットの生存確認
+		Status targetStatus;
+		if (!m_target.TryGetComponent(out targetStatus) || targetStatus.GetHp() <= 0 || targetStatus.GetDeath())
+		{
+			Destroy(gameObject);
+			return;
+		}
+
+		// 追尾（簡易直線。arcHeightを使った山なりは必要なら拡張）
+		Vector3 toTarget = (m_target.transform.position - transform.position);
+		Vector3 direction = toTarget.normalized;
+
+		// （オプション）山なり成分
+		float yBoost = 0f;
+		if (arcHeight > 0f)
+		{
+			float dist = toTarget.magnitude;
+			float t = dist / Mathf.Max(0.01f, speed);          // 到達予測秒
+			float u = Mathf.Clamp01(Time.deltaTime / Mathf.Max(t, 0.0001f));
+			yBoost = 4f * arcHeight * (u - u * u);
+		}
+
+		m_rb.velocity = direction * speed + Vector3.up * yBoost;
+		transform.forward = direction; // 見た目調整（任意）
 	}
 
 	private void OnTriggerEnter(Collider other)
 	{
-		//�Փː悪�^�[�Q�b�g�̏ꍇ
-		if (other.gameObject == m_target)
+		// 衝突先がターゲットのみ処理
+		if (other.gameObject != m_target) return;
+
+		// ターゲットの Status / Manager
+		if (!m_target.TryGetComponent(out Status status))
 		{
-			Debug.Log("�Փː悪�^�[�Q�b�g�Ɠ���");
-			Status status;
-			if (m_target.TryGetComponent(out status))
-			{
-				Debug.Log("�X�e�[�^�X�X�N���v�g�擾");
-
-				//�_���[�W�t�^
-				switch (m_bulletType)
-				{
-					case Type.Poison:
-					status.Damage(m_attackPower);
-						break;
-
-					case Type.Heal:
-						
-						break;
-
-					case Type.SpeedBuff:
-						
-						break;
-
-				}
-
-
-				//���������ʒu�ŃG�t�F�N�g�̔���
-				if(m_effect != null)
-				{
-					Instantiate(m_effect, m_target.transform);
-				}
-
-				if(m_effect != null)
-				{
-					//SE����
-					SoundEffect.Play3D(m_se, m_target.transform.position);
-				}
-
-				//��ڂ��I�����̂Ŕj��
-				Destroy(gameObject);
-			}
+			Destroy(gameObject);
+			return;
 		}
-		//�ǂɓ���������ђʂ��Ȃ�
-		if (other.CompareTag("Wall")) Destroy(gameObject);
+
+		if (status == null || status.GetDeath())
+		{
+			Debug.LogWarning("[Homing] 付与先が不正（Status無し or 死亡）");
+			Destroy(gameObject);
+			return;
+		}
+
+		// 攻撃者の現在攻撃力（ownerがあればバフ/デバフ反映、無ければフォールバック値）
+		int attackerAtk = (m_ownerStatus != null) ? m_ownerStatus.GetAttackPower() : m_attackPower;
+		attackerAtk = Mathf.Max(0, attackerAtk);
+
+		switch (m_bulletType)
+		{
+			case Type.Poison:
+				{
+					// --- ① 即時ダメージ：攻撃力100% ---
+					status.Damage(attackerAtk);
+
+					// --- ② DOT付与：攻撃力の poisonScalePerSecond [ダメージ/秒] ---
+					// 1tickあたりダメージ = ATK * 係数/秒 * tick間隔 を丸め（最低1保証）
+					int baseDamagePerTickPerStack = Mathf.Max(
+						1, Mathf.RoundToInt(attackerAtk * poisonScalePerSecond * poisonTickInterval)
+					);
+
+					// Managerを取得（なければ追加）
+					var manager = status.GetComponent<StatusEffectManager>();
+					if (manager == null) manager = status.gameObject.AddComponent<StatusEffectManager>();
+
+					// 同名Key="Poison" の層管理。DOTは各層独立減衰（PerStackDecay=true）が扱いやすい
+					var dot = new DamageOverTimeStackEffect(
+						owner: status,
+						key: "Poison", displayName: "毒",
+						type: DamageType.Poison,
+						initialStacks: 1,
+						maxStacks: Mathf.Max(1, poisonMaxStacks),
+						baseDamagePerTick: baseDamagePerTickPerStack, // 1層あたりのtickダメージ
+						tickInterval: poisonTickInterval,
+						perStackDecay: true,                          // 毒は層ごと減衰が自然
+						durationSeconds: poisonDuration,
+						applyImmediateFirstTick: false
+					);
+
+					// AddOrStack: 同Keyなら層+1、各層の寿命（perStackDuration）を毒の継続秒で付与
+					manager.AddOrStack(
+						effect: dot,
+						stacksToAdd: 1,
+						perStackDuration: poisonDuration
+					);
+					break;
+				}
+
+			case Type.Heal:
+				{
+					// 例：即時回復 + HOT（同名Key="HOT"、層で回復量/tick加算）
+					// int healInstant = attackerAtk;
+					// status.Heal(healInstant);
+					// var manager = status.GetComponent<StatusEffectManager>() ?? status.gameObject.AddComponent<StatusEffectManager>();
+					// var hot = new HealOverTimeStackEffect(...); // ※未実装なら後で提供します
+					// manager.AddOrStack(hot, stacksToAdd: 1, perStackDuration: hotDuration);
+					break;
+				}
+
+			case Type.SpeedBuff:
+				{
+					// 例：速度バフ（Key="Slow" の逆。Key="SpeedBuff" で +x%/層）
+					// var manager = status.GetComponent<StatusEffectManager>() ?? status.gameObject.AddComponent<StatusEffectManager>();
+					// var spd = new SpeedBuffStackEffect(...);
+					// manager.AddOrStack(spd, stacksToAdd: 1, perStackDuration: duration);
+					break;
+				}
+		}
+
+		// ヒット演出
+		if (m_effect != null)
+		{
+			Instantiate(m_effect, m_target.transform.position, Quaternion.identity);
+		}
+
+		if (m_se != null)
+		{
+			SoundEffect.Play3D(m_se, m_target.transform.position);
+		}
+
+		// 弾は役目を終えたので破壊
+		Destroy(gameObject);
 	}
 
-	public void SetStatus(GameObject newTarget,int attackPower,GameObject effect,AudioClip se)
+	private void OnCollisionEnter(Collision collision)
+	{
+		// 壁に当たったら貫通しない
+		if (collision.gameObject.CompareTag("Wall"))
+		{
+			Destroy(gameObject);
+		}
+	}
+
+	/// <summary>
+	/// 追尾弾のパラメータ設定（フォールバック版）。
+	/// owner 未指定時は m_attackPower を使用。
+	/// </summary>
+	public void SetStatus(GameObject newTarget, int attackPower, GameObject effect, AudioClip se)
 	{
 		m_target = newTarget;
 		m_attackPower = attackPower;
 		m_effect = effect;
 		m_se = se;
+		m_ownerStatus = null;
+	}
+
+	/// <summary>
+	/// 追尾弾のパラメータ設定（攻撃者Statusを渡す版：バフ/デバフに追随）。
+	/// </summary>
+	public void SetStatus(GameObject newTarget, Status ownerStatus, GameObject effect, AudioClip se)
+	{
+		m_target = newTarget;
+		m_ownerStatus = ownerStatus; // 攻撃者の現在ATKを参照
+		m_effect = effect;
+		m_se = se;
+
+		// フォールバック値も用意（初期化時点の攻撃力）
+		m_attackPower = (ownerStatus != null) ? ownerStatus.GetAttackPower() : 0;
 	}
 }
