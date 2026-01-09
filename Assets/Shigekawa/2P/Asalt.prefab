@@ -848,7 +848,6 @@ GameObject:
   - component: {fileID: 2037961320255511379}
   - component: {fileID: 862135541586742341}
   - component: {fileID: 5641388775292104170}
-  - component: {fileID: -4050042306735374457}
   m_Layer: 8
   m_Name: Asalt
   m_TagString: Target
@@ -1042,24 +1041,6 @@ CapsuleCollider:
   m_Height: 2.2
   m_Direction: 1
   m_Center: {x: 0, y: 1.1, z: 0}
---- !u!114 &-4050042306735374457
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2287190611394248375}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d54ea43d289c821419b55403125ab7a6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_skillType: 0
-  m_skillBasePoint: {fileID: 4980140841704692513}
-  m_skillRange: 5
-  m_turretPrefab: {fileID: 7817944612077219138, guid: ed571d4a05d784f439f5db506fb96d31,
-    type: 3}
-  m_cooldownTime: 10
 --- !u!1 &2605431855296493822
 GameObject:
   m_ObjectHideFlags: 0
