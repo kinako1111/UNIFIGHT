@@ -16,6 +16,7 @@ public class SkillActivation : MonoBehaviour
 
 	PlayerInput m_playerInput;
 	Animator m_animator;
+	[SerializeField] List<SkillPrint> m_skillPrint = new();
 
 	// スキルごとのクールタイム管理
 	Dictionary<ISkill, float> cooldownTimers = new Dictionary<ISkill, float>();
@@ -77,8 +78,6 @@ public class SkillActivation : MonoBehaviour
 	void OnReleasedSkill(InputAction.CallbackContext context)
 	{
 		ISkill skill = skills[currentSkillIndex];
-
-
 		if (m_approvalSkill && cooldownTimers[skill] <= 0f)
 		{
 			ReleasedSkill();
@@ -140,6 +139,10 @@ public class SkillActivation : MonoBehaviour
 			if (cooldownTimers[skill] > 0f)
 			{
 				cooldownTimers[skill] -= Time.fixedDeltaTime;
+				foreach(SkillPrint skillPrint in m_skillPrint)
+				{
+
+				}
 				if (cooldownTimers[skill] < 0f) cooldownTimers[skill] = 0f;
 			}
 		}

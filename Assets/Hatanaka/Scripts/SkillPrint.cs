@@ -11,7 +11,7 @@ public class SkillPrint : MonoBehaviour
     {
 		ChargeImage = GetComponent<Image>();
 	}
-
+	 
 	// Update is called once per frame
 	public void UpdateClock(float charge)
 	{

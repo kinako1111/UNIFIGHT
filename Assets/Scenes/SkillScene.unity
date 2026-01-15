@@ -424,7 +424,7 @@ GameObject:
   - component: {fileID: 656029187}
   - component: {fileID: 656029186}
   - component: {fileID: 656029188}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Cube (1)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -885,6 +885,89 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdae43f226c78ae4c82ac17f930b7caf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1254716244
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1254716247}
+  - component: {fileID: 1254716246}
+  - component: {fileID: 1254716245}
+  m_Layer: 8
+  m_Name: Cube
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!23 &1254716245
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254716244}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 0aed1b5ccdc807641a7db3a4f8218a35, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1254716246
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254716244}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1254716247
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254716244}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 2.5}
+  m_LocalScale: {x: 2.5, y: 0.1, z: 5}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3517372609033213613}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &1301962424 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3948521606127140827, guid: 02838cb56ae57f74693d7c034a475a8c,
@@ -1737,8 +1820,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2891761588963092254, guid: 3d6782a5d67e6b34eaca7f098c25fdcd,
         type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: ff51d5f80ba74a54598921ab8cd7baa1,
+        type: 3}
+    - target: {fileID: 2891761588963092254, guid: 3d6782a5d67e6b34eaca7f098c25fdcd,
+        type: 3}
       propertyPath: m_FillAmount
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2891761588963092254, guid: 3d6782a5d67e6b34eaca7f098c25fdcd,
         type: 3}
@@ -1748,12 +1837,12 @@ PrefabInstance:
     - target: {fileID: 6396531430402490630, guid: 3d6782a5d67e6b34eaca7f098c25fdcd,
         type: 3}
       propertyPath: m_Name
-      value: Taihou (1)
+      value: Power
       objectReference: {fileID: 0}
     - target: {fileID: 6396531430402490630, guid: 3d6782a5d67e6b34eaca7f098c25fdcd,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4748,7 +4837,7 @@ PrefabInstance:
     - target: {fileID: 2891761588963092254, guid: 3d6782a5d67e6b34eaca7f098c25fdcd,
         type: 3}
       propertyPath: m_FillAmount
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2891761588963092254, guid: 3d6782a5d67e6b34eaca7f098c25fdcd,
         type: 3}
@@ -4763,7 +4852,7 @@ PrefabInstance:
     - target: {fileID: 6396531430402490630, guid: 3d6782a5d67e6b34eaca7f098c25fdcd,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5722,7 +5811,8 @@ MonoBehaviour:
   m_autoAttackInterval: 0.1
   m_bulletPrefab: []
   m_generateTransform: {fileID: 0}
-  m_effect: {fileID: 0}
+  m_effect: {fileID: 5222750351268202474, guid: d7734bd7ce2d02b43ac6d857778f51f7,
+    type: 3}
   m_se: {fileID: 0}
 --- !u!23 &3171337861794263726
 MeshRenderer:
@@ -6060,6 +6150,7 @@ Transform:
   m_Children:
   - {fileID: 4039094895606692800}
   - {fileID: 5427283138822291148}
+  - {fileID: 1254716247}
   m_Father: {fileID: 4090131653976606770}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3528582989031897139
@@ -7182,7 +7273,7 @@ PrefabInstance:
     - target: {fileID: 1243957255191431763, guid: 02838cb56ae57f74693d7c034a475a8c,
         type: 3}
       propertyPath: m_Name
-      value: Canvas (1)
+      value: SkillUI
       objectReference: {fileID: 0}
     - target: {fileID: 3188634541877351559, guid: 02838cb56ae57f74693d7c034a475a8c,
         type: 3}
@@ -7299,8 +7390,7 @@ PrefabInstance:
       propertyPath: m_FillAmount
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 7279691846697157584, guid: 02838cb56ae57f74693d7c034a475a8c, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 1556275513431541671, guid: 02838cb56ae57f74693d7c034a475a8c, type: 3}
     - {fileID: 6307874710730341269, guid: 02838cb56ae57f74693d7c034a475a8c, type: 3}
@@ -10396,7 +10486,7 @@ PrefabInstance:
     - target: {fileID: 8125023391788984430, guid: 4b79cff24a945d443a18808484ee1e0d,
         type: 3}
       propertyPath: m_Name
-      value: Canvas
+      value: StatusUI
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11104,7 +11194,8 @@ MonoBehaviour:
   - {fileID: 297142082120475545, guid: fee0818209e86b747a27eb4cd79dfb2b, type: 3}
   - {fileID: 297142082120475545, guid: fe5b517a7d2a84142b70948ade0ff344, type: 3}
   m_generateTransform: {fileID: 725970350442463278}
-  m_effect: {fileID: 0}
+  m_effect: {fileID: 5222750351268202474, guid: d7734bd7ce2d02b43ac6d857778f51f7,
+    type: 3}
   m_se: {fileID: 8300000, guid: 9ff956574cfe9684283738eb617f7a49, type: 3}
 --- !u!1 &7366783916110886817
 GameObject:
@@ -12107,10 +12198,11 @@ MonoBehaviour:
   m_autoAttackCount: 1
   m_simultaneous: 1
   m_magnification: 100
-  m_autoAttackInterval: 0.75
+  m_autoAttackInterval: 0
   m_bulletPrefab: []
   m_generateTransform: {fileID: 0}
-  m_effect: {fileID: 0}
+  m_effect: {fileID: 5222750351268202474, guid: d7734bd7ce2d02b43ac6d857778f51f7,
+    type: 3}
   m_se: {fileID: 0}
 --- !u!114 &7981138418582269248
 MonoBehaviour:
@@ -12960,6 +13052,7 @@ MonoBehaviour:
   skillComponents:
   - {fileID: 8407726400515303783}
   - {fileID: 8407726400515303784}
+  m_skillPrint: []
 --- !u!114 &8407726400515303783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13917,6 +14010,9 @@ MonoBehaviour:
   skillComponents:
   - {fileID: 8866081849299868086}
   - {fileID: 8866081849299868085}
+  m_skillPrint:
+  - {fileID: 955719243835288875}
+  - {fileID: 126133645581574246}
 --- !u!114 &8866081849299868088
 MonoBehaviour:
   m_ObjectHideFlags: 0
