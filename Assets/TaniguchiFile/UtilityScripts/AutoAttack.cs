@@ -41,6 +41,9 @@ public class AutoAttack : MonoBehaviour
 	[Header("再生するAudioClip"), SerializeField]
 	AudioClip m_se;
 
+	[Header("障害物レイヤー"), SerializeField]
+	LayerMask m_obstacleLayer;
+
 	//範囲内のUnitのリスト
 	List<GameObject> m_unitList = new();
 
@@ -110,24 +113,10 @@ public class AutoAttack : MonoBehaviour
 		}
 	}
 
-	IEnumerator RepeatAttack()
-	{
-		while (true)
-		{
-			// 攻撃処理（OnFire の中身を関数化して呼び出す）
-			TryExecuteAutoAttack();
-			yield return new WaitForSeconds(m_autoAttackInterval); // 攻撃間隔（調整可能）
-		}
-	}
 
-
-	// ★ ExecuteAutoAttack をクールダウン判定付きの Try に変更
 	private void TryExecuteAutoAttack()
 	{
-		// 攻撃中は発動しない（アニメ中の多重発動防止）
 		if (m_isAttack) return;
-
-		// クールダウン：次に攻撃できる時刻になるまで発動しない
 		if (Time.time < m_nextAttackTime) return;
 
 		m_unitList.Clear();
@@ -135,27 +124,35 @@ public class AutoAttack : MonoBehaviour
 
 		Collider[] colliders = Physics.OverlapSphere(transform.position, m_autoAttackRange);
 
-		m_unitList = colliders
+		var candidates = colliders
 			.Select(col => col.gameObject)
 			.Where(obj => obj != this.gameObject && obj.CompareTag("Enemy"))
 			.OrderBy(obj => (transform.position - obj.transform.position).sqrMagnitude)
 			.ToList();
 
-		if (m_unitList.Count == 0) return;
+		if (candidates.Count == 0) return;
 
-		for (int i = 0; i < m_simultaneous && i < m_unitList.Count; i++)
+		foreach (var enemy in candidates)
 		{
-			m_target.Add(m_unitList[i]);
+			if (m_target.Count >= m_simultaneous) break;
+
+			// Raycastで障害物チェック
+			Vector3 direction = (enemy.transform.position - transform.position).normalized;
+			float distance = Vector3.Distance(transform.position, enemy.transform.position);
+
+			if (!Physics.Raycast(transform.position, direction, distance, m_obstacleLayer))
+			{
+				// 障害物がない場合のみターゲットに追加
+				m_target.Add(enemy);
+			}
 		}
 
-		// 実際に攻撃を発動
+		if (m_target.Count == 0) return;
+
 		m_animator.SetTrigger("AutoAttack");
 		m_isAttack = true;
-
-		// ★ 次の攻撃可能時刻をセット（ここが重要）
 		m_nextAttackTime = Time.time + m_autoAttackInterval;
 	}
-
 
 	public void OnAttackStart()
 	{

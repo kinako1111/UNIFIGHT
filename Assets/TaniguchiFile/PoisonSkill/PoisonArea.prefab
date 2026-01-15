@@ -24569,7 +24569,7 @@ GameObject:
   - component: {fileID: 8355862849562929745}
   - component: {fileID: 1011451229951976110}
   - component: {fileID: 8916378515800940891}
-  - component: {fileID: -1037661713334788688}
+  - component: {fileID: -932442075424462672}
   m_Layer: 0
   m_Name: PoisonArea
   m_TagString: Untagged
@@ -29509,7 +29509,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 4
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-1037661713334788688
+--- !u!114 &-932442075424462672
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -29518,21 +29518,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7062806617379088084}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 582ea67d747c110448395db5a88152d5, type: 3}
+  m_Script: {fileID: 11500000, guid: e3cdb24b3cab4d248b4e478cbf18e751, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effectKey: AreaPoison
-  displayName: "\u6BD2\u306E\u9727"
+  radius: 5
+  baseDamagePerTick: 50
+  tickInterval: 1
+  duration: 10
+  perStackSlow: 0.3
   damageType: 4
-  initialStacks: 1
-  maxStacks: 10
-  baseDamagePerTick: 2
-  tickInterval: 0.5
-  perStackDecay: 0
-  refreshDurationSeconds: 2
-  applyImmediateFirstTick: 1
-  targetLayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  requiredTag: Enemy
-  refreshInterval: 0.5
