@@ -50,8 +50,9 @@ public class AutoAttack : MonoBehaviour
 	Status m_status;
 	bool m_isAttack;
 	private bool m_isFirePressed = false;
-	private Coroutine m_attackCoroutine;
 	int m_currentBullet = 0;
+	float m_nextAttackTime = 0f;	//攻撃間隔のクールダウンを測る変数
+
 
 	public bool IsAttack => m_isAttack;
 
@@ -80,19 +81,12 @@ public class AutoAttack : MonoBehaviour
 		//Fireが押されている間、攻撃範囲を表示
 		m_rangeLooks.SetActive( m_isFirePressed );
 
-		// 押されたら攻撃開始
-		if (m_isFirePressed && m_attackCoroutine == null)
-		{
-			m_attackCoroutine = StartCoroutine(RepeatAttack());
-		}
 
-		// 離されたら攻撃停止
-		if (!m_isFirePressed && m_attackCoroutine != null)
+		// ★ 連打しても m_nextAttackTime に到達するまでは攻撃しない
+		if (m_isFirePressed)
 		{
-			StopCoroutine(m_attackCoroutine);
-			m_attackCoroutine = null;
+			TryExecuteAutoAttack();
 		}
-
 
 		// 弾の切り替え
 		if (m_CreateBullet)
@@ -121,14 +115,20 @@ public class AutoAttack : MonoBehaviour
 		while (true)
 		{
 			// 攻撃処理（OnFire の中身を関数化して呼び出す）
-			ExecuteAutoAttack();
+			TryExecuteAutoAttack();
 			yield return new WaitForSeconds(m_autoAttackInterval); // 攻撃間隔（調整可能）
 		}
 	}
 
-	private void ExecuteAutoAttack()
+
+	// ★ ExecuteAutoAttack をクールダウン判定付きの Try に変更
+	private void TryExecuteAutoAttack()
 	{
+		// 攻撃中は発動しない（アニメ中の多重発動防止）
 		if (m_isAttack) return;
+
+		// クールダウン：次に攻撃できる時刻になるまで発動しない
+		if (Time.time < m_nextAttackTime) return;
 
 		m_unitList.Clear();
 		m_target.Clear();
@@ -143,14 +143,19 @@ public class AutoAttack : MonoBehaviour
 
 		if (m_unitList.Count == 0) return;
 
-		m_animator.SetTrigger("AutoAttack");
-		m_isAttack = true;
-
 		for (int i = 0; i < m_simultaneous && i < m_unitList.Count; i++)
 		{
 			m_target.Add(m_unitList[i]);
 		}
+
+		// 実際に攻撃を発動
+		m_animator.SetTrigger("AutoAttack");
+		m_isAttack = true;
+
+		// ★ 次の攻撃可能時刻をセット（ここが重要）
+		m_nextAttackTime = Time.time + m_autoAttackInterval;
 	}
+
 
 	public void OnAttackStart()
 	{
