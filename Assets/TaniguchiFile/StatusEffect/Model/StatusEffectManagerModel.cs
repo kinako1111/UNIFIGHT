@@ -8,6 +8,7 @@ using UnityEngine;
 public class StatusEffectManagerModel : MonoBehaviour
 {
 	private readonly Dictionary<string, IStatusEffectModel> _effectsByKey = new();
+	private readonly List<string> pendingRemove = new();
 	private Status _status;
 
 	private void Awake()
@@ -15,19 +16,30 @@ public class StatusEffectManagerModel : MonoBehaviour
 		if (_status == null) _status = GetComponent<Status>();
 	}
 
+
+
 	private void Update()
 	{
+		if (_status == null) return;
+
 		float dt = Time.deltaTime;
-		// Tick & 期限切れ削除
-		var toRemove = new List<string>();
-		foreach (var kv in _effectsByKey)
+
+		// ★ コピーを作って回す（元の Dictionary を直接回さない）
+		foreach (var kv in new List<KeyValuePair<string, IStatusEffectModel>>(_effectsByKey))
 		{
 			kv.Value.Tick(dt);
+
 			if (kv.Value.IsExpired)
-				toRemove.Add(kv.Key);
+				pendingRemove.Add(kv.Key);
 		}
-		foreach (var key in toRemove) _effectsByKey.Remove(key);
+
+		// ★ Tick が全部終わってからまとめて Remove
+		foreach (var key in pendingRemove)
+			_effectsByKey.Remove(key);
+
+		pendingRemove.Clear();
 	}
+
 
 	/// <summary>
 	/// 新規効果を「同Keyならスタック増加」で扱う。新規Keyなら追加。
@@ -55,10 +67,13 @@ public class StatusEffectManagerModel : MonoBehaviour
 	}
 
 	/// <summary>同Keyの効果を完全解除</summary>
+
 	public void RemoveEffect(string key)
 	{
-		_effectsByKey.Remove(key);
+		if (_effectsByKey.ContainsKey(key))
+			pendingRemove.Add(key);
 	}
+
 
 	/// <summary>全解除（死亡時など）</summary>
 	public void ClearAll() => _effectsByKey.Clear();

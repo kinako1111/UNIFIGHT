@@ -24571,7 +24571,7 @@ GameObject:
   - component: {fileID: 8916378515800940891}
   - component: {fileID: -932442075424462672}
   m_Layer: 0
-  m_Name: PoisonArea
+  m_Name: PoisonAreaAlly
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29522,8 +29522,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 5
-  baseDamagePerTick: 50
+  baseDamagePerTick: 20
   tickInterval: 1
-  duration: 10
+  duration: 5
   perStackSlow: 0.3
   damageType: 4
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 64

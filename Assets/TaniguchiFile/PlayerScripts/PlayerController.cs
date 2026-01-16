@@ -67,7 +67,7 @@ public class PlayerController : MonoBehaviour
 
 		// 操作入力と鉛直方向速度から、現在速度を計算
 		var moveVelocity = new Vector3(
-			m_inputMove.x * m_speed,
+			m_inputMove.x * m_status.GetSpeed(),
 			0,
 			m_inputMove.y * m_speed
 		);

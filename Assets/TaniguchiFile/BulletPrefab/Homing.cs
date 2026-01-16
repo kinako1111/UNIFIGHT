@@ -38,6 +38,12 @@ public class Homing : MonoBehaviour
 	[Header("毒のTick間隔(秒)"), SerializeField]
 	private float poisonTickInterval = 1.0f;
 
+	[Header("弾毎の効果音(無ければ無視)"), SerializeField]
+	private AudioClip m_bulletSe; 
+
+	[Header("弾毎のエフェクト(無ければ無視)"), SerializeField]
+	private GameObject m_bulletEffect;
+
 	// --- 実行時パラメータ ---
 	private GameObject m_target;        // 追尾対象（敵）
 
@@ -123,37 +129,6 @@ public class Homing : MonoBehaviour
 				{
 					// --- ① 即時ダメージ：攻撃力100% ---
 					status.Damage(attackerAtk);
-
-					// --- ② DOT付与：攻撃力の poisonScalePerSecond [ダメージ/秒] ---
-					// 1tickあたりダメージ = ATK * 係数/秒 * tick間隔 を丸め（最低1保証）
-					int baseDamagePerTickPerStack = Mathf.Max(
-						1, Mathf.RoundToInt(attackerAtk * poisonScalePerSecond * poisonTickInterval)
-					);
-
-					// Managerを取得（なければ追加）
-					var manager = status.GetComponent<StatusEffectManagerModel>();
-					if (manager == null) manager = status.gameObject.AddComponent<StatusEffectManagerModel>();
-
-					// 同名Key="Poison" の層管理。DOTは各層独立減衰（PerStackDecay=true）が扱いやすい
-					var dot = new DamageOverTimeStackEffect(
-						owner: status,
-						key: "Poison", displayName: "毒",
-						type: DamageType.Poison,
-						initialStacks: 1,
-						maxStacks: Mathf.Max(1, poisonMaxStacks),
-						baseDamagePerTick: baseDamagePerTickPerStack, // 1層あたりのtickダメージ
-						tickInterval: poisonTickInterval,
-						perStackDecay: true,                          // 毒は層ごと減衰が自然
-						durationSeconds: poisonDuration,
-						applyImmediateFirstTick: false
-					);
-
-					// AddOrStack: 同Keyなら層+1、各層の寿命（perStackDuration）を毒の継続秒で付与
-					manager.AddOrStack(
-						effect: dot,
-						stacksToAdd: 1,
-						perStackDuration: poisonDuration
-					);
 					break;
 				}
 
@@ -187,6 +162,17 @@ public class Homing : MonoBehaviour
 		if (m_se != null)
 		{
 			SoundEffect.Play3D(m_se, m_target.transform.position);
+		}
+
+		//その弾専用のヒット演出
+		if (m_bulletEffect != null)
+		{
+			Instantiate(m_bulletEffect, m_target.transform.position, Quaternion.identity);
+		}
+
+		if (m_bulletSe != null)
+		{
+			SoundEffect.Play3D(m_bulletSe, m_target.transform.position);
 		}
 
 		// 弾は役目を終えたので破壊

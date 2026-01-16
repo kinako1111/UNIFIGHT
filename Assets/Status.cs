@@ -35,9 +35,15 @@ public class Status : MonoBehaviour
 	int hp;
 	int baseAttackPower; // 基本値
 	int attackPower;     // 現在値（フォールバック用）
+	float baseSpeed;	 //基本値
+	float speed;		 //現在値
 	string range;
 	int maxHp;
 	bool isDeath;
+
+	//速度上限と下限
+	const float MaxSpeed = 10;
+	const float MinSpeed = 0.5f;
 
 	private void Awake()
 	{
@@ -47,14 +53,19 @@ public class Status : MonoBehaviour
 
 	void Start()
 	{
+		//ステータスの取得
 		unitData = unit.dataArray[(int)m_name];
 
 		character = unitData.Character;
 		hp = unitData.Hp;
 		baseAttackPower = unitData.Attackpower;
+		baseSpeed = unitData.Speed;
 		maxHp = unitData.Hp;
 		isDeath = false;
+
+		//ステータスの初期化
 		attackPower = baseAttackPower;
+		speed = baseSpeed;
 	}
 
 	// --- ステータス取得メソッド ---
@@ -74,6 +85,16 @@ public class Status : MonoBehaviour
 		return attackPower; // Manager未設定時は従来値
 	}
 
+	public float GetSpeed()
+	{
+		if(effectManager != null)
+		{
+			//状態異常マネージャー設定時、変更後の速度を返す
+			float modified = effectManager.CalculateMoveSpeed(baseSpeed);
+		}
+		return speed;
+	}
+
 	public int GetMaxHp() => maxHp;
 	public string GetRange() => range;
 	public bool GetDeath() => isDeath;
@@ -91,6 +112,17 @@ public class Status : MonoBehaviour
 		attackPower = baseAttackPower;
 	}
 
+	public void SetSpeed(int newSpeed)
+	{
+		if (isDeath) return;
+		speed = Mathf.Clamp(newSpeed,MinSpeed,MaxSpeed);
+	}
+
+	public void ResetSpeed()
+	{
+		if (isDeath) return;
+		speed = baseSpeed;
+	}
 
 	public void Damage(int damage)
 	{

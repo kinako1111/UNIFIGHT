@@ -208,6 +208,13 @@ MonoBehaviour:
   speed: 10
   arcHeight: 0
   m_deathTime: 3
+  poisonDuration: 5
+  poisonScalePerSecond: 0.3
+  poisonMaxStacks: 3
+  poisonTickInterval: 1
+  m_bulletSe: {fileID: 0}
+  m_bulletEffect: {fileID: 7062806617379088084, guid: b25836fa85e58334e8fefbbd2653ea47,
+    type: 3}
 --- !u!54 &7121388328663856859
 Rigidbody:
   m_ObjectHideFlags: 0

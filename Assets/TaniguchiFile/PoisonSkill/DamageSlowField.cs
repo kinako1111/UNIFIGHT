@@ -7,9 +7,10 @@ public class DamageSlowField : MonoBehaviour
 	public float radius = 5f;
 	public int baseDamagePerTick = 50;
 	public float tickInterval = 1f;
-	public float duration = 10f;
-	public float perStackSlow = 0.3f; // 30%減速
+	public float duration = 5f;
+	public float perStackSlow = 0.3f;
 	public DamageType damageType = DamageType.Poison;
+	public LayerMask targetLayers;  
 
 	private SphereCollider triggerCollider;
 
@@ -19,12 +20,20 @@ public class DamageSlowField : MonoBehaviour
 		triggerCollider.isTrigger = true;
 		triggerCollider.radius = radius;
 
-		// フィールド寿命
+		if (gameObject.transform.position.y <= 0)
+		{
+			gameObject.transform.position = new Vector3(transform.position.x, 0.5f, transform.position.z);
+		}
+
 		Destroy(gameObject, duration);
 	}
 
 	private void OnTriggerEnter(Collider other)
 	{
+		// ★ レイヤーマスク判定（対象外なら return）
+		if ((targetLayers.value & (1 << other.gameObject.layer)) == 0)
+			return;
+
 		var manager = other.GetComponent<StatusEffectManagerModel>();
 		var status = other.GetComponent<Status>();
 
@@ -45,7 +54,7 @@ public class DamageSlowField : MonoBehaviour
 				durationSeconds: duration,
 				applyImmediateFirstTick: true
 			);
-			manager.AddOrStack(dot, stacksToAdd: 0);
+			manager.AddOrStack(dot, 0);
 
 			var slow = new SlowStackEffect(
 				status,
@@ -55,7 +64,7 @@ public class DamageSlowField : MonoBehaviour
 				perStackDecay: false,
 				durationSeconds: duration
 			);
-			manager.AddOrStack(slow, stacksToAdd: 0);
+			manager.AddOrStack(slow, 0);
 		}
 		else
 		{
@@ -65,6 +74,10 @@ public class DamageSlowField : MonoBehaviour
 
 	private void OnTriggerExit(Collider other)
 	{
+		// ★ レイヤーマスク判定
+		if ((targetLayers.value & (1 << other.gameObject.layer)) == 0)
+			return;
+
 		var manager = other.GetComponent<StatusEffectManagerModel>();
 		if (manager != null)
 		{
