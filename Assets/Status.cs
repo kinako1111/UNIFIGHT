@@ -30,6 +30,9 @@ public class Status : MonoBehaviour
 	UnitData unitData;
 	StatusEffectManagerModel effectManager; // ★ Manager参照追加
 
+	// イベント宣言（現在HP, 最大HP）
+	public event System.Action<int, int> OnHpChanged;
+
 	// ステータス情報
 	string character;
 	int hp;
@@ -131,6 +134,9 @@ public class Status : MonoBehaviour
 		hp -= damage;
 		Debug.Log(damage);
 
+		// Damage の末尾や hp が変わった直後に：
+		OnHpChanged?.Invoke(hp, maxHp);
+
 		var takeDamage = GetComponent<TakeDamage>();
 		if (takeDamage != null)
 		{
@@ -157,6 +163,7 @@ public class Status : MonoBehaviour
 	{
 		if (isDeath) return;
 		hp = Mathf.Min(hp + heal, maxHp);
+		OnHpChanged?.Invoke(hp, maxHp);
 		m_animator.SetTrigger("Heal");
 	}
 }

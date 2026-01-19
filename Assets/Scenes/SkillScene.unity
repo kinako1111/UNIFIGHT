@@ -2610,8 +2610,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3363570942842533546}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -4058,7 +4058,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1948381452219302205
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4493,6 +4493,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6206048768948587258}
   - component: {fileID: 6029825479772855488}
+  - component: {fileID: 6206048768948587259}
   m_Layer: 5
   m_Name: Hp
   m_TagString: Untagged
@@ -4762,7 +4763,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &2291947159161646287
 GameObject:
   m_ObjectHideFlags: 0
@@ -9239,7 +9240,7 @@ RectTransform:
   m_Father: {fileID: 6434303068142858478}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -10190,6 +10191,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -100}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6206048768948587259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2206315133356813189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fe0ac3bdcda9f242a179a1dc5b5b6b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_status: {fileID: 2037961319357880111}
 --- !u!4 &6206283504005515119
 Transform:
   m_ObjectHideFlags: 0
@@ -13850,7 +13864,11 @@ MonoBehaviour:
   skillComponents:
   - {fileID: 8407726400515303783}
   - {fileID: 8407726400515303784}
-  uiBindings: []
+  uiBindings:
+  - skillComponent: {fileID: 8407726400515303783}
+    skillPrint: {fileID: 0}
+  - skillComponent: {fileID: 8407726400515303784}
+    skillPrint: {fileID: 0}
 --- !u!114 &8407726400515303783
 MonoBehaviour:
   m_ObjectHideFlags: 0

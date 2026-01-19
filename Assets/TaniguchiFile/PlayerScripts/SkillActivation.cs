@@ -29,7 +29,7 @@ public class SkillActivation : MonoBehaviour
 	public class SkillUIBinding
 	{
 		[SerializeField] private MonoBehaviour skillComponent; // ISkill 実装を持つコンポーネント
-		[SerializeField] private SkillPrint skillPrint;     // クールタイムUI（Image.fillAmount を更新）
+		[SerializeField] private SkillPrint skillPrint;        // クールタイムUI（Image.fillAmount を更新）
 
 		// 外部からは読み取り専用でアクセスする
 		public ISkill Skill => skillComponent as ISkill;
@@ -68,10 +68,10 @@ public class SkillActivation : MonoBehaviour
 	// 状態管理用のフィールド
 	// ─────────────────────────────────────────────────
 	int currentSkillIndex = 0; // 現在「準備中」のスキルインデックス
-	bool m_approvalSkill;       // 準備状態フラグ（ボタン押下中など）
+	bool m_approvalSkill;      // 準備状態フラグ（ボタン押下中など）
 
-	PlayerInput m_playerInput;  // 新Input System のエントリポイント
-	Animator m_animator;     // 発動時のアニメ再生などに使用
+	PlayerInput m_playerInput; // 新Input System のエントリポイント
+	Animator m_animator;       // 発動時のアニメ再生などに使用
 
 	// 個別クールタイム管理：各 ISkill ごとの残り時間（秒）
 	Dictionary<ISkill, float> cooldownTimers = new Dictionary<ISkill, float>();
@@ -125,14 +125,28 @@ public class SkillActivation : MonoBehaviour
 			if (!skillToPrint.ContainsKey(s))
 			{
 				skillToPrint.Add(s, sp);
-				// 起動時は「使用可 = 0」に見せる
-				sp.UpdateClock(0f);
+				// ★ 変更点：ここでは sp.UpdateClock(0f) を呼ばない（Awake順依存を避ける）
 			}
 		}
 
 		// 3) 入力イベント用デリゲート（解除で同参照を使えるよう、フィールドに保持）
 		onSkill1Performed = ctx => OnPreparation(0); // Skill1 入力でスキル0を準備
 		onSkill2Performed = ctx => OnPreparation(1); // Skill2 入力でスキル1を準備
+	}
+
+	/// <summary>
+	/// ★ 変更点：初回UI同期は Start で行う（他オブジェクトの Awake 完了後）
+	/// </summary>
+	private void Start()
+	{
+		foreach (var kv in skillToPrint)
+		{
+			var sp = kv.Value;
+			if (sp != null)
+			{
+				sp.UpdateClock(0f);
+			}
+		}
 	}
 
 	// ─────────────────────────────────────────────────
