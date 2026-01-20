@@ -29,6 +29,7 @@ public class Status : MonoBehaviour
 	Animator m_animator;
 	UnitData unitData;
 	StatusEffectManagerModel effectManager; // ★ Manager参照追加
+	TakeDamage takeDamage;
 
 	// イベント宣言（現在HP, 最大HP）
 	public event System.Action<int, int> OnHpChanged;
@@ -43,6 +44,7 @@ public class Status : MonoBehaviour
 	string range;
 	int maxHp;
 	bool isDeath;
+	const float DeathTimer = 2f;
 
 	//速度上限と下限
 	const float MaxSpeed = 10;
@@ -52,6 +54,7 @@ public class Status : MonoBehaviour
 	{
 		m_animator = GetComponent<Animator>();
 		effectManager = GetComponent<StatusEffectManagerModel>(); // ★ 自動取得
+		takeDamage = GetComponent<TakeDamage>();
 	}
 
 	void Start()
@@ -137,11 +140,8 @@ public class Status : MonoBehaviour
 		// Damage の末尾や hp が変わった直後に：
 		OnHpChanged?.Invoke(hp, maxHp);
 
-		var takeDamage = GetComponent<TakeDamage>();
-		if (takeDamage != null)
-		{
-			takeDamage.ShowDamageUI(damage);
-		}
+		takeDamage.ShowDamageUI(damage);
+		
 
 		if (hp <= 0)
 		{
@@ -155,7 +155,7 @@ public class Status : MonoBehaviour
 				effectManager.ClearAll();
 			}
 
-			Destroy(gameObject, 2f);
+			Destroy(gameObject, DeathTimer);
 		}
 	}
 

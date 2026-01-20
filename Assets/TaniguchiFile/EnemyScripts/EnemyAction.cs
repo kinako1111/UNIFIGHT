@@ -94,7 +94,8 @@ public class EnemyAction : MonoBehaviour
 		}
 
 		//現在最も近いターゲットを取得
-		GameObject clossTarget = m_targetList.OrderBy(target => Vector3.Distance(target.transform.position, transform.position)).First();
+		GameObject clossTarget = m_targetList.OrderBy(
+			target => Vector3.Distance(target.transform.position, transform.position)).First();
 
 		//攻撃範囲内にプレイヤーがいる場合
 		if ((clossTarget.transform.position - transform.position).magnitude <= AttackRange)
@@ -105,7 +106,8 @@ public class EnemyAction : MonoBehaviour
 			//攻撃中は向きも変わらない
 			if (!isAttack)
 			{
-				transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(clossTarget.transform.position - transform.position), 0.2f);
+				transform.rotation = Quaternion.Lerp(transform.rotation,
+					Quaternion.LookRotation(clossTarget.transform.position - transform.position), 0.2f);
 			}
 
 			//クールタイム終了と同時に攻撃
@@ -115,6 +117,7 @@ public class EnemyAction : MonoBehaviour
 				OnAttack();
 			}
 		}
+
 		else
 		{
 			isMove = true;
@@ -187,5 +190,11 @@ public class EnemyAction : MonoBehaviour
 	public void SetSlider(Slider slider)
 	{
 		m_slider = slider;
+	}
+
+	//ヘイト管理
+	public void ChangeHate(int order,GameObject target)
+	{
+		m_targetList.Insert(order, target);
 	}
 }
