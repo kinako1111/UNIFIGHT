@@ -6,7 +6,7 @@ using UnityEngine;
 public class Decoy : MonoBehaviour
 {
 	[Header("注目範囲"), SerializeField]
-	float m_attentionRange;
+	Collider m_attentionCollider;
 
 	[Header("消えるまでの時間"), SerializeField]
 	float m_deathTimer;
@@ -17,6 +17,8 @@ public class Decoy : MonoBehaviour
 	[Header("破壊時の効果音"), SerializeField]
 	AudioClip m_se;
 
+	Collider[] m_targetCollider;
+
 	Status m_status;
 
 	private void Awake()
@@ -26,21 +28,35 @@ public class Decoy : MonoBehaviour
 
 	private void Start()
 	{
-		Collider[] colliders = Physics.OverlapSphere(transform.position, m_attentionRange);
-		foreach(Collider targetCollider in colliders)
-		{
-			GameObject target = targetCollider.gameObject;
-			EnemyAction enemyaction;
-			if (target.TryGetComponent(out enemyaction))
-			{
-				enemyaction.ChangeHate(0, target);
-			}
-		}
+		//m_targetCollider = Physics.OverlapSphere(transform.positio);
+		//foreach(Collider targetCollider in m_targetCollider)
+		//{
+		//	GameObject target = targetCollider.gameObject;
+		//	EnemyAction enemyaction;
+		//	if (target.TryGetComponent(out enemyaction))
+		//	{
+		//		enemyaction.ChangeHate(0, gameObject);
+		//		Debug.Log("ヘイト変更");
+		//	}
+		//}
 		Destroy(gameObject,m_deathTimer);
+	}
+
+	private void OnTriggerEnter(Collider other)
+	{
+		//Enemeyタグがなければ対象外
+		if (!other.CompareTag("Enemy")) return;
+		
+	}
+
+	private void OnTriggerExit(Collider other)
+	{
+		
 	}
 
 	private void OnDestroy()
 	{
+
 		if(m_effect != null)
 		{
 			Instantiate(m_effect,gameObject.transform.position,Quaternion.identity);

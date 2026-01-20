@@ -140,7 +140,7 @@ public class Status : MonoBehaviour
 		// Damage ‚Ì––”ö‚â hp ‚ª•Ï‚í‚Á‚½’¼Œã‚ÉF
 		OnHpChanged?.Invoke(hp, maxHp);
 
-		takeDamage.ShowDamageUI(damage);
+		if (takeDamage!= null) takeDamage.ShowDamageUI(damage);
 		
 
 		if (hp <= 0)

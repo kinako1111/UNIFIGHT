@@ -44,6 +44,8 @@ public class EnemyAction : MonoBehaviour
 	int KnockBackDamage;
 
 	//防衛対象のリスト
+
+	[SerializeField]
 	List<GameObject> m_targetList = new();
 
 	//プレイヤーのリスト
@@ -197,4 +199,6 @@ public class EnemyAction : MonoBehaviour
 	{
 		m_targetList.Insert(order, target);
 	}
+
+	//次のターゲットに迎えるようにリストから削除
 }
