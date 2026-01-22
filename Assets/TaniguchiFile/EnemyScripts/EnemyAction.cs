@@ -1,182 +1,304 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using TMPro;
-
-//using UnityEditor.Experimental.GraphView;
+using TMPro; // 必要に応じて
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
-//using UnityEngine.UIElements;
 
 public class EnemyAction : MonoBehaviour
 {
+	// 攻撃の種類（現状は物理攻撃のみ）
 	enum AttackList
 	{
 		PhysicalAttack,
 	}
 
+	[Header("ステータス")]
 	[SerializeField] Status status;
 
-	[Header("Navmesh"), SerializeField]
-	NavMeshAgent m_navmeshAgent;
+	[Header("NavMesh")]
+	[SerializeField] NavMeshAgent m_navmeshAgent;
 
-	[Header("エフェクトのリスト"), SerializeField]
-	List<GameObject> m_effectList = new();
+	[Header("エフェクトリスト")]
+	[SerializeField] List<GameObject> m_effectList = new();
 
-	[Header("攻撃地点のTransform"), SerializeField]
-	List<Transform> m_attackPos = new();
+	[Header("攻撃判定発生位置")]
+	[SerializeField] List<Transform> m_attackPos = new();
 
-	[Header("サウンドのリスト"), SerializeField]
-	List<AudioClip> m_soundList = new();
+	[Header("サウンドリスト")]
+	[SerializeField] List<AudioClip> m_soundList = new();
 
-	[Header("攻撃範囲"), SerializeField]
-	float AttackRange;
+	[Header("攻撃範囲")]
+	[SerializeField] float AttackRange = 2.0f;
 
-	[Header("自身のコライダー"), SerializeField]
-	Collider m_collider;
+	[Header("自身のコライダー")]
+	[SerializeField] Collider m_collider;
 
-	[Header("攻撃のコライダー"), SerializeField]
-	List<Collider> m_colliderList = new();
+	[Header("攻撃用コライダー")]
+	[SerializeField] List<Collider> m_colliderList = new();
 
-	[Header("ノックバックするダメージ"), SerializeField]
-	int KnockBackDamage;
+	[Header("攻撃クールタイム")]
+	[SerializeField] float m_attackCoolTime = 2.0f;
 
-	//防衛対象のリスト
+	[Header("ターゲットリスト（デコイ・防衛対象・プレイヤー）")]
+	[SerializeField] List<GameObject> m_targetList = new();
 
-	[SerializeField]
-	List<GameObject> m_targetList = new();
+	// UI関連
+	[SerializeField] Slider m_slider;
 
-	//プレイヤーのリスト
-	[SerializeField]
-	List<GameObject> m_playerList = new();
-
-	[Header("攻撃のクールタイム"), SerializeField]
-	float m_attackCoolTime;
-
+	// 内部変数
 	Animator m_animator;
+	Status m_status; // 自身のStatusコンポーネントキャッシュ
 	float m_coolTime;
 	bool isMove;
 	bool isAttack = false;
 	bool m_damageAction = false;
 
-	bool isBossWave = false;
-
-	[SerializeField] Slider m_slider;
-	[SerializeField] EnemyFactory m_factory;
-
+	// 回転速度（スムーズな方向転換用）
+	float rotationSpeed = 5.0f;
 
 	private void Awake()
 	{
 		m_animator = GetComponent<Animator>();
-		m_playerList.AddRange(GameObject.FindGameObjectsWithTag("Player"));
-		m_targetList.AddRange(GameObject.FindGameObjectsWithTag("Target"));
-		m_targetList.AddRange(GameObject.FindGameObjectsWithTag("Player"));
+		m_status = GetComponent<Status>();
+
+		//攻撃のクールタイム
+		m_coolTime = m_attackCoolTime;
+
+		// 初期状態でシーンにいるプレイヤーや防衛対象をリストに入れる
+		// （動的に増減する場合はChangeHate/RemoveHateで管理）
+		AddTargetsByTag("Player");
+		AddTargetsByTag("Target");
+	}
+
+	// 指定タグのオブジェクトをまとめてリストに追加するヘルパー
+	private void AddTargetsByTag(string tagName)
+	{
+		GameObject[] objects = GameObject.FindGameObjectsWithTag(tagName);
+		foreach (var obj in objects)
+		{
+			if (!m_targetList.Contains(obj))
+			{
+				m_targetList.Add(obj);
+			}
+		}
 	}
 
 	private void FixedUpdate()
 	{
-		if (m_slider != null)
-		{
-			m_slider.maxValue = status.GetMaxHp();
-			m_slider.value = status.GetHp();
-		}
-
+		// 1. 死亡判定
 		if (status.GetDeath())
 		{
-			m_navmeshAgent.isStopped = true;
-
-			//コライダー持ちはコライダーも消す
-			if (m_collider != null)
-			{
-				m_collider.enabled = false;
-			}
+			HandleDeath();
 			return;
 		}
 
-		//現在最も近いターゲットを取得
-		GameObject clossTarget = m_targetList.OrderBy(
-			target => Vector3.Distance(target.transform.position, transform.position)).First();
+		// 2. UI更新
+		UpdateUI();
 
-		//攻撃範囲内にプレイヤーがいる場合
-		if ((clossTarget.transform.position - transform.position).magnitude <= AttackRange)
+		// 3. ターゲット選定ロジック（ここがAIの頭脳）
+		// リストから消滅したオブジェクト(null)を除去
+		m_targetList.RemoveAll(t => t == null);
+
+		// 優先順位（デコイ＞ターゲット＞プレイヤー）に従って現在の標的を決める
+		GameObject currentTarget = GetPriorityTarget();
+
+		// ターゲットがいない場合は待機
+		if (currentTarget == null)
 		{
 			isMove = false;
 			m_navmeshAgent.isStopped = true;
-
-			//攻撃中は向きも変わらない
-			if (!isAttack)
-			{
-				transform.rotation = Quaternion.Lerp(transform.rotation,
-					Quaternion.LookRotation(clossTarget.transform.position - transform.position), 0.2f);
-			}
-
-			//クールタイム終了と同時に攻撃
-			m_coolTime -= Time.deltaTime;
-			if (m_coolTime < 0)
-			{
-				OnAttack();
-			}
+			m_animator.SetBool("Walk", false);
+			return;
 		}
 
+		// 4. 行動分岐（攻撃か移動か）
+		float dist = Vector3.Distance(currentTarget.transform.position, transform.position);
+
+		if (dist <= AttackRange)
+		{
+			PerformAttackState(currentTarget);
+		}
 		else
 		{
-			isMove = true;
-
-			//攻撃中またはダメージアクション中は移動禁止
-			if (!isAttack && !m_damageAction)
-			{
-				m_navmeshAgent.isStopped = false;
-				m_navmeshAgent.SetDestination(m_targetList.Find(target => target.tag == "Target").transform.position);
-			}
+			PerformMoveState(currentTarget);
 		}
+
+		// 移動アニメーション反映
 		m_animator.SetBool("Walk", isMove);
 	}
 
+	// --- コアロジック: 優先順位に基づいたターゲット取得 ---
+	GameObject GetPriorityTarget()
+	{
+		// 1. デコイを探す (どこにいても最優先)
+		GameObject decoy = GetClosestObjectWithTag("Decoy");
+		if (decoy != null) return decoy;
+
+		// 2. プレイヤーが「攻撃範囲内」にいるかチェック
+		// 範囲内にプレイヤーがいれば、拠点を無視してプレイヤーを狙う
+		GameObject nearbyPlayer = GetClosestObjectWithTag("Player");
+		if (nearbyPlayer != null)
+		{
+			float distToPlayer = Vector3.Distance(transform.position, nearbyPlayer.transform.position);
+			if (distToPlayer <= AttackRange)
+			{
+				return nearbyPlayer;
+			}
+		}
+
+		// 3. 範囲内にプレイヤーがいない、またはデコイがないなら「防衛対象」を狙う
+		GameObject baseTarget = GetClosestObjectWithTag("Target");
+		if (baseTarget != null) return baseTarget;
+
+		// 4. 防衛対象すらなくなったら、遠くにいるプレイヤーでも追いかける
+		//　使わないと思うけど一応
+		if (nearbyPlayer != null) return nearbyPlayer;
+
+		return null;
+	}
+
+	// 指定タグの中で一番近いオブジェクトを探す
+	GameObject GetClosestObjectWithTag(string tagName)
+	{
+		GameObject closest = null;
+		float minDist = float.MaxValue;
+
+		foreach (var t in m_targetList)
+		{
+			if (t != null && t.CompareTag(tagName))
+			{
+				float d = Vector3.Distance(transform.position, t.transform.position);
+				if (d < minDist)
+				{
+					minDist = d;
+					closest = t;
+				}
+			}
+		}
+		return closest;
+	}
+
+	// --- 行動ステート ---
+
+	void PerformAttackState(GameObject target)
+	{
+		isMove = false;
+		m_navmeshAgent.isStopped = true;
+
+		// 攻撃中でなければターゲットの方を向く
+		if (!isAttack)
+		{
+			Vector3 dir = (target.transform.position - transform.position).normalized;
+			dir.y = 0; // 上下方向の回転は防ぐ
+			if (dir != Vector3.zero)
+			{
+				Quaternion targetRot = Quaternion.LookRotation(dir);
+				transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * rotationSpeed);
+			}
+		}
+
+		// クールタイム消化
+		m_coolTime -= Time.deltaTime;
+		if (m_coolTime < 0)
+		{
+			OnAttack();
+		}
+	}
+
+	void PerformMoveState(GameObject target)
+	{
+		// ダメージモーション中などでなければ移動
+		if (!isAttack && !m_damageAction)
+		{
+			isMove = true;
+			m_navmeshAgent.isStopped = false;
+			m_navmeshAgent.speed = m_status.GetSpeed();
+
+			// 負荷軽減のため、目的地が大きく変わった時だけセットする
+			if (Vector3.Distance(m_navmeshAgent.destination, target.transform.position) > 0.5f)
+			{
+				m_navmeshAgent.SetDestination(target.transform.position);
+			}
+		}
+		else
+		{
+			isMove = false;
+			m_navmeshAgent.isStopped = true;
+		}
+	}
+
+	void HandleDeath()
+	{
+		m_navmeshAgent.isStopped = true;
+		if (m_collider != null) m_collider.enabled = false;
+		// 死亡アニメーションなどが再生されている前提
+	}
+
+	void UpdateUI()
+	{
+		if (m_slider != null)
+		{
+			// MaxValueはStart時などに1回設定するのが望ましいが、変化する可能性を考慮してここでも可
+			m_slider.maxValue = status.GetMaxHp();
+			m_slider.value = status.GetHp();
+		}
+	}
+
+	// --- 攻撃アニメーションイベント・処理 ---
+
 	void OnAttack()
 	{
-		//クールタイムが０の時アニメーションがループする
 		if (isAttack) return;
 		isAttack = true;
 		m_animator.SetTrigger("Attack");
+		// 次の攻撃までの時間をセット
 		m_coolTime = m_attackCoolTime;
 	}
 
+	// Animation Eventから呼ばれる: 攻撃判定発生
 	public void AttackHit()
 	{
-		Debug.Log("Golem attack started!");
+		int index = (int)AttackList.PhysicalAttack;
+		if (index >= m_colliderList.Count) return;
 
-		m_colliderList[(int)AttackList.PhysicalAttack].enabled = true;
-
-		//当たった位置でエフェクトの発生
-		if (m_effectList.Count() != 0)
+		// コライダー有効化
+		if (m_colliderList[index] != null)
 		{
-			Instantiate(m_effectList[(int)AttackList.PhysicalAttack], m_attackPos[(int)AttackList.PhysicalAttack].transform);
+			m_colliderList[index].enabled = true;
 		}
 
-		if (m_soundList.Count() != 0)
+		// エフェクト生成
+		if (index < m_effectList.Count && m_effectList[index] != null)
 		{
-			//SE生成
-			SoundEffect.Play3D(m_soundList[(int)AttackList.PhysicalAttack], m_attackPos[(int)AttackList.PhysicalAttack].transform.position);
+			Instantiate(m_effectList[index], m_attackPos[index].transform);
+		}
+
+		// SE再生
+		if (index < m_soundList.Count && m_soundList[index] != null)
+		{
+			SoundEffect.Play3D(m_soundList[index], m_attackPos[index].transform.position);
 		}
 	}
 
+	// Animation Eventから呼ばれる: 攻撃判定終了
 	public void AttackHitEnd()
 	{
-		m_colliderList[(int)AttackList.PhysicalAttack].enabled = false;
+		int index = (int)AttackList.PhysicalAttack;
+		if (index < m_colliderList.Count && m_colliderList[index] != null)
+		{
+			m_colliderList[index].enabled = false;
+		}
 	}
 
+	// Animation Eventから呼ばれる: 攻撃モーション終了
 	public void AttackEnd()
 	{
-		Debug.Log("Golem attack end!");
 		isAttack = false;
 	}
 
-	public void SetTarget(GameObject target)
-	{
-		m_targetList.Add(target);
-	}
+	// --- 外部からの制御・イベント ---
 
 	public void Damagefirst()
 	{
@@ -194,11 +316,24 @@ public class EnemyAction : MonoBehaviour
 		m_slider = slider;
 	}
 
-	//ヘイト管理
-	public void ChangeHate(int order,GameObject target)
+	// Decoyや外部スクリプトから呼ばれるヘイト管理
+	// order引数は互換性のために残すが、優先順位はタグで自動判定するため無視してAddする
+	public void ChangeHate(int order, GameObject target)
 	{
-		m_targetList.Insert(order, target);
+		if (target != null && !m_targetList.Contains(target))
+		{
+			m_targetList.Add(target);
+			// リストに追加さえすれば、FixedUpdateのGetPriorityTargetが
+			// 次のフレームで自動的に優先度(Decoy > Target > Player)を判断します
+		}
 	}
 
-	//次のターゲットに迎えるようにリストから削除
+	// ターゲットが破壊されたり、範囲外に出た時に呼ばれる
+	public void RemoveHate(GameObject target)
+	{
+		if (m_targetList.Contains(target))
+		{
+			m_targetList.Remove(target);
+		}
+	}
 }

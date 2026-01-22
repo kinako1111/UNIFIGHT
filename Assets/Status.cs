@@ -20,6 +20,7 @@ public class Status : MonoBehaviour
 		Cactus,
 		Tower,
 		Turret,
+		Bomb,
 		Length,
 	}
 
@@ -97,6 +98,7 @@ public class Status : MonoBehaviour
 		{
 			//状態異常マネージャー設定時、変更後の速度を返す
 			float modified = effectManager.CalculateMoveSpeed(baseSpeed);
+			return modified;
 		}
 		return speed;
 	}

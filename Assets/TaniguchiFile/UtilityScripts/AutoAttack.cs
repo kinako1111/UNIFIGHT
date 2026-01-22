@@ -180,27 +180,32 @@ public class AutoAttack : MonoBehaviour
 
 		for (int i = 0; i < m_autoAttackCount; i++)
 		{
-			if ((transform.position - m_target.First().transform.position).sqrMagnitude <= rangeSqr)
+			// 1. ターゲットが空でないか、最初の要素がDestroyされていないかチェック
+			if (m_target.Count == 0 || m_target.First() == null)
 			{
-				Status status;
-				if (m_target.First().TryGetComponent(out status))
+				yield break; // ターゲットが消えたらコルーチン終了
+			}
+
+			GameObject firstTarget = m_target.First();
+
+			// 2. 距離チェック（ターゲットが生きていれば座標にアクセス可能）
+			if ((transform.position - firstTarget.transform.position).sqrMagnitude <= rangeSqr)
+			{
+				if (firstTarget.TryGetComponent(out Status enemyStatus))
 				{
-					// ダメージ付与			※ここの値は１００分率
-					status.Damage(m_status.GetAttackPower() *m_magnification /100);
+					// ダメージ付与
+					enemyStatus.Damage(m_status.GetAttackPower() * m_magnification / 100);
 
-					// ダメージ表示
-					Debug.Log(m_status.GetAttackPower() + "ダメージを与えた！");
-
-					// エフェクト
+					// エフェクト生成（ターゲットの現在位置）
 					if (m_effect != null)
 					{
-						Instantiate(m_effect, m_target.First().transform);
+						Instantiate(m_effect, firstTarget.transform.position, transform.rotation);
 					}
 
-					// SE
+					// SE再生
 					if (m_se != null)
 					{
-						SoundEffect.Play3D(m_se, m_target.First().transform.position);
+						SoundEffect.Play3D(m_se, firstTarget.transform.position);
 					}
 				}
 			}
@@ -208,8 +213,6 @@ public class AutoAttack : MonoBehaviour
 			// 攻撃間隔待機
 			yield return new WaitForSeconds(m_autoAttackInterval);
 		}
-
-		// 攻撃終了はアニメーションイベントで呼ばれるので、ここでは呼ばない
 	}
 
 
