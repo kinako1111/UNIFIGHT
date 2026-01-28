@@ -78,6 +78,7 @@ public class AutoAttack : MonoBehaviour
 
 	void Update()
 	{
+		if (m_status.GetDeath()) return;
 		// Fireƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©‚ð”»’è
 		m_isFirePressed = m_playerInput.actions["Fire"].ReadValue<float>() > 0f;
 

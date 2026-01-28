@@ -25,6 +25,15 @@ public class PlayerController : MonoBehaviour
 	Camera m_targetCamera;
 	AutoAttack m_autoAttack;
 
+	bool m_moveApproval = true;
+
+	public bool ActionApproval => m_moveApproval;
+
+	public void MoveApproval(bool approval)
+	{
+		m_moveApproval = approval;
+	}
+
 	private void Awake()
 	{
 		m_playerInput = GetComponent<PlayerInput>();
@@ -49,6 +58,7 @@ public class PlayerController : MonoBehaviour
 
 	public void OnMove(InputAction.CallbackContext callback)
 	{
+		if (m_status.GetDeath()) return;
 		m_inputMove = callback.ReadValue<Vector2>();
 		m_animator.SetBool("Move", true);
 	}
@@ -79,7 +89,7 @@ public class PlayerController : MonoBehaviour
 
 		// CharacterControllerに移動量を指定し、オブジェクトを動かす
 		//攻撃中は移動、振り向き不可
-		if (m_autoAttack.IsAttack) return;
+		if (m_autoAttack.IsAttack || !m_moveApproval) return;
 		m_rigidbody.velocity = moveVelocity;
 
 		if (moveVelocity != Vector3.zero)

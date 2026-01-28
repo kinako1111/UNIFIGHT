@@ -103,6 +103,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "PressAny",
+                    "type": "Button",
+                    "id": "f897f1e4-1ab3-4aa9-8ffc-9b267529906a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -455,6 +464,28 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "PinCancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e9175e93-62a7-4984-990c-5afa22ae8d69",
+                    "path": "<Keyboard>/anyKey",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PressAny",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "db71ff01-b912-4982-891b-04669393d0b3",
+                    "path": "<Gamepad>/*",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PressAny",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

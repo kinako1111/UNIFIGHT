@@ -37,7 +37,7 @@ public class Status : MonoBehaviour
 
 	// ステータス情報
 	string character;
-	int hp;
+	[SerializeField]int hp;
 	int baseAttackPower; // 基本値
 	int attackPower;     // 現在値（フォールバック用）
 	float baseSpeed;	 //基本値
@@ -143,7 +143,6 @@ public class Status : MonoBehaviour
 		OnHpChanged?.Invoke(hp, maxHp);
 
 		if (takeDamage!= null) takeDamage.ShowDamageUI(damage);
-		
 
 		if (hp <= 0)
 		{
@@ -163,9 +162,11 @@ public class Status : MonoBehaviour
 
 	public void Heal(int heal)
 	{
+		int originalHP = hp;
 		if (isDeath) return;
 		hp = Mathf.Min(hp + heal, maxHp);
 		OnHpChanged?.Invoke(hp, maxHp);
-		m_animator.SetTrigger("Heal");
+		if (takeDamage != null) takeDamage.ShowDamageUI(hp - originalHP);
+		Debug.Log(hp - originalHP + "回復しました");
 	}
 }

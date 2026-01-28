@@ -12,6 +12,10 @@ public class PhysicalAttack : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
+		//※注意※EnemyとPlayerでレイヤーの当たり判定を切っているため
+		//攻撃の当たり判定は必ずEnemy以外にすること　
+		if (other.gameObject.layer == gameObject.layer) return;
+
 		Status status;
 		if (other.gameObject.TryGetComponent(out status))
 		{
@@ -20,5 +24,4 @@ public class PhysicalAttack : MonoBehaviour
 			status.Damage(m_status.GetAttackPower());
 		}
 	}
-
 }
