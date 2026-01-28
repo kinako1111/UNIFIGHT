@@ -48,9 +48,11 @@ public class AutoAttack : MonoBehaviour
 	List<GameObject> m_unitList = new();
 
 	PlayerInput m_playerInput;
+	PlayerController m_playerController;
 	Animator m_animator;
-	List<GameObject> m_target = new();
 	Status m_status;
+
+	List<GameObject> m_target = new();
 	bool m_isAttack;
 	private bool m_isFirePressed = false;
 	int m_currentBullet = 0;
@@ -64,6 +66,7 @@ public class AutoAttack : MonoBehaviour
 		m_playerInput = GetComponent<PlayerInput>();
 		m_animator = GetComponent<Animator>();
 		m_status = GetComponent<Status>();
+		m_playerController = GetComponent<PlayerController>();
 	}
 
 	private void Start()
@@ -84,7 +87,6 @@ public class AutoAttack : MonoBehaviour
 
 		//Fireが押されている間、攻撃範囲を表示
 		m_rangeLooks.SetActive( m_isFirePressed );
-
 
 		// ★ 連打しても m_nextAttackTime に到達するまでは攻撃しない
 		if (m_isFirePressed)
@@ -118,6 +120,7 @@ public class AutoAttack : MonoBehaviour
 	private void TryExecuteAutoAttack()
 	{
 		if (m_isAttack) return;
+		if (m_playerController.ActionApproval() == false) return;	
 		if (Time.time < m_nextAttackTime) return;
 
 		m_unitList.Clear();

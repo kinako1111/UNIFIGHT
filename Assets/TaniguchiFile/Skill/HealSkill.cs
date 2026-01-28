@@ -14,6 +14,7 @@ public class HealSkill : MonoBehaviour, ISkill
 
 	Status m_status;
 	PlayerController m_playerController;
+	AutoAttack m_autoAttack;
 
 	public string SkillName => m_skillName;     //スキルの名前
 	public float CoolDownTime => m_cooldownTime;//スキルのクールダウン
@@ -27,10 +28,14 @@ public class HealSkill : MonoBehaviour, ISkill
 	{
 		m_status = GetComponent<Status>();
 		m_playerController = GetComponent<PlayerController>();
+		m_autoAttack = GetComponent<AutoAttack>();
 	}
 
 	public void Execute(Vector3 position, Quaternion rotation, GameObject target)
 	{
+		//攻撃モーションに割り込むのは禁止
+		if (m_autoAttack.IsAttack) return;
+
 		//ポーションを表示
 		m_prefab.SetActive(true);
 
@@ -39,7 +44,7 @@ public class HealSkill : MonoBehaviour, ISkill
 		if(target.TryGetComponent(out animator))
 		{
 			animator.SetTrigger("Heal");
-			Debug.Log("なんでそんなによばれてるの？");
+			Debug.Log("回復アニメーション始動");
 		}
 
 		//PlayerControllerの移動許可をとり下げる

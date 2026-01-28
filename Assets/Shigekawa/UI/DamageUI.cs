@@ -4,14 +4,17 @@ using UnityEngine;
 public class DamageUI : MonoBehaviour
 {
 	private TextMeshProUGUI damageText;
-	private float fadeOutSpeed = 1f;
-	[SerializeField] private float moveSpeed = 0.4f;
-	[SerializeField] private float randomOffsetRange = 0.5f; // X・Y方向のランダム範囲
+	[SerializeField] private float fadeOutSpeed = 2f; // 少し早めが気持ちいいです
+	[SerializeField] private float moveSpeed = 1.5f;
+	[SerializeField] private float randomOffsetRange = 0.5f;
+
+	private Transform _camTransform;
 
 	void Awake()
 	{
-		// TextMeshProUGUI を取得
 		damageText = GetComponentInChildren<TextMeshProUGUI>();
+		// カメラのTransformをキャッシュ
+		if (Camera.main != null) _camTransform = Camera.main.transform;
 	}
 
 	public void SetDamage(int damage)
@@ -21,28 +24,31 @@ public class DamageUI : MonoBehaviour
 			damageText.text = damage.ToString();
 		}
 
-		// ランダムなオフセット（X:左右, Y:上下）※Z方向は0
-		float offsetX = Random.Range(-randomOffsetRange, randomOffsetRange);
-		float offsetY = Random.Range(-randomOffsetRange, randomOffsetRange);
-
-		transform.position += new Vector3(offsetX, offsetY, 0f);
+		// 初期位置にランダム性を持たせる
+		transform.position += new Vector3(
+			Random.Range(-randomOffsetRange, randomOffsetRange),
+			Random.Range(-randomOffsetRange, randomOffsetRange),
+			0f
+		);
 	}
 
 	void LateUpdate()
 	{
-		if (damageText == null) return;
+		if (damageText == null || _camTransform == null) return;
 
-		// カメラの方向を向く（ビルボード）
-		transform.rotation = Camera.main.transform.rotation;
+		// 1. カメラの方向を向く（ビルボード）
+		transform.rotation = _camTransform.rotation;
 
-		// 上に移動
-		transform.position += Vector3.up * moveSpeed * Time.deltaTime;
+		// 2. 上に移動
+		transform.Translate(Vector3.up * moveSpeed * Time.deltaTime);
 
-		// 徐々に透明にする
-		damageText.color = Color.Lerp(damageText.color, new Color(1f, 0f, 0f, 0f), fadeOutSpeed * Time.deltaTime);
+		// 3. アルファ値だけを下げる（元の色を維持）
+		Color textColor = damageText.color;
+		textColor.a -= fadeOutSpeed * Time.deltaTime;
+		damageText.color = textColor;
 
-		// 透明になったら削除
-		if (damageText.color.a <= 0.1f)
+		// 4. 完全に透明になったら削除
+		if (textColor.a <= 0)
 		{
 			Destroy(gameObject);
 		}

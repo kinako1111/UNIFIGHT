@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3543871705069975652}
   - component: {fileID: 7458510039154281556}
   m_Layer: 5
-  m_Name: DamageText
+  m_Name: HealText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -67,15 +67,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: Hit
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d67239ac983d4804e87c18715f2af9ff, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: d67239ac983d4804e87c18715f2af9ff, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278255360
+  m_fontColor: {r: 0, g: 1, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -150,7 +150,7 @@ GameObject:
   - component: {fileID: 8464060577820079929}
   - component: {fileID: 8727173946308431163}
   m_Layer: 5
-  m_Name: DamageUI
+  m_Name: HealUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -221,7 +221,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &3338237752051869767
 MonoBehaviour:
   m_ObjectHideFlags: 0

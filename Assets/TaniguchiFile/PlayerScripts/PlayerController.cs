@@ -25,9 +25,12 @@ public class PlayerController : MonoBehaviour
 	Camera m_targetCamera;
 	AutoAttack m_autoAttack;
 
-	bool m_moveApproval = true;
+	[SerializeField]bool m_moveApproval = true;
 
-	public bool ActionApproval => m_moveApproval;
+	public bool ActionApproval()
+	{
+		return m_moveApproval;
+	}
 
 	public void MoveApproval(bool approval)
 	{

@@ -146,6 +146,7 @@ public class Status : MonoBehaviour
 
 		if (hp <= 0)
 		{
+			Debug.Log("Ž€‚É‚Ü‚µ‚½");
 			hp = 0;
 			m_animator.SetTrigger("Death");
 			isDeath = true;
@@ -166,7 +167,7 @@ public class Status : MonoBehaviour
 		if (isDeath) return;
 		hp = Mathf.Min(hp + heal, maxHp);
 		OnHpChanged?.Invoke(hp, maxHp);
-		if (takeDamage != null) takeDamage.ShowDamageUI(hp - originalHP);
+		if (takeDamage != null) takeDamage.ShowDamageUI(hp - originalHP,DamageKinds.Heal);
 		Debug.Log(hp - originalHP + "‰ñ•œ‚µ‚Ü‚µ‚½");
 	}
 }
