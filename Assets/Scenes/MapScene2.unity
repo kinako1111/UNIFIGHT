@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -8276,7 +8275,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &962584400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12229,10 +12228,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameData: {fileID: 11400000, guid: 82f541923975c434994039f849c06b6a, type: 2}
   characterPrefabs:
-  - {fileID: 2287190611394248375, guid: ffe702d9d280bd7439f4f93ede098c79, type: 3}
-  - {fileID: 4026575479493717847, guid: 6b66f0db2d412f04c8d390641a94853e, type: 3}
-  - {fileID: 1947077543429934961, guid: 2f780cf9c0fb29d418c544aae85c1d9f, type: 3}
-  - {fileID: 9134497885762573885, guid: 9c68c709ca32c624a90d664143fb5023, type: 3}
+  - {fileID: 2287190611394248375, guid: 841f7bd985bb46c4d8d6c968b6f65fec, type: 3}
+  - {fileID: 828189837278061227, guid: 4b6808a659f97df4ea159279021e2638, type: 3}
+  - {fileID: 6146188184620764762, guid: 80396b100533b8e4db346c7c950bdd9f, type: 3}
+  - {fileID: 9134497885762573885, guid: 210911db05f66a84391adf4eaaca1b9e, type: 3}
 --- !u!4 &1506645184
 Transform:
   m_ObjectHideFlags: 0
@@ -14650,7 +14649,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u73FE\u5728\u306E\u30A6\u30A7\u30FC\u30D6\u306F"
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 39a2fb579ba7de14fab69dfaf65e6331, type: 2}
   m_sharedMaterial: {fileID: -7355131084418436048, guid: 39a2fb579ba7de14fab69dfaf65e6331,

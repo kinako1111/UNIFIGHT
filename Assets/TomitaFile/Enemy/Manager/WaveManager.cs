@@ -17,7 +17,6 @@ public class WaveManager : MonoBehaviour
 		m_textActive.SetActive(true);
 		m_waveText.text = "現在のウェーブは" + m_waveCount.ToString() + "です";
 		StartCoroutine(WaveCountRead());
-
 	}
 
 	IEnumerator WaveCountRead()
