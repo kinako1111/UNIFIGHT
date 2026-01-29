@@ -57,10 +57,7 @@ public class Status : MonoBehaviour
 		m_animator = GetComponent<Animator>();
 		effectManager = GetComponent<StatusEffectManagerModel>(); // ★ 自動取得
 		takeDamage = GetComponent<TakeDamage>();
-	}
 
-	void Start()
-	{
 		//ステータスの取得
 		unitData = unit.dataArray[(int)m_name];
 
@@ -70,7 +67,10 @@ public class Status : MonoBehaviour
 		baseSpeed = unitData.Speed;
 		maxHp = unitData.Hp;
 		isDeath = false;
+	}
 
+	void Start()
+	{
 		//ステータスの初期化
 		attackPower = baseAttackPower;
 		speed = baseSpeed;
@@ -168,7 +168,7 @@ public class Status : MonoBehaviour
 		if (isDeath) return;
 		hp = Mathf.Min(hp + heal, maxHp);
 		OnHpChanged?.Invoke(hp, maxHp);
-		if (takeDamage != null) takeDamage.ShowDamageUI(hp - originalHP,DamageKinds.Heal);
+		if (takeDamage != null) takeDamage.ShowDamageUI(heal,DamageKinds.Heal);
 		Debug.Log(hp - originalHP + "回復しました");
 	}
 }

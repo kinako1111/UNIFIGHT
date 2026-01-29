@@ -3,10 +3,11 @@ using UnityEngine;
 public class HealSkill : MonoBehaviour, ISkill
 {
 	[SerializeField] GameObject m_prefab = null;
+	[SerializeField] GameObject m_skillEffect = null;
 	[SerializeField] float m_cooldownTime = 5f;
 	[SerializeField] string m_skillName = "âÒïúÉ|Å[ÉVÉáÉì";
 	[SerializeField] SkillType m_skillType = SkillType.Self;
-	[SerializeField] float m_healMagnification = 0.5f;
+	[SerializeField] float m_healMagnification = 0.25f;
 	[SerializeField] GameObject m_skillUI;
 	[SerializeField] float m_skillRangeX = 0;
 	[SerializeField] float m_skillRangeZ = 0;
