@@ -49,7 +49,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 3
   m_Height: 1
@@ -467,15 +467,12 @@ MonoBehaviour:
   m_attackPos:
   - {fileID: 4699345401605870260}
   m_soundList: []
-  m_speed: 5
   AttackRange: 3
   m_collider: {fileID: 1832806162151988408}
   m_colliderList: []
-  KnockBackDamage: 0
-  m_playerList: []
   m_attackCoolTime: 5
+  m_targetList: []
   m_slider: {fileID: 0}
-  m_factory: {fileID: 0}
 --- !u!114 &7503813739638201173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -490,8 +487,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unit: {fileID: 11400000, guid: c5ab73f7af931fd468029bc68a544b98, type: 2}
   m_name: 0
-  KnockBackDamage: 0
-  m_collider: {fileID: 1832806162151988408}
+  hp: 0
 --- !u!54 &6505987832573707500
 Rigidbody:
   m_ObjectHideFlags: 0
