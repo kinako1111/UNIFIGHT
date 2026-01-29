@@ -21,6 +21,7 @@ public class Status : MonoBehaviour
 		Tower,
 		Turret,
 		Bomb,
+		Wyburn,
 		Length,
 	}
 
