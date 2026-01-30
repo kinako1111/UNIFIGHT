@@ -88,7 +88,7 @@ public class AutoAttack : MonoBehaviour
 		//Fireが押されている間、攻撃範囲を表示
 		m_rangeLooks.SetActive( m_isFirePressed );
 
-		// ★ 連打しても m_nextAttackTime に到達するまでは攻撃しない
+		// 連打しても m_nextAttackTime に到達するまでは攻撃しない
 		if (m_isFirePressed)
 		{
 			TryExecuteAutoAttack();
@@ -117,7 +117,7 @@ public class AutoAttack : MonoBehaviour
 	}
 
 
-	private void TryExecuteAutoAttack()
+	public void TryExecuteAutoAttack()
 	{
 		if (m_isAttack) return;
 		if (m_playerController.ActionApproval() == false) return;	

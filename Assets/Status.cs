@@ -62,6 +62,9 @@ public class Status : MonoBehaviour
 	const float MaxSpeed = 10;
 	const float MinSpeed = 0.5f;
 
+	//ダメージ処理の許可
+	bool damageApproval = true;
+
 	private void Awake()
 	{
 		m_animator = GetComponent<Animator>();
@@ -118,6 +121,11 @@ public class Status : MonoBehaviour
 	public string GetRange() => range;
 	public bool GetDeath() => isDeath;
 
+	public void SetDamageApproval(bool approval)
+	{
+		damageApproval = approval;
+	} 
+
 	// 攻撃力の外部変更（フォールバック用）
 	public void SetAttackPower(int newPower)
 	{
@@ -146,6 +154,12 @@ public class Status : MonoBehaviour
 	public void Damage(int damage)
 	{
 		if (isDeath) return;
+
+		//ダメージ処理の許可が出ていないとき、ダメージは０になる
+		if (!damageApproval)
+		{
+			damage = 0;
+		}
 
 		hp -= damage;
 		Debug.Log(damage);
