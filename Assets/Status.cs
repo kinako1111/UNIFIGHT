@@ -25,9 +25,18 @@ public class Status : MonoBehaviour
 		Length,
 	}
 
+	public enum DeathManagement
+	{
+		Script,
+		Animation,
+		Length
+	}
+
 	[SerializeField] Unit unit;
 	[SerializeField] Name m_name;
 	[SerializeField] AudioClip m_deathSound;
+	[SerializeField] AudioClip m_deathEffect;
+	[Header("死亡時の処理管理方法"),SerializeField] DeathManagement m_deathManagement;
 
 	Animator m_animator;
 	UnitData unitData;
@@ -152,20 +161,33 @@ public class Status : MonoBehaviour
 			hp = 0;
 			m_animator.SetTrigger("Death");
 			isDeath = true;
-
 			// ★ 追加：状態異常を全消去
 			if (effectManager != null)
 			{
 				effectManager.ClearAll();
 			}
 
-			if(m_deathSound != null )
-			{
-				SoundEffect.Play3D(m_deathSound,transform.position);
-			}
-
-			Destroy(gameObject, DeathTimer);
+			//アニメーションで死亡時の処理を書く場合はスキップ
+			if(m_deathManagement == DeathManagement.Animation)return;
+			Death();
 		}
+	}
+
+	public void Death(float deathTime = DeathTimer)
+	{
+		//死亡した場所からサウンド再生
+		if (m_deathSound != null)
+		{
+			SoundEffect.Play3D(m_deathSound, transform.position);
+		}
+
+		//死亡した場所からエフェクト再生
+		if(m_deathEffect != null)
+		{
+			Instantiate(m_deathEffect,transform.position,Quaternion.identity);
+		}
+
+		Destroy(gameObject, DeathTimer);
 	}
 
 	public void Heal(int heal)
