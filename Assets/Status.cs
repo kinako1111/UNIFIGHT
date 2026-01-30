@@ -27,6 +27,7 @@ public class Status : MonoBehaviour
 
 	[SerializeField] Unit unit;
 	[SerializeField] Name m_name;
+	[SerializeField] AudioClip m_deathSound;
 
 	Animator m_animator;
 	UnitData unitData;
@@ -156,6 +157,11 @@ public class Status : MonoBehaviour
 			if (effectManager != null)
 			{
 				effectManager.ClearAll();
+			}
+
+			if(m_deathSound != null )
+			{
+				SoundEffect.Play3D(m_deathSound,transform.position);
 			}
 
 			Destroy(gameObject, DeathTimer);
