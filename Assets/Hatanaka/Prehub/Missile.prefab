@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &4118410751567995253
+--- !u!1001 &3998153485301118206
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -10,18 +10,33 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 2017b25d16897cf42823a860dbacf657,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 2017b25d16897cf42823a860dbacf657,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 2017b25d16897cf42823a860dbacf657,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 2017b25d16897cf42823a860dbacf657,
+        type: 3}
       propertyPath: m_LocalPosition.x
-      value: 895.4902
+      value: 7.38
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2017b25d16897cf42823a860dbacf657,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.846486
+      value: 2.03
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2017b25d16897cf42823a860dbacf657,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3470.408
+      value: -41.65
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2017b25d16897cf42823a860dbacf657,
         type: 3}
@@ -58,36 +73,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -5627550536026561981, guid: 2017b25d16897cf42823a860dbacf657,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 4021b53071638cf439f07f2d674adf30, type: 2}
-    - target: {fileID: -5627550536026561981, guid: 2017b25d16897cf42823a860dbacf657,
-        type: 3}
-      propertyPath: m_Materials.Array.data[1]
-      value: 
-      objectReference: {fileID: 2100000, guid: f68199f0d6b135042abdfd30a935c1d3, type: 2}
-    - target: {fileID: -650679000888355955, guid: 2017b25d16897cf42823a860dbacf657,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: df213796a4aa2154a827f29f408cfe7b, type: 2}
-    - target: {fileID: 805098333363774982, guid: 2017b25d16897cf42823a860dbacf657,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f68199f0d6b135042abdfd30a935c1d3, type: 2}
     - target: {fileID: 919132149155446097, guid: 2017b25d16897cf42823a860dbacf657,
         type: 3}
       propertyPath: m_Name
       value: Missile
       objectReference: {fileID: 0}
-    - target: {fileID: 7622661218638243942, guid: 2017b25d16897cf42823a860dbacf657,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f68199f0d6b135042abdfd30a935c1d3, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
