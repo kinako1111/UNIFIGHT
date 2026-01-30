@@ -903,7 +903,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1813444127139497509
 Transform:
   m_ObjectHideFlags: 0
@@ -984,7 +984,8 @@ MonoBehaviour:
   - {fileID: 5222750351268202474, guid: 471430dca40f907499aac08fe5b5bb09, type: 3}
   m_attackPos:
   - {fileID: 8269717419616332039}
-  m_soundList: []
+  m_soundList:
+  - {fileID: 8300000, guid: 4e64f87575804b44383f999cc674e287, type: 3}
   AttackRange: 5
   m_collider: {fileID: 4703109288381568863}
   m_colliderList:
@@ -1071,7 +1072,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageUIPrefab: {fileID: 8802386729067888466, guid: b38c4dcc9d25ab9439b1b85b5bf40f0d,
     type: 3}
-  healUIPrefab: {fileID: 0}
+  healUIPrefab: {fileID: 8802386729067888466, guid: adf08ac033d1be147bf56f03b40d7605,
+    type: 3}
   specialUIPrefab: {fileID: 0}
 --- !u!114 &2315191864976482840
 MonoBehaviour:
