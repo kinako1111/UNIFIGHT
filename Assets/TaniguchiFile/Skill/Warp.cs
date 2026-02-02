@@ -64,6 +64,7 @@ public class Warp : MonoBehaviour, ISkill
 		//ワープ後のポジションを保持
 		m_warpPos = position;
 
+		//ダメージをロック
 		m_status.SetDamageApproval(false);
 	}
 
@@ -74,6 +75,9 @@ public class Warp : MonoBehaviour, ISkill
 
 		//移動の許可
 		m_playerController.MoveApproval(true);
+
+		//ダメージロックを解除
+		m_status.SetDamageApproval(false);
 
 		//ワープ後、ごく短い時間だけ攻撃力大アップ
 		// 攻撃力 +m_buffRate を m_buffTime 秒（スタック対応）
