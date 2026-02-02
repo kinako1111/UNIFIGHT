@@ -620,7 +620,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
-  m_FillAmount: 0
+  m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -2462,9 +2462,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillComponents:
   - {fileID: 598753623}
-  - {fileID: 0}
+  - {fileID: 1715935062232059969}
   uiBindings:
-  - skillComponent: {fileID: 598753623}
+  - skillComponent: {fileID: 0}
     skillPrint: {fileID: 0}
 --- !u!95 &598753621
 Animator:
@@ -3635,7 +3635,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
-  m_FillAmount: 0
+  m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -3812,7 +3812,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 40.999996}
+  m_AnchoredPosition: {x: 0, y: -31}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1295295286
@@ -4878,7 +4878,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 41}
+  m_AnchoredPosition: {x: 0, y: -31.000015}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1781712382
@@ -5934,7 +5934,7 @@ PrefabInstance:
     - target: {fileID: 8817838083818518433, guid: b39edd28484296444b24ad31e686ede2,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1.293
       objectReference: {fileID: 0}
     - target: {fileID: 8817838083818518433, guid: b39edd28484296444b24ad31e686ede2,
         type: 3}
@@ -6130,6 +6130,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1715935062232059967}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1715935062232059969 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 127573933929131303, guid: 2f706e17af222e14b99f7ca51d76621e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1715935062232059967}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3689863230259662149
 PrefabInstance:
   m_ObjectHideFlags: 0
