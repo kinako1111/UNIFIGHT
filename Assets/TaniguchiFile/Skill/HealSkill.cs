@@ -37,6 +37,9 @@ public class HealSkill : MonoBehaviour, ISkill
 		//攻撃モーションに割り込むのは禁止
 		if (m_autoAttack.IsAttack) return;
 
+		//PlayerControllerの移動許可をとり下げる
+		m_playerController.MoveApproval(false);
+
 		//ポーションを表示
 		m_prefab.SetActive(true);
 
@@ -47,9 +50,6 @@ public class HealSkill : MonoBehaviour, ISkill
 			animator.SetTrigger("Heal");
 			Debug.Log("回復アニメーション始動");
 		}
-
-		//PlayerControllerの移動許可をとり下げる
-		m_playerController.MoveApproval(false);
 	}
 
 	public void ExecutionHeal()

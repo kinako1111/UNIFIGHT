@@ -219,7 +219,6 @@ public class AutoAttack : MonoBehaviour
 		}
 	}
 
-
 	public void FarBulletAttack()
 	{
 		//‰“‹——£

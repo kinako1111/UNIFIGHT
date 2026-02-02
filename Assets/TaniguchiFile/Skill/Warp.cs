@@ -22,7 +22,6 @@ public class Warp : MonoBehaviour, ISkill
 	// まずは固定の最大スタック数（必要なら SerializeField にして調整）
 	private const int DEFAULT_MAX_STACKS = 1;
 
-	StatusEffectManagerModel m_statusEffectManagerModel;
 	Status m_status;
 	Animator m_animator;
 	AutoAttack m_autoAttack;
@@ -43,7 +42,6 @@ public class Warp : MonoBehaviour, ISkill
 		m_animator = GetComponent<Animator>();
 		m_playerController = GetComponent<PlayerController>();
 		m_autoAttack = GetComponent<AutoAttack>();
-		m_statusEffectManagerModel = GetComponent<StatusEffectManagerModel>();
 		m_status = GetComponent<Status>();
 	}
 
@@ -51,6 +49,9 @@ public class Warp : MonoBehaviour, ISkill
 	{
 		//攻撃に割り込むのは禁止
 		if (m_autoAttack.IsAttack) return;
+
+		//死んでたら動かない
+		if (m_status.GetDeath()) return;
 		
 		//ワープアニメーションスタート
 		m_animator.SetTrigger("Warp");
@@ -77,7 +78,7 @@ public class Warp : MonoBehaviour, ISkill
 		m_playerController.MoveApproval(true);
 
 		//ダメージロックを解除
-		m_status.SetDamageApproval(false);
+		m_status.SetDamageApproval(true);
 
 		//ワープ後、ごく短い時間だけ攻撃力大アップ
 		// 攻撃力 +m_buffRate を m_buffTime 秒（スタック対応）
@@ -91,5 +92,4 @@ public class Warp : MonoBehaviour, ISkill
 			durationSeconds: Mathf.Max(0.1f, m_buffTime)
 		);
 	}
-
 }
