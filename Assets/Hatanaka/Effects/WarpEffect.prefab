@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2174944399596894275}
   - component: {fileID: 3128821749274447350}
   m_Layer: 0
-  m_Name: Particle System
+  m_Name: CircleEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4851,7 +4851,7 @@ GameObject:
   - component: {fileID: 8842236692135051790}
   - component: {fileID: 5364240609111343124}
   m_Layer: 0
-  m_Name: Particle System (2)
+  m_Name: CircleEffect2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9690,12 +9690,12 @@ GameObject:
   - component: {fileID: 244820244488046563}
   - component: {fileID: 8061038722109587089}
   m_Layer: 0
-  m_Name: Particle 2
+  m_Name: LineParticle 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2260050306014765256
 Transform:
   m_ObjectHideFlags: 0
@@ -14587,12 +14587,12 @@ GameObject:
   - component: {fileID: 7442764657533822196}
   - component: {fileID: 7530940274943259503}
   m_Layer: 0
-  m_Name: Particle
+  m_Name: LineParticle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6120229320103370719
 Transform:
   m_ObjectHideFlags: 0
@@ -24413,7 +24413,7 @@ GameObject:
   - component: {fileID: 7879444936265944884}
   - component: {fileID: 718508110753526390}
   m_Layer: 0
-  m_Name: Particle System (1)
+  m_Name: RollEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
