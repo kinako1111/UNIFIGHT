@@ -93,27 +93,6 @@ public class AutoAttack : MonoBehaviour
 		{
 			TryExecuteAutoAttack();
 		}
-
-		// 弾の切り替え
-		if (m_CreateBullet)
-		{
-			if (m_playerInput.actions["NextBullet"].triggered)
-			{
-				m_currentBullet += 1;
-				if(m_currentBullet >= m_bulletPrefab.Count)
-				{
-					m_currentBullet = 0;
-				}
-				Debug.Log(m_currentBullet);
-			}
-			else if (m_playerInput.actions["BackBullet"].triggered)
-			{
-				m_currentBullet -= 1;
-				//切り替え後、弾の数を下回ったら最後尾のバレットへ
-				if (m_currentBullet < 0) m_currentBullet = m_bulletPrefab.Count -1;
-				Debug.Log(m_currentBullet);
-			}
-		}
 	}
 
 
@@ -191,26 +170,21 @@ public class AutoAttack : MonoBehaviour
 			}
 
 			GameObject firstTarget = m_target.First();
-
-			// 2. 距離チェック（ターゲットが生きていれば座標にアクセス可能）
-			if ((transform.position - firstTarget.transform.position).sqrMagnitude <= rangeSqr)
+			if (firstTarget.TryGetComponent(out Status enemyStatus))
 			{
-				if (firstTarget.TryGetComponent(out Status enemyStatus))
+				// ダメージ付与
+				enemyStatus.Damage(m_status.GetAttackPower() * m_magnification / 100);
+
+				// エフェクト生成（ターゲットの現在位置）
+				if (m_effect != null)
 				{
-					// ダメージ付与
-					enemyStatus.Damage(m_status.GetAttackPower() * m_magnification / 100);
+					Instantiate(m_effect, firstTarget.transform.position, transform.rotation);
+				}
 
-					// エフェクト生成（ターゲットの現在位置）
-					if (m_effect != null)
-					{
-						Instantiate(m_effect, firstTarget.transform.position, transform.rotation);
-					}
-
-					// SE再生
-					if (m_se != null)
-					{
-						SoundEffect.Play3D(m_se, firstTarget.transform.position);
-					}
+				// SE再生
+				if (m_se != null)
+				{
+					SoundEffect.Play3D(m_se, firstTarget.transform.position);
 				}
 			}
 
