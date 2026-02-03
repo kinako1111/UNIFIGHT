@@ -200,7 +200,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 8a0a3c41833625640be420a71c103c55,
         type: 3}
       propertyPath: m_Name
-      value: C
+      value: Posion
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -214,10 +214,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 4032663075196473457}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8a0a3c41833625640be420a71c103c55,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 276755152437110987}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8a0a3c41833625640be420a71c103c55,
         type: 3}
       insertIndex: -1
@@ -250,21 +246,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &276755152437110987
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6146188184620764762}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b19b6b771c817241a8c0bec1cf34903, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  unit: {fileID: 11400000, guid: c5ab73f7af931fd468029bc68a544b98, type: 2}
-  m_name: 2
-  m_animator: {fileID: 4032663075196473457}
 --- !u!143 &-8380453784369786396
 CharacterController:
   m_ObjectHideFlags: 0
