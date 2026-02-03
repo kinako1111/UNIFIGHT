@@ -27,6 +27,9 @@ public class CharacterSelectUI : MonoBehaviour
 
 			// ƒV[ƒ“‘JˆÚ
 			SceneManager.LoadScene(gameData.selectedStageId);
+
+			SceneChanger changer = GameObject.FindWithTag("SceneManager").GetComponent<SceneChanger>();
+			changer.ChangeScene(gameData.selectedStageId);
 		}
 		
 	}

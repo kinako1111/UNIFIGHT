@@ -12,7 +12,6 @@ public class StartSceneController : MonoBehaviour
 	[SerializeField] GameObject guideText;       // 「Press Any Button」のテキストオブジェクト
 	PlayerInput anyKeyAction;
 
-
 	private bool canInput = false;
 	private bool isTransitioning = false; // 多重遷移防止
 
@@ -58,8 +57,9 @@ public class StartSceneController : MonoBehaviour
 		{
 			isTransitioning = true;
 			Debug.Log("次のシーンへ遷移します");
-			SceneManager.LoadScene(nextSceneName);
-		}
 
+			SceneChanger changer = GameObject.FindWithTag("SceneManager").GetComponent<SceneChanger>();
+			changer.ChangeScene("StageSelectionScene");
+		}
 	}
 }

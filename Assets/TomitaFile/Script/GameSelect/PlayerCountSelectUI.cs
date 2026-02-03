@@ -18,7 +18,7 @@ public class PlayerCountSelectUI : MonoBehaviour
 
         Debug.Log($"Player Count Selected : {count}");
 
-		// Ÿ‚ÌƒV[ƒ“‚Ö
-		SceneManager.LoadScene("CharacterSelectionScene");
+		SceneChanger changer = GameObject.FindWithTag("SceneManager").GetComponent<SceneChanger>();
+		changer.ChangeScene("CharacterSelectionScene");
 	}
 }

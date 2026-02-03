@@ -12,5 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 889a5fbb1622c0741b62d6952f3620db, type: 3}
   m_Name: GameSelectionData
   m_EditorClassIdentifier: 
-  selectedCharacterId: 0
+  selectedPlayerCount: 0
+  selectedCharacterIds: 
   selectedStageId: 0
+  maxPlayerCount: 4
+  m_joinedPlayerCount: 0
+  m_currentPlayerCount: 0
+  m_allPlayerReady: 0

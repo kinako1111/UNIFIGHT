@@ -19,8 +19,8 @@ public class StageSelectUI : MonoBehaviour
         //前回プレイの選択が残らないようにする
         gameData.ResetData();
 
-        // Player人数選択シーンへ移動
-        SceneManager.LoadScene("PlayerNumberScene");
-    }
+		SceneChanger changer = GameObject.FindWithTag("SceneManager").GetComponent<SceneChanger>();
+		changer.ChangeScene("PlayerNumberScene");
+	}
 
 }

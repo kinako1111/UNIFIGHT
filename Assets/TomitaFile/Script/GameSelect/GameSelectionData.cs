@@ -7,7 +7,7 @@ using UnityEngine;
 public class GameSelectionData : ScriptableObject
 {
 	// 選択されたキャラID一覧(参加プレイヤー分)
-	[Tooltip("今回遊ぶ人数")]
+	[Header("今回遊ぶ人数")]
 	public int selectedPlayerCount;
 
 	[Header("=== Character Select ===")]

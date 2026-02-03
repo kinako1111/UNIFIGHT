@@ -1,21 +1,32 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class ManagerSceneAutoLoader : MonoBehaviour 
+public static class ManagerSceneAutoLoader
 {
-	// ゲーム開始時(シーン読み込み前)に実行される
-	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+	private const string ManagerSceneName = "ManagerScene";
 
+	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
 	private static void LoadManagerScene()
 	{
-		string managerSceneName = "ManagerScene";
-
-		// ManagerSceneが有効でない時(まだ読み込んでいない時)だけ追加ロードするように
-		if(!SceneManager.GetSceneByName(managerSceneName).IsValid())
+		// 1. すでに読み込まれていないかチェック
+		for (int i = 0; i < SceneManager.sceneCount; i++)
 		{
-			SceneManager.LoadScene(managerSceneName, LoadSceneMode.Additive);
+			if (SceneManager.GetSceneAt(i).name == ManagerSceneName)
+			{
+				return; // すでに存在すれば何もしない
+			}
 		}
 
-
+		// 2. ビルド設定に含まれているかチェック（エラー防止）
+		if (Application.CanStreamedLevelBeLoaded(ManagerSceneName))
+		{
+			// 同期的にロード（BeforeSceneLoad内なので、最初のシーンの開始前に完了する）
+			SceneManager.LoadScene(ManagerSceneName, LoadSceneMode.Additive);
+			Debug.Log($"<color=cyan>[AutoLoader]</color> {ManagerSceneName} を読み込みました。");
+		}
+		else
+		{
+			Debug.LogError($"[AutoLoader] シーン '{ManagerSceneName}' がBuild Settingsに追加されていません！");
+		}
 	}
 }

@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 public class SelectiManager : MonoBehaviour
 {
 	[SerializeField] GameSelectionData gameData;
-	[SerializeField] GameObject playerPrefab;
+	[SerializeField] GameObject[] playerPrefab;
 	[SerializeField] Camera cameraPrefab;
 	[SerializeField] Transform[] spawnPoints;
 
@@ -24,7 +24,7 @@ public class SelectiManager : MonoBehaviour
 
 			// ÉvÉåÉCÉÑÅ[Çê∂ê¨
 			GameObject player = Instantiate(
-				playerPrefab,
+				playerPrefab[i],
 				spawnPoints[i].position,
 				Quaternion.identity
 				);

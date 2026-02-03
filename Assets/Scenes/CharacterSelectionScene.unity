@@ -507,7 +507,6 @@ GameObject:
   - component: {fileID: 312806517}
   - component: {fileID: 312806516}
   - component: {fileID: 312806521}
-  - component: {fileID: 312806520}
   - component: {fileID: 312806519}
   - component: {fileID: 312806522}
   - component: {fileID: 312806523}
@@ -710,23 +709,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
---- !u!114 &312806520
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 312806514}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6e33aca620f10042bdc51c328995dab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_status: {fileID: 312806521}
-  m_statusText:
-  - {fileID: 1833243032}
-  - {fileID: 24276766}
-  - {fileID: 538044099}
 --- !u!114 &312806521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2458,7 +2440,6 @@ GameObject:
   - component: {fileID: 826233394}
   - component: {fileID: 826233400}
   - component: {fileID: 826233398}
-  - component: {fileID: 826233397}
   - component: {fileID: 826233399}
   - component: {fileID: 826233401}
   - component: {fileID: 826233402}
@@ -2582,23 +2563,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 826233392}
   m_CullTransparentMesh: 1
---- !u!114 &826233397
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 826233392}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6e33aca620f10042bdc51c328995dab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_status: {fileID: 826233398}
-  m_statusText:
-  - {fileID: 1505517121}
-  - {fileID: 620866259}
-  - {fileID: 722631552}
 --- !u!114 &826233398
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3129,7 +3093,6 @@ GameObject:
   - component: {fileID: 1194156257}
   - component: {fileID: 1194156256}
   - component: {fileID: 1194156261}
-  - component: {fileID: 1194156260}
   - component: {fileID: 1194156259}
   - component: {fileID: 1194156262}
   - component: {fileID: 1194156263}
@@ -3332,23 +3295,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
---- !u!114 &1194156260
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1194156254}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6e33aca620f10042bdc51c328995dab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_status: {fileID: 1194156261}
-  m_statusText:
-  - {fileID: 559278342}
-  - {fileID: 945330547}
-  - {fileID: 1378215420}
 --- !u!114 &1194156261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3510,7 +3456,6 @@ GameObject:
   - component: {fileID: 1223713757}
   - component: {fileID: 1223713756}
   - component: {fileID: 1223713759}
-  - component: {fileID: 1223713760}
   - component: {fileID: 1223713761}
   - component: {fileID: 1223713762}
   - component: {fileID: 1223713763}
@@ -3653,23 +3598,6 @@ MonoBehaviour:
   m_deathEffect: {fileID: 0}
   m_deathManagement: 0
   hp: 0
---- !u!114 &1223713760
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1223713754}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6e33aca620f10042bdc51c328995dab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_status: {fileID: 1223713759}
-  m_statusText:
-  - {fileID: 756599240}
-  - {fileID: 1549277529}
-  - {fileID: 45466577}
 --- !u!114 &1223713761
 MonoBehaviour:
   m_ObjectHideFlags: 0
