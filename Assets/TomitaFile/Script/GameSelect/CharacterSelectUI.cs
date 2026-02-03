@@ -25,9 +25,6 @@ public class CharacterSelectUI : MonoBehaviour
 		{
 			Debug.Log("[CharacterSelect] All Player READY");
 
-			// ƒV[ƒ“‘JˆÚ
-			SceneManager.LoadScene(gameData.selectedStageId);
-
 			SceneChanger changer = GameObject.FindWithTag("SceneManager").GetComponent<SceneChanger>();
 			changer.ChangeScene(gameData.selectedStageId);
 		}
