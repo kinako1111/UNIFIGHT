@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -52,11 +51,13 @@ public class ResultSceneController : MonoBehaviour
 
 	public void GoToMapSelect()
 	{
-		SceneManager.LoadScene("StageSelectionScene");
+		SceneChanger changer = GameObject.FindWithTag("SceneManager").GetComponent<SceneChanger>();
+		changer.ChangeScene("StageSelectionScene");
 	}
 
 	public void GoToTitle()
 	{
-		SceneManager.LoadScene("TitleScene");
+		SceneChanger changer = GameObject.FindWithTag("SceneManager").GetComponent<SceneChanger>();
+		changer.ChangeScene("TitleScene");
 	}
 }

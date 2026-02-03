@@ -27,9 +27,13 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
+    - _FaceDilate: 0.428
+    - _OutlineSoftness: 0
     - _OutlineWidth: 0.28
+    - _ScaleRatioA: 0.9
+    - _ScaleRatioC: 0.34604996
     m_Colors:
-    - _OutlineColor: {r: 1, g: 0, b: 0, a: 1}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &11400000
 MonoBehaviour:
