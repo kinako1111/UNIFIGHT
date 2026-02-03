@@ -55,6 +55,10 @@ public class BGMManager : MonoBehaviour
 
 	private void OnDestroy() => SceneManager.sceneLoaded -= OnSceneLoaded;
 
+	/// <summary>
+	/// ★追加：BGM音量を設定（0?1）
+	/// UIスライダーなどから呼ぶ想定
+	/// </summary>
 	public void SetMasterVolume(float volume, bool save = true)
 	{
 		m_masterVolume = Mathf.Clamp01(volume);

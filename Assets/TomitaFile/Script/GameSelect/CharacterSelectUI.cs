@@ -10,24 +10,7 @@ public class CharacterSelectUI : MonoBehaviour
 
 	public void OnCharacterSelected(int characterId)
 	{
-		// 既に選択されていたら何もしない
-		if(gameData.IsCharacterUsed(characterId)) return;
-
-		// キャラIDを追加
-		gameData.selectedCharacterIds.Add(characterId);
-
-		// Debug用
-		gameData.UpdateDebug();
-		Debug.Log($"[CharacterSelect] PlayerCount = {gameData.selectedCharacterIds.Count}");
-
-		// 全員選択完了したか
-		if(gameData.selectedCharacterIds.Count >= gameData.selectedPlayerCount)
-		{
-			Debug.Log("[CharacterSelect] All Player READY");
-
-			// シーン遷移
-			SceneManager.LoadScene(gameData.selectedStageId);
-		}
-		
+		gameData.selectedCharacterId = characterId;
+		SceneManager.LoadScene(gameData.selectedStageId);
 	}
 }
