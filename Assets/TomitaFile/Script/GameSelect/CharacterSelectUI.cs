@@ -10,11 +10,11 @@ public class CharacterSelectUI : MonoBehaviour
 
 	public void OnCharacterSelected(int characterId)
 	{
-		// 既に選択されていたら何もしない
-		if(gameData.IsCharacterUsed(characterId)) return;
+		//// 既に選択されていたら何もしない
+		//if(gameData.IsCharacterUsed(characterId)) return;
 
-		// キャラIDを追加
-		gameData.selectedCharacterIds.Add(characterId);
+		//// キャラIDを追加
+		//gameData.selectedCharacterIds.Add(characterId);
 
 		// Debug用
 		gameData.UpdateDebug();

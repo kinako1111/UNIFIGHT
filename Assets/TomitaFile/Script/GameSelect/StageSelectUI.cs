@@ -22,5 +22,4 @@ public class StageSelectUI : MonoBehaviour
 		SceneChanger changer = GameObject.FindWithTag("SceneManager").GetComponent<SceneChanger>();
 		changer.ChangeScene("PlayerNumberScene");
 	}
-
 }

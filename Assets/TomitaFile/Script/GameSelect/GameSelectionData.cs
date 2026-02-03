@@ -11,7 +11,7 @@ public class GameSelectionData : ScriptableObject
 	public int selectedPlayerCount;
 
 	[Header("=== Character Select ===")]
-	public List<int> selectedCharacterIds = new List<int>();
+	public List<GameObject> selectedCharacterIds = new List<GameObject>();
 
 	// 選択されたステージID
 	[Header("=== Stage ===")]
@@ -29,10 +29,10 @@ public class GameSelectionData : ScriptableObject
 	[SerializeField] bool m_allPlayerReady;
 
 	// 既に使用されているキャラか
-	public bool IsCharacterUsed(int characterId)
-	{
-		return selectedCharacterIds.Contains(characterId);
-	}
+	//public bool IsCharacterUsed(int characterId)
+	//{
+	//	return selectedCharacterIds.Contains(characterId);
+	//}
 
 	// 全員キャラ選択が完了したか
 	public bool IsAllPlayerReady()
