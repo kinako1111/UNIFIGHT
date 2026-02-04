@@ -1,33 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class CharacterSelectUI : MonoBehaviour
 {
+	SelectRecord m_record;
 
-    [SerializeField] GameSelectionData gameData;
+	Dictionary<PlayerInput,int>temSelect = new Dictionary<PlayerInput,int>();
 
-	public void OnCharacterSelected(int characterId)
+	public void DecisionCharacter()
 	{
-		//// 既に選択されていたら何もしない
-		//if(gameData.IsCharacterUsed(characterId)) return;
+		
+	}
 
-		//// キャラIDを追加
-		//gameData.selectedCharacterIds.Add(characterId);
+	private void Start()
+	{
+		m_record = GameObject.FindGameObjectWithTag("GameController").GetComponent<SelectRecord>();
+	}
 
-		// Debug用
-		gameData.UpdateDebug();
-		Debug.Log($"[CharacterSelect] PlayerCount = {gameData.selectedCharacterIds.Count}");
-
+	private void Update()
+	{
 		// 全員選択完了したか
-		if(gameData.selectedCharacterIds.Count >= gameData.selectedPlayerCount)
+		if (m_record.GetDictionary().Count == m_record.GetMaxPlayerCount())
 		{
 			Debug.Log("[CharacterSelect] All Player READY");
 
 			SceneChanger changer = GameObject.FindWithTag("SceneManager").GetComponent<SceneChanger>();
-			changer.ChangeScene(gameData.selectedStageId);
+			changer.ChangeScene(m_record.GetMapID());
 		}
-		
 	}
 }

@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class SelectRecord : MonoBehaviour
 {
-	[Header("最大人数")]
+	[Header("最大人数"),SerializeField]
 	const int MaxPlayerCount = 4;
 
 	[Header("プレイヤーの人数"),SerializeField]
@@ -15,27 +15,47 @@ public class SelectRecord : MonoBehaviour
 	int m_selectMapID = 1;
 
 	[Header("選んだキャラ"),SerializeField]
-	private Dictionary<int,GameObject> selection = new Dictionary<int,GameObject>();
+	private Dictionary<PlayerInput,int> selection = new Dictionary<PlayerInput,int>();
 
-	public void Register(int playerID,GameObject prefab)
+	public void Register(PlayerInput playerInput,int prefabID)
 	{
-		selection.Add(playerID, prefab);	
+		selection.Add(playerInput, prefabID);	
 	}
 
+	public void Decision(int mapID)
+	{
+		m_selectMapID = mapID;
+	}
+
+	public void SetSelection(Dictionary<PlayerInput,int> selected)
+	{
+		//仮登録されている紐づけを登録
+		selection = selected;
+	}
+
+	public int GetMaxPlayerCount()
+	{
+		return MaxPlayerCount;
+	}
+
+	public int GetMapID()
+	{
+		return m_selectMapID;
+	}
+	public Dictionary<PlayerInput,int> GetDictionary()
+	{
+		return selection;
+	}
 
 	public void OnPlayerJoined(PlayerInput playerInput)
 	{
-	//	m_playerCount++; // 単純に1増やす
-						 // もしくは、現在の辞書の数を見る
-						 // m_playerCount = _playerMapSelections.Count;
-
+		m_playerCount = Mathf.Min(m_playerCount + 1,MaxPlayerCount); //最大人数を超えないように調整
 		print($"プレイヤー#{playerInput.user.index}が入室！");
 	}
 
 	public void OnPlayerLeft(PlayerInput playerInput)
 	{
-		//m_playerCount = Mathf.Max(0, m_playerCount - 1); // 0以下にならないように1減らす
-
+		m_playerCount = Mathf.Max(0, m_playerCount - 1); // 0以下にならないように1減らす
 		print($"プレイヤー#{playerInput.user.index}が退室！");
 	}
 

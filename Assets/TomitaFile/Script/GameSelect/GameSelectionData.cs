@@ -15,7 +15,7 @@ public class GameSelectionData : ScriptableObject
 
 	// 選択されたステージID
 	[Header("=== Stage ===")]
-	public int selectedStageId;
+	//public int selectedStageId;
 
 	// 最大人数(4人)
 	[Header("== Player Select ===")]

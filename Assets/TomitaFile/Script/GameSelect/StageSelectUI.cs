@@ -6,20 +6,16 @@ using UnityEngine.SceneManagement;
 
 public class StageSelectUI : MonoBehaviour
 {
-
-    [SerializeField] GameSelectionData gameData;
-
-
     // ステージが選択された時に呼ばれる
    public void OnStageSelected(int stageId)
     {
-        // 選択されたステージIDを保存
-        gameData.selectedStageId = stageId;
+        //ステージ保存場所の検索
+		SelectRecord record = GameObject.FindGameObjectWithTag("GameController").GetComponent<SelectRecord>();
 
-        //前回プレイの選択が残らないようにする
-        gameData.ResetData();
+		//ステージ選択
+        record.Decision(stageId);
 
 		SceneChanger changer = GameObject.FindWithTag("SceneManager").GetComponent<SceneChanger>();
-		changer.ChangeScene("PlayerNumberScene");
+		changer.ChangeScene("CharacterSelectionScene");
 	}
 }

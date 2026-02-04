@@ -18,7 +18,7 @@ public class SceneController : MonoBehaviour
 	{
 		//選んだステージを元にステージシーンへ
 		{
-			gameData.selectedStageId = stageId;
+			//gameData.selectedStageId = stageId;
 			SceneManager.LoadScene("CharacterSelectionScene",LoadSceneMode.Additive);
 		}
 	}
