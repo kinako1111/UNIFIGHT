@@ -1027,6 +1027,7 @@ GameObject:
   - component: {fileID: 5169999763619530912}
   - component: {fileID: 5411562169085441655}
   - component: {fileID: 4321368480207469099}
+  - component: {fileID: -4765951981594201930}
   m_Layer: 6
   m_Name: 02.Cactus
   m_TagString: Enemy
@@ -1222,6 +1223,18 @@ MonoBehaviour:
   healUIPrefab: {fileID: 8802386729067888466, guid: adf08ac033d1be147bf56f03b40d7605,
     type: 3}
   specialUIPrefab: {fileID: 0}
+--- !u!114 &-4765951981594201930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7210673905239658240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdae43f226c78ae4c82ac17f930b7caf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7335664927105789904
 GameObject:
   m_ObjectHideFlags: 0
