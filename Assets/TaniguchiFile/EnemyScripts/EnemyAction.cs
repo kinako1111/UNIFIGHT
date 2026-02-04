@@ -272,7 +272,7 @@ public class EnemyAction : MonoBehaviour
 		// エフェクト生成
 		if (index < m_effectList.Count && m_effectList[index] != null)
 		{
-			Instantiate(m_effectList[index], m_attackPos[index].transform);
+			Instantiate(m_effectList[index], m_attackPos[index].transform.position,transform.rotation);
 		}
 
 		// SE再生
