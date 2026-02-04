@@ -578,11 +578,7 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1178203664}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4213256591467372042, guid: e977d8214a8b3264286faf15baf92bdc,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1993610997}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e977d8214a8b3264286faf15baf92bdc, type: 3}
 --- !u!1 &141358189 stripped
 GameObject:
@@ -1421,11 +1417,7 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1510426932}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4213256591467372042, guid: e977d8214a8b3264286faf15baf92bdc,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1070644516}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e977d8214a8b3264286faf15baf92bdc, type: 3}
 --- !u!1 &676845806 stripped
 GameObject:
@@ -1807,37 +1799,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 676845805}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1070644516
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1070644515}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: ad77406f45f66664a86573afeabc3a9b,
-    type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!1 &1121655180
 GameObject:
   m_ObjectHideFlags: 0
@@ -2339,11 +2300,7 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 281393161}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4213256591467372042, guid: e977d8214a8b3264286faf15baf92bdc,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1493788746}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e977d8214a8b3264286faf15baf92bdc, type: 3}
 --- !u!1 &1339174371 stripped
 GameObject:
@@ -2726,37 +2683,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1339174370}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1493788746
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 937954059}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: ad77406f45f66664a86573afeabc3a9b,
-    type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!1 &1510426931
 GameObject:
   m_ObjectHideFlags: 0
@@ -3285,74 +3211,12 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1431460210486079825}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1940616019
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1611656013}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: ad77406f45f66664a86573afeabc3a9b,
-    type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!224 &1993610996 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7950343244013143532, guid: e977d8214a8b3264286faf15baf92bdc,
     type: 3}
   m_PrefabInstance: {fileID: 141358188}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1993610997
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1450049574}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: ad77406f45f66664a86573afeabc3a9b,
-    type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!1001 &1431460210486079825
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3609,10 +3473,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 933965284}
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4213256591467372042, guid: e977d8214a8b3264286faf15baf92bdc,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1940616019}
     - targetCorrespondingSourceObject: {fileID: 4402578645003826029, guid: e977d8214a8b3264286faf15baf92bdc,
         type: 3}
       insertIndex: -1
