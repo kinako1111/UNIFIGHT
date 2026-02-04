@@ -221,7 +221,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &3338237752051869767
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -280,4 +280,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unit: {fileID: 11400000, guid: c5ab73f7af931fd468029bc68a544b98, type: 2}
   m_name: 0
+  m_deathSound: {fileID: 0}
+  m_deathEffect: {fileID: 0}
+  m_deathManagement: 0
   hp: 0
