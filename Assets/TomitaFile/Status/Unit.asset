@@ -20,10 +20,10 @@ MonoBehaviour:
     hp: 150
     attackpower: 100
     magnification: 1.2
-    speed: 5
+    speed: 4
     passive: 2.5
-    skill1cooltime: 10.5
-    skill2cooltime: 4.5
+    skill1cooltime: 13
+    skill2cooltime: 8
     urthcooltime: 20
     skill1duration: 5
     skill2duration: 0
@@ -32,13 +32,13 @@ MonoBehaviour:
     speedtext: "\u9AD8\u901F"
   - id: 2
     character: ShotGun
-    hp: 50
+    hp: 100
     attackpower: 100
     magnification: 2
-    speed: 5
+    speed: 6
     passive: 1
     skill1cooltime: 8
-    skill2cooltime: 7
+    skill2cooltime: 6
     urthcooltime: 25.5
     skill1duration: 25.5
     skill2duration: 10
@@ -48,12 +48,12 @@ MonoBehaviour:
   - id: 3
     character: Healer
     hp: 60
-    attackpower: 100
+    attackpower: 300
     magnification: 2.5
-    speed: 2.5
+    speed: 3
     passive: 2
-    skill1cooltime: 7.5
-    skill2cooltime: 9
+    skill1cooltime: 20
+    skill2cooltime: 8
     urthcooltime: 15
     skill1duration: 20.5
     skill2duration: 15
@@ -62,13 +62,13 @@ MonoBehaviour:
     speedtext: "\u8D85\u4F4E\u901F"
   - id: 4
     character: Sniper
-    hp: 30
+    hp: 60
     attackpower: 100
     magnification: 1.3
     speed: 3.5
     passive: 3.5
-    skill1cooltime: 4
-    skill2cooltime: 4.5
+    skill1cooltime: 10
+    skill2cooltime: 5
     urthcooltime: 20.5
     skill1duration: 10.5
     skill2duration: 200
@@ -77,8 +77,8 @@ MonoBehaviour:
     speedtext: "\u8D85\u9AD8\u901F"
   - id: 100
     character: Golem
-    hp: 10000
-    attackpower: 15
+    hp: 7500
+    attackpower: 25
     magnification: 1
     speed: 3
     passive: 0
@@ -198,7 +198,7 @@ MonoBehaviour:
   - id: 106
     character: Wyburn
     hp: 10000
-    attackpower: 20
+    attackpower: 30
     magnification: 1
     speed: 2
     passive: 0

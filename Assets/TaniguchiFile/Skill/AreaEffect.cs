@@ -9,6 +9,13 @@ public class AreaEffect : MonoBehaviour, ISkill
 	[SerializeField] GameObject m_skillUI;
 	[Header("â~å`ÇÃÇΩÇﬂÅAêîílÇÕàÍÇ¬"),SerializeField] float m_skillRange;
 	[SerializeField] float m_skillDistance;
+	[SerializeField] AudioClip m_seClip;
+
+	AudioSource m_audioSource;
+	void Awake()
+	{
+		m_audioSource = GetComponent<AudioSource>();
+	}
 
 	public string SkillName => m_skillName;
 	public float CoolDownTime => m_cooldownTime;
@@ -25,5 +32,11 @@ public class AreaEffect : MonoBehaviour, ISkill
 			GameObject obj = Instantiate(m_prefab, position, rotation);
 			Destroy(obj, 10f);
 		}
+		PlaySE();
+	}
+
+	void PlaySE()
+	{
+		m_audioSource.PlayOneShot(m_seClip);
 	}
 }

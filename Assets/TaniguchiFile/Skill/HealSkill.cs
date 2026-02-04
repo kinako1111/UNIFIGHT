@@ -12,7 +12,9 @@ public class HealSkill : MonoBehaviour, ISkill
 	[SerializeField] float m_skillRangeX = 0;
 	[SerializeField] float m_skillRangeZ = 0;
 	[SerializeField] float m_skillDistance = 0;
+	[SerializeField] AudioClip m_seClip;
 
+	AudioSource m_audioSource;
 	Status m_status;
 	PlayerController m_playerController;
 	AutoAttack m_autoAttack;
@@ -23,7 +25,11 @@ public class HealSkill : MonoBehaviour, ISkill
 	public GameObject SkillUI => m_skillUI;		//スキルのUI 
 	public float SkillRangeX => m_skillRangeX;	//スキル範囲の幅
 	public float SkillRangeZ => m_skillRangeZ;	//スキル範囲の長さ
-	public float SkillDistance => m_skillDistance;　//スキル発動場所までの距離
+	public float SkillDistance => m_skillDistance; //スキル発動場所までの距離
+	void Awake()
+	{
+		m_audioSource = GetComponent<AudioSource>();
+	}
 
 	private void Start()
 	{
@@ -50,6 +56,8 @@ public class HealSkill : MonoBehaviour, ISkill
 			animator.SetTrigger("Heal");
 			Debug.Log("回復アニメーション始動");
 		}
+
+		PlaySE();
 	}
 
 	public void ExecutionHeal()
@@ -62,5 +70,9 @@ public class HealSkill : MonoBehaviour, ISkill
 
 		//ポーションを隠す
 		m_prefab.SetActive(false);
+	}
+	void PlaySE()
+	{
+		m_audioSource.PlayOneShot(m_seClip);
 	}
 }

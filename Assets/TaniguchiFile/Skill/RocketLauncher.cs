@@ -13,11 +13,13 @@ public class RocketLauncher: MonoBehaviour, ISkill
 	[SerializeField] float m_skillRangeX;
 	[SerializeField] float m_skillRangeZ;
 	[SerializeField] float m_skillDistance;
+	[SerializeField] AudioClip m_seClip;
 
 	Status m_status;
 	Animator m_animator;
 	AutoAttack m_autoAttack;
 	PlayerController m_playerController;
+	AudioSource m_audioSource;
 
 	Vector3 m_impactPoint;
 
@@ -27,7 +29,11 @@ public class RocketLauncher: MonoBehaviour, ISkill
 	public GameObject SkillUI => m_skillUI;		//スキルのUI 
 	public float SkillRangeX => m_skillRangeX;	//スキル範囲の幅
 	public float SkillRangeZ => m_skillRangeZ;	//スキル範囲の長さ
-	public float SkillDistance => m_skillDistance;　//スキル発動場所までの距離
+	public float SkillDistance => m_skillDistance; //スキル発動場所までの距離
+	void Awake()
+	{
+		m_audioSource = GetComponent<AudioSource>();
+	}
 
 	private void Start()
 	{
@@ -58,6 +64,8 @@ public class RocketLauncher: MonoBehaviour, ISkill
 
 		//目標地点を記録
 		m_impactPoint = position;
+
+		PlaySE();
 	}
 
 	public void Fire()
@@ -80,5 +88,9 @@ public class RocketLauncher: MonoBehaviour, ISkill
 
 		//移動不可の取り下げ
 		m_playerController.MoveApproval(true);
+	}
+	void PlaySE()
+	{
+		m_audioSource.PlayOneShot(m_seClip);
 	}
 }
