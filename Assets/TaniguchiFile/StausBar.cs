@@ -5,13 +5,15 @@ using UnityEngine.UI;
 
 public class StausBar : MonoBehaviour
 {
-	Status m_status;
+	[SerializeField]Status m_status;
 	Slider m_slider;
 
 	private void Awake()
 	{
 		m_slider = GetComponent<Slider>();
+		if (m_status != null) return;
 		m_status = transform.root.GetComponent<Status>();
+		
 	}
 
 	private void Start()
@@ -31,6 +33,7 @@ public class StausBar : MonoBehaviour
 
 	private void HandleHpChanged(int cur, int max)
 	{
+		Debug.Log("HPïœçX");
 		if (!Mathf.Approximately(m_slider.maxValue, max)) m_slider.maxValue = max;
 		m_slider.value = cur;
 	}

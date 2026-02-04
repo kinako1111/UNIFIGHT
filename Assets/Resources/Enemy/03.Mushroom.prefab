@@ -513,6 +513,7 @@ GameObject:
   - component: {fileID: 7688591971766415072}
   - component: {fileID: 2551595840813075447}
   - component: {fileID: 480018790263916816}
+  - component: {fileID: 345655177516761875}
   m_Layer: 6
   m_Name: 03.Mushroom
   m_TagString: Enemy
@@ -575,6 +576,8 @@ MonoBehaviour:
   unit: {fileID: 11400000, guid: c5ab73f7af931fd468029bc68a544b98, type: 2}
   m_name: 7
   m_deathSound: {fileID: 8300000, guid: 66399a14bc2fa6949adce7a33137beee, type: 3}
+  m_deathEffect: {fileID: 0}
+  m_deathManagement: 0
   hp: 0
 --- !u!114 &2725996802890297308
 MonoBehaviour:
@@ -703,8 +706,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageUIPrefab: {fileID: 8802386729067888466, guid: b38c4dcc9d25ab9439b1b85b5bf40f0d,
     type: 3}
-  healUIPrefab: {fileID: 0}
+  healUIPrefab: {fileID: 8802386729067888466, guid: adf08ac033d1be147bf56f03b40d7605,
+    type: 3}
   specialUIPrefab: {fileID: 0}
+--- !u!114 &345655177516761875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2667216166888113379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fe0ac3bdcda9f242a179a1dc5b5b6b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3268205053786038615
 GameObject:
   m_ObjectHideFlags: 0

@@ -805,6 +805,7 @@ GameObject:
   m_Component:
   - component: {fileID: 418939900502978467}
   - component: {fileID: 8777700343265894475}
+  - component: {fileID: 3041989217486252522}
   m_Layer: 5
   m_Name: Hp
   m_TagString: Untagged
@@ -885,6 +886,19 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3041989217486252522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6382097710532640813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fe0ac3bdcda9f242a179a1dc5b5b6b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_status: {fileID: 545592717754214144}
 --- !u!1 &6409042009528332770
 GameObject:
   m_ObjectHideFlags: 0
@@ -1075,6 +1089,8 @@ MonoBehaviour:
   unit: {fileID: 11400000, guid: c5ab73f7af931fd468029bc68a544b98, type: 2}
   m_name: 8
   m_deathSound: {fileID: 8300000, guid: 66399a14bc2fa6949adce7a33137beee, type: 3}
+  m_deathEffect: {fileID: 0}
+  m_deathManagement: 0
   hp: 0
 --- !u!114 &8300878748528264654
 MonoBehaviour:
@@ -1203,7 +1219,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageUIPrefab: {fileID: 8802386729067888466, guid: b38c4dcc9d25ab9439b1b85b5bf40f0d,
     type: 3}
-  healUIPrefab: {fileID: 0}
+  healUIPrefab: {fileID: 8802386729067888466, guid: adf08ac033d1be147bf56f03b40d7605,
+    type: 3}
   specialUIPrefab: {fileID: 0}
 --- !u!1 &7335664927105789904
 GameObject:
