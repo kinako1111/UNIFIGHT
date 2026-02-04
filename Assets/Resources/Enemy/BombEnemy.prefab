@@ -350,6 +350,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8971266863836816408}
   - component: {fileID: 420952093893796055}
+  - component: {fileID: 2585198701387256362}
   m_Layer: 5
   m_Name: Hp
   m_TagString: Untagged
@@ -430,6 +431,18 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2585198701387256362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1105879873649868704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fe0ac3bdcda9f242a179a1dc5b5b6b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1288113125942400214
 GameObject:
   m_ObjectHideFlags: 0
