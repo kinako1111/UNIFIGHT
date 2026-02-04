@@ -43,12 +43,14 @@ public class LocalMultiUISetUp : MonoBehaviour
 	private void OnPlayerJoined(PlayerInput playerInput)
 	{
 		int index = playerInput.playerIndex;
-
 		if (index >= m_playerUIInfo.Length)
 		{
 			Debug.LogError($"プレイヤーインデックス {index} に対応するUI設定がありません。");
 			return;
 		}
+
+		SelectRecord selectRecord = GameObject.FindWithTag("GameController").GetComponent<SelectRecord>();
+		selectRecord.SetPlayerCount(index + 1);
 
 		var uiInfo = m_playerUIInfo[index];
 
@@ -68,7 +70,6 @@ public class LocalMultiUISetUp : MonoBehaviour
 			// 接続直後はEventSystemが不安定なため、1フレーム遅らせてフォーカス
 			StartCoroutine(SetFocusRoutine(es, uiInfo.firstSelected));
 		}
-
 		Debug.Log($"[Joined] Player {index} connected. UI Activated.");
 	}
 

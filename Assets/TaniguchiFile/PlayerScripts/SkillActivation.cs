@@ -149,21 +149,35 @@ public class SkillActivation : MonoBehaviour
 		}
 	}
 
-	// ─────────────────────────────────────────────────
-	// 入力イベント購読（OnEnable）／解除（OnDisable）
-	// ─────────────────────────────────────────────────
-	private void OnEnable()
+	public void Setup(PlayerInput input, Camera cam)
 	{
-		// performed: ボタン押下で「準備開始」
-		m_playerInput.actions["Skill1"].performed += onSkill1Performed;
-		m_playerInput.actions["Skill2"].performed += onSkill2Performed;
+		m_playerInput = input;
+		m_playerInput.camera = cam;
 
-		// canceled: ボタン解放で「発動試行」（準備中かつCT0であれば発動）
-		m_playerInput.actions["Skill1"].canceled += OnReleasedSkill;
-		m_playerInput.actions["Skill2"].canceled += OnReleasedSkill;
+		// ここで初めて入力を購読する
+		RegisterInputEvents();
+	}
 
-		// キャンセル専用ボタン：準備解除（UIを隠す）
-		m_playerInput.actions["SkillCancel"].performed += OnSkillCancel;
+	private void RegisterInputEvents()
+	{
+		if (m_playerInput == null) return;
+
+		// アクションが存在するかチェックしてから登録（KeyNotFoundException対策）
+		var actions = m_playerInput.actions;
+		if (actions.FindAction("Skill1") != null)
+		{
+			actions["Skill1"].performed += onSkill1Performed;
+			actions["Skill1"].canceled += OnReleasedSkill;
+		}
+		if (actions.FindAction("Skill2") != null)
+		{
+			actions["Skill2"].performed += onSkill2Performed;
+			actions["Skill2"].canceled += OnReleasedSkill;
+		}
+		if (actions.FindAction("SkillCancel") != null)
+		{
+			actions["SkillCancel"].performed += OnSkillCancel;
+		}
 	}
 
 	private void OnDisable()

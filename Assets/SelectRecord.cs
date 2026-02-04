@@ -16,23 +16,29 @@ public class SelectRecord : MonoBehaviour
 	{
 		// Addではなくインデクサを使うことで、上書きを許容しエラーを防ぐ
 		selection[playerInput] = prefabID;
+
+		//selectionの配列の大きさが、現在のプレイヤーの人数と同じになればシーン遷移
+		if(selection.Count == m_playerCount)
+		{
+			var sheneChager = GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneChanger>();
+			sheneChager.ChangeScene(m_selectMapID);
+		}
 	}
 
-	public void OnPlayerJoined(PlayerInput playerInput)
+	//もう一度続ける場合とかに中身を変えれるように
+	public void SelectionClear()
 	{
-		m_playerCount = Mathf.Min(m_playerCount + 1, MaxPlayerCount);
-		print($"プレイヤー#{playerInput.user.index}が入室！");
+		selection.Clear();
 	}
 
-	public void OnPlayerLeft(PlayerInput playerInput)
+	public void SetPlayerCount(int playerCount)
 	{
-		m_playerCount = Mathf.Max(0, m_playerCount - 1);
-		if (selection.ContainsKey(playerInput)) selection.Remove(playerInput);
-		print($"プレイヤー#{playerInput.user.index}が退室！");
+		m_playerCount = playerCount;
 	}
 
 	public Dictionary<PlayerInput, int> GetDictionary() => selection;
 	public int GetMaxPlayerCount() => MaxPlayerCount;
+	public int GetPlayerCount() => m_playerCount;
 	public int GetMapID() => m_selectMapID;
 
 	// 既存の Decision や SetSelection もそのまま残す

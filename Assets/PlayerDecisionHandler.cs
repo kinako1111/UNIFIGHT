@@ -1,23 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
-using UnityEngine.UI;
-using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
+using UnityEngine.EventSystems;
 
-public class PhotoChange : MonoBehaviour
+public class PlayerDecisionHandler : MonoBehaviour
 {
-	[SerializeField] private GameObject[] m_characterSelect;
-	private int m_index = 0;
+	[Header("この枠で選択されるキャラクターID")]
+	[SerializeField] private int m_characterID;
 
-	SelectRecord m_record;
+	private SelectRecord m_record;
 
-	void Start()
+	private void Start()
 	{
-		m_characterSelect[0].SetActive(true);
-
 		// データを渡す先の Record を取得
 		GameObject controller = GameObject.FindGameObjectWithTag("GameController");
 		if (controller != null)
@@ -26,23 +20,9 @@ public class PhotoChange : MonoBehaviour
 		}
 	}
 
-	public void Right()
-	{
-		m_characterSelect[m_index].SetActive(false);
-		m_index++;
-		if (m_index >= m_characterSelect.Length)
-			m_index = 0;
-		m_characterSelect[m_index].SetActive(true);
-	}
-	public void Left()
-	{
-		m_characterSelect[m_index].SetActive(false);
-		m_index--;
-		if (m_index < 0)
-			m_index = m_characterSelect.Length - 1;
-		m_characterSelect[m_index].SetActive(true);
-	}
-
+	/// <summary>
+	/// UIボタンの OnClick() にこの関数を登録してください
+	/// </summary>
 	public void OnClickDecision()
 	{
 		// 1. 現在このボタンを操作している EventSystem を取得
@@ -56,12 +36,12 @@ public class PhotoChange : MonoBehaviour
 
 			if (pi != null)
 			{
-				Debug.Log($"[Decision] Player:{pi.playerIndex} selected ID:{m_index}");
+				Debug.Log($"[Decision] Player:{pi.playerIndex} selected ID:{m_characterID}");
 
 				// 3. SelectRecord に登録
 				if (m_record != null)
 				{
-					m_record.Register(pi, m_index);
+					m_record.Register(pi, m_characterID);
 				}
 			}
 		}
