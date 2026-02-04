@@ -1,55 +1,65 @@
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
+using UnityEngine.EventSystems;
 
 public class CharacterSelectUI : MonoBehaviour
 {
-	SelectRecord m_record;
-	// 決定済みのプレイヤーを管理
-	[SerializeField]HashSet<PlayerInput> confirmedPlayers = new HashSet<PlayerInput>();
+	[SerializeField] private int m_playerIndex;
+	[SerializeField] private GameObject m_visualRoot;
+
+	private SelectRecord m_record;
+	private bool m_isJoined = false;
+
+	private void Awake()
+	{
+		// 1P(Index 0)以外は初期非表示
+		if (m_visualRoot != null) m_visualRoot.SetActive(m_playerIndex == 0);
+	}
 
 	private void Start()
 	{
 		m_record = GameObject.FindGameObjectWithTag("GameController").GetComponent<SelectRecord>();
 	}
 
-	// CharacterSelectUI.cs にこのメソッドを追加/修正
-	public void OnClickDecision()
+	// Managerから呼ばれる
+	public void ActivateUI(PlayerInput pi)
 	{
-		// 現在このボタンをクリックした(Focusしている)EventSystemを取得
-		var currentEventSystem = EventSystem.current as MultiplayerEventSystem;
+		m_isJoined = true;
+		if (m_visualRoot != null) m_visualRoot.SetActive(true);
 
-		if (currentEventSystem != null && currentEventSystem.playerRoot != null)
+		var es = GetComponentInChildren<MultiplayerEventSystem>();
+		if (es != null)
 		{
-			// MultiuserEventSystemのPlayerRootに設定されているPlayerInputを取得
-			PlayerInput pi = currentEventSystem.playerRoot.GetComponent<PlayerInput>();
-
-			if (pi != null)
-			{
-				// 既存の決定ロジックへ飛ばす
-				HandleDecision(pi);
-			}
+			es.playerRoot = pi.gameObject;
+			if (es.firstSelectedGameObject != null) es.SetSelectedGameObject(es.firstSelectedGameObject);
 		}
 	}
 
-	// 共通の決定ロジック
-	public void HandleDecision(PlayerInput player)
+	// Managerから呼ばれる
+	public void DeactivateUI(PlayerInput pi)
 	{
-		if (confirmedPlayers.Contains(player))
+		m_isJoined = false;
+		if (m_visualRoot != null) m_visualRoot.SetActive(false);
+	}
+
+	public void OnClickDecision()
+	{
+		if (!m_isJoined) return;
+
+		var currentEventSystem = EventSystem.current as MultiplayerEventSystem;
+		if (currentEventSystem != null && currentEventSystem.playerRoot != null)
 		{
-			Debug.Log($"プレイヤー {player.user.index} は既に決定済みです。");
-			return;
+			PlayerInput pi = currentEventSystem.playerRoot.GetComponent<PlayerInput>();
+			if (pi != null) HandleDecision(pi);
 		}
+	}
 
-		// 選択中のID（ここでは仮に0とする。実際はカーソル位置などから取得）
-		int selectedID = 0;
+	private void HandleDecision(PlayerInput player)
+	{
+		if (m_record.GetDictionary().ContainsKey(player)) return;
 
-		// 記録用Dictionaryに追加
-		m_record.Register(player, selectedID);
-		confirmedPlayers.Add(player);
-
-		Debug.Log($"プレイヤー {player.user.index} が キャラ {selectedID} を選択！");
+		m_record.Register(player, 0);
+		Debug.Log($"Player {player.playerIndex} Ready!");
 	}
 }
