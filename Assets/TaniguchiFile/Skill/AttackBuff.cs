@@ -8,6 +8,7 @@ public class AttackBuff : MonoBehaviour, ISkill
 	[SerializeField] private string m_skillName = "□□□";
 	[SerializeField] private SkillType m_skillType;
 	[SerializeField] private GameObject m_skillUI;
+	[SerializeField] AudioClip m_seClip;
 
 	[Header("円形のため、数値は一つ"), SerializeField]
 	private float m_skillRange;
@@ -23,6 +24,8 @@ public class AttackBuff : MonoBehaviour, ISkill
 	// まずは固定の最大スタック数（必要なら SerializeField にして調整）
 	private const int DEFAULT_MAX_STACKS = 5;
 
+	AudioSource m_audioSource;
+
 	public string SkillName => m_skillName;
 	public float CoolDownTime => m_cooldownTime;
 	public SkillType SkillType => m_skillType;
@@ -30,6 +33,10 @@ public class AttackBuff : MonoBehaviour, ISkill
 	public float SkillRangeX => m_skillRange;
 	public float SkillRangeZ => m_skillRange;
 	public float SkillDistance => m_skillDistance;
+	void Awake()
+	{
+		m_audioSource = GetComponent<AudioSource>();
+	}
 
 	public void Execute(Vector3 position, Quaternion rotation, GameObject target)
 	{
@@ -69,5 +76,11 @@ public class AttackBuff : MonoBehaviour, ISkill
 			var fx = Instantiate(m_prefab, target.transform.position, rotation, target.transform);
 			Destroy(fx, m_buffTime);
 		}
+
+		PlaySE();
+	}
+	void PlaySE()
+	{
+		m_audioSource.PlayOneShot(m_seClip);
 	}
 }

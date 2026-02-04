@@ -3946,7 +3946,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &886624227
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8455,12 +8455,27 @@ PrefabInstance:
     - target: {fileID: 481043753077701451, guid: 77ccf81e22061ef429fed8c2257387c0,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 481043753077701451, guid: 77ccf81e22061ef429fed8c2257387c0,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 723415319621534427, guid: 77ccf81e22061ef429fed8c2257387c0,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 723415319621534427, guid: 77ccf81e22061ef429fed8c2257387c0,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 723415319621534427, guid: 77ccf81e22061ef429fed8c2257387c0,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4019908106392416490, guid: 77ccf81e22061ef429fed8c2257387c0,
         type: 3}
@@ -8516,6 +8531,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Shotgun
+      objectReference: {fileID: 0}
+    - target: {fileID: 4343259128750023175, guid: 77ccf81e22061ef429fed8c2257387c0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

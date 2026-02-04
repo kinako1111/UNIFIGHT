@@ -10,6 +10,7 @@ public class Warp : MonoBehaviour, ISkill
 	[SerializeField] float m_skillRangeX;
 	[SerializeField] float m_skillRangeZ;
 	[SerializeField] float m_skillDistance;
+	[SerializeField] AudioClip m_seClip;
 
 	//攻撃バフに関しての値
 
@@ -23,6 +24,7 @@ public class Warp : MonoBehaviour, ISkill
 	private const int DEFAULT_MAX_STACKS = 1;
 
 	Status m_status;
+	AudioSource m_audioSource;
 	Animator m_animator;
 	AutoAttack m_autoAttack;
 	PlayerController m_playerController;
@@ -35,7 +37,12 @@ public class Warp : MonoBehaviour, ISkill
 	public GameObject SkillUI => m_skillUI;		//スキルのUI 
 	public float SkillRangeX => m_skillRangeX;	//スキル範囲の幅
 	public float SkillRangeZ => m_skillRangeZ;	//スキル範囲の長さ
-	public float SkillDistance => m_skillDistance;　//スキル発動場所までの距離
+	public float SkillDistance => m_skillDistance; //スキル発動場所までの距離
+	void Awake()
+	{
+		m_audioSource = GetComponent<AudioSource>();
+	}
+
 
 	void Start()
 	{
@@ -91,5 +98,11 @@ public class Warp : MonoBehaviour, ISkill
 			perStackDecay: false,                      // バフは共有タイマーが一般的
 			durationSeconds: Mathf.Max(0.1f, m_buffTime)
 		);
+
+		PlaySE();
+	}
+	void PlaySE()
+	{
+		m_audioSource.PlayOneShot(m_seClip);
 	}
 }
