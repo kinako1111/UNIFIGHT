@@ -22,6 +22,7 @@ public class Status : MonoBehaviour
 		Turret,
 		Bomb,
 		Wyburn,
+		Robot,
 		Length,
 	}
 
