@@ -325,7 +325,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5824427751799431968
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1008,6 +1008,8 @@ MonoBehaviour:
   unit: {fileID: 11400000, guid: c5ab73f7af931fd468029bc68a544b98, type: 2}
   m_name: 4
   m_deathSound: {fileID: 8300000, guid: 791209dfd63917a42b9bdd36caba6fae, type: 3}
+  m_deathEffect: {fileID: 0}
+  m_deathManagement: 0
   hp: 0
 --- !u!136 &4703109288381568863
 CapsuleCollider:
@@ -1217,7 +1219,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2511664738710215362
 RectTransform:
   m_ObjectHideFlags: 0
