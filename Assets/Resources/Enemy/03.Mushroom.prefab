@@ -513,7 +513,6 @@ GameObject:
   - component: {fileID: 7688591971766415072}
   - component: {fileID: 2551595840813075447}
   - component: {fileID: 480018790263916816}
-  - component: {fileID: 345655177516761875}
   - component: {fileID: 6983014421283779864}
   m_Layer: 6
   m_Name: 03.Mushroom
@@ -521,7 +520,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8783249861941975954
 Transform:
   m_ObjectHideFlags: 0
@@ -710,19 +709,6 @@ MonoBehaviour:
   healUIPrefab: {fileID: 8802386729067888466, guid: adf08ac033d1be147bf56f03b40d7605,
     type: 3}
   specialUIPrefab: {fileID: 0}
---- !u!114 &345655177516761875
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2667216166888113379}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fe0ac3bdcda9f242a179a1dc5b5b6b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_status: {fileID: 0}
 --- !u!114 &6983014421283779864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1392,12 +1378,12 @@ PrefabInstance:
     - target: {fileID: 3291279789919885140, guid: 4b79cff24a945d443a18808484ee1e0d,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3291279789919885140, guid: 4b79cff24a945d443a18808484ee1e0d,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3711182124192083972, guid: 4b79cff24a945d443a18808484ee1e0d,
         type: 3}
@@ -1547,17 +1533,17 @@ PrefabInstance:
     - target: {fileID: 8108953373147906868, guid: 4b79cff24a945d443a18808484ee1e0d,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8108953373147906868, guid: 4b79cff24a945d443a18808484ee1e0d,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8108953373147906868, guid: 4b79cff24a945d443a18808484ee1e0d,
         type: 3}
       propertyPath: m_AnchorMin.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8125023391788984430, guid: 4b79cff24a945d443a18808484ee1e0d,
         type: 3}
@@ -1583,7 +1569,11 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 9106101008880361574, guid: 4b79cff24a945d443a18808484ee1e0d, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 9128969917201598273, guid: 4b79cff24a945d443a18808484ee1e0d,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6125346695229465353}
   m_SourcePrefab: {fileID: 100100000, guid: 4b79cff24a945d443a18808484ee1e0d, type: 3}
 --- !u!114 &3679205631426506923 stripped
 MonoBehaviour:
@@ -1591,7 +1581,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 40513146568605871}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 9097117007596472302}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
@@ -1603,3 +1593,22 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 40513146568605871}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &9097117007596472302 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9128969917201598273, guid: 4b79cff24a945d443a18808484ee1e0d,
+    type: 3}
+  m_PrefabInstance: {fileID: 40513146568605871}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6125346695229465353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9097117007596472302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fe0ac3bdcda9f242a179a1dc5b5b6b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_status: {fileID: 6968150290591633418}

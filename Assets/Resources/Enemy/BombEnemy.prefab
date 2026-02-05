@@ -443,6 +443,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fe0ac3bdcda9f242a179a1dc5b5b6b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_status: {fileID: 0}
 --- !u!1 &1288113125942400214
 GameObject:
   m_ObjectHideFlags: 0
@@ -983,7 +984,6 @@ GameObject:
   - component: {fileID: 7416073484326106202}
   - component: {fileID: 6590463053742628173}
   - component: {fileID: 8647664784469510067}
-  - component: {fileID: 3877956071226353474}
   - component: {fileID: 5584902014325293206}
   m_Layer: 6
   m_Name: BombEnemy
@@ -1195,21 +1195,6 @@ MonoBehaviour:
   m_effect: {fileID: 7289506039164781117, guid: 82ad1f2cc4dbe21438fc7e557e048d57,
     type: 3}
   m_destroyedTime: 1
---- !u!114 &3877956071226353474
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2610657211241995477}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ef5ef81f63629041a2c7442af4b13a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fadeOutSpeed: 1
-  moveSpeed: 0.4
-  randomOffsetRange: 0.5
 --- !u!114 &5584902014325293206
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3548,12 +3533,12 @@ PrefabInstance:
     - target: {fileID: 3291279789919885140, guid: 4b79cff24a945d443a18808484ee1e0d,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3291279789919885140, guid: 4b79cff24a945d443a18808484ee1e0d,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3711182124192083972, guid: 4b79cff24a945d443a18808484ee1e0d,
         type: 3}
@@ -3713,17 +3698,17 @@ PrefabInstance:
     - target: {fileID: 8108953373147906868, guid: 4b79cff24a945d443a18808484ee1e0d,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8108953373147906868, guid: 4b79cff24a945d443a18808484ee1e0d,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8108953373147906868, guid: 4b79cff24a945d443a18808484ee1e0d,
         type: 3}
       propertyPath: m_AnchorMin.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8125023391788984430, guid: 4b79cff24a945d443a18808484ee1e0d,
         type: 3}
@@ -3738,7 +3723,7 @@ PrefabInstance:
     - target: {fileID: 8125023391788984430, guid: 4b79cff24a945d443a18808484ee1e0d,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8210042981682881929, guid: 4b79cff24a945d443a18808484ee1e0d,
         type: 3}
@@ -3773,7 +3758,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 9128969917201598273, guid: 4b79cff24a945d443a18808484ee1e0d,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1523433982307496572}
   m_SourcePrefab: {fileID: 100100000, guid: 4b79cff24a945d443a18808484ee1e0d, type: 3}
 --- !u!224 &524576416819020219 stripped
 RectTransform:
@@ -3781,3 +3770,22 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 4832430754712560534}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &4440729478143403223 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9128969917201598273, guid: 4b79cff24a945d443a18808484ee1e0d,
+    type: 3}
+  m_PrefabInstance: {fileID: 4832430754712560534}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1523433982307496572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4440729478143403223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fe0ac3bdcda9f242a179a1dc5b5b6b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_status: {fileID: 5155485321582074905}

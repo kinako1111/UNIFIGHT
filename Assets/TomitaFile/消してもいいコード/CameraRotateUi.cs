@@ -1,12 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraRotateUi : MonoBehaviour
 {
+    private Camera m_targetCamera;
+
+    public void SetTargetCamera(Camera cam)
+    {
+        m_targetCamera = cam;
+    }
+
     void LateUpdate()
     {
-        // カメラと同じ向きに設定
-        transform.rotation = Camera.main.transform.rotation;    
+        // カメラがセットされるまでは回転しない
+        if (m_targetCamera == null) return;
+
+        transform.rotation = m_targetCamera.transform.rotation;
     }
 }

@@ -43,31 +43,41 @@ public class PhotoChange : MonoBehaviour
 		m_characterSelect[m_index].SetActive(true);
 	}
 
-	public void OnClickDecision()
-	{
-		// 1. 現在このボタンを操作している EventSystem を取得
-		var currentES = EventSystem.current as MultiplayerEventSystem;
+    public void OnClickDecision()
+    {
+        var currentES = EventSystem.current as MultiplayerEventSystem;
 
-		if (currentES != null && currentES.playerRoot != null)
-		{
-			// 2. EventSystem が紐付いている PlayerInput を取得
-			// (Playerプレハブ側に PlayerInput が付いている想定)
-			PlayerInput pi = currentES.GetComponent<PlayerInput>();
+        if (currentES != null)
+        {
+            // 操作している PlayerInput を取得
+            PlayerInput pi = currentES.GetComponentInParent<PlayerInput>();
 
-			if (pi != null)
-			{
-				Debug.Log($"[Decision] Player:{pi.playerIndex} selected ID:{m_index}");
+            if (pi != null)
+            {
+                // --- 追加：キーボードデバイスが含まれているかチェック ---
+                bool isKeyboard = false;
+                foreach (var device in pi.devices)
+                {
+                    if (device is Keyboard || device is Mouse)
+                    {
+                        isKeyboard = true;
+                        break;
+                    }
+                }
 
-				// 3. SelectRecord に登録
-				if (m_record != null)
-				{
-					m_record.Register(pi, m_index);
-				}
-			}
-		}
-		else
-		{
-			Debug.LogWarning("操作しているプレイヤーを特定できません。EventSystemの設定を確認してください。");
-		}
-	}
+                if (isKeyboard)
+                {
+                    Debug.Log("キーボードでの参加は許可されていません。");
+                    return; // ここで処理を中断
+                }
+
+                Debug.Log($"[Decision] Player:{pi.playerIndex} selected ID:{m_index}");
+
+                if (m_record != null)
+                {
+                    m_record.Register(pi, m_index);
+                }
+            }
+        }
+    }
 }

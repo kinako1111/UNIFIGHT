@@ -148,7 +148,6 @@ GameObject:
   - component: {fileID: 3338237752051869767}
   - component: {fileID: 3585545777704466654}
   - component: {fileID: 8464060577820079929}
-  - component: {fileID: 8727173946308431163}
   m_Layer: 5
   m_Name: DamageUI
   m_TagString: Untagged
@@ -221,7 +220,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &3338237752051869767
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -266,21 +265,3 @@ MonoBehaviour:
   fadeOutSpeed: 2
   moveSpeed: 0.4
   randomOffsetRange: 0.5
---- !u!114 &8727173946308431163
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8802386729067888466}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b19b6b771c817241a8c0bec1cf34903, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  unit: {fileID: 11400000, guid: c5ab73f7af931fd468029bc68a544b98, type: 2}
-  m_name: 0
-  m_deathSound: {fileID: 0}
-  m_deathEffect: {fileID: 0}
-  m_deathManagement: 0
-  hp: 0

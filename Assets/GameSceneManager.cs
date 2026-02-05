@@ -1,54 +1,133 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Users;
+using System.Collections.Generic;
 
 public class GameSceneManager : MonoBehaviour
 {
-	SelectRecord m_selectRecord;
+    SelectRecord m_selectRecord;
 
-	[SerializeField] GameObject[] m_playerPrefab;
-	[SerializeField] Transform[] m_genelatePos;
-	[SerializeField] Camera cameraPrefab;
+    [Header("生成用プレハブ設定")]
+    [SerializeField] GameObject[] m_playerPrefab;
+    [SerializeField] Transform[] m_genelatePos;
 
-	[SerializeField] InputActionAsset m_actionAsset; // �� �����ǉ�
-	[SerializeField] string m_actionMapName = "PlayerInput";
+    [Header("カメラ設定")]
+    [SerializeField] Camera cameraPrefab; // CameraFollowがアタッチされたカメラ
 
-	void Start()
-	{
-		m_selectRecord = GameObject.FindWithTag("GameController").GetComponent<SelectRecord>();
-		var selectionDict = m_selectRecord.GetDictionary();
+    [Header("入力設定")]
+    [SerializeField] InputActionAsset m_actionAsset;
 
-		int index = 0;
-		foreach (KeyValuePair<InputDevice,int> entry in m_selectRecord.GetDictionary())
-		{
-			InputDevice device = entry.Key; // ���x�� InputDevice ���擾�ł���
-			int charId = entry.Value;
+    void Start()
+    {
+        // 1. 選択データの取得
+        GameObject controllerObj = GameObject.FindWithTag("GameController");
+        if (controllerObj == null) return;
 
-			GameObject playerObj = Instantiate(m_playerPrefab[charId], m_genelatePos[index].position, Quaternion.identity);
+        m_selectRecord = controllerObj.GetComponent<SelectRecord>();
+        var selectionDict = m_selectRecord.GetDictionary();
 
-			// PlayerInput�̐ݒ�
-			PlayerInput newPlayerInput = playerObj.GetComponent<PlayerInput>();
-			if (newPlayerInput != null)
-			{
-				newPlayerInput.actions = m_actionAsset;
+        int index = 0;
+        int totalPlayers = selectionDict.Count;
 
-				// �ۑ����Ă������f�o�C�X���y�A�����O����
-				InputUser.PerformPairingWithDevice(device, newPlayerInput.user);
+        foreach (var entry in selectionDict)
+        {
+            InputDevice[] devices = entry.Key;
+            int charId = entry.Value;
 
-				newPlayerInput.enabled = true;
-			}
+            if (index >= m_genelatePos.Length) break;
 
-			// SkillActivation �������������ꍇ�� Setup �Ăяo��
-			var skill = playerObj.GetComponent<SkillActivation>();
-			if (skill != null)
-			{
-				skill.Setup(newPlayerInput, Instantiate(cameraPrefab));
-			}
+            // 2. カメラとプレイヤーの生成
+            Camera playerCamera = Instantiate(cameraPrefab);
+            PlayerInput newPlayerInput = PlayerInput.Instantiate(
+                m_playerPrefab[charId],
+                pairWithDevices: devices
+            );
 
-			index++;
-		}
-	}
+            // 3. 基本設定（追従・PlayerInputへの登録）
+            newPlayerInput.camera = playerCamera;
+            CameraFollow followScript = playerCamera.GetComponent<CameraFollow>();
+            if (followScript != null)
+            {
+                followScript.SetTarget(newPlayerInput.transform);
+            }
+
+            // 4. 【重要】カメラのアタッチ（TakeDamageへの参照渡し）
+            // これにより、ダメージUIが「自分のカメラ」を向くようになります
+            TakeDamage td = newPlayerInput.GetComponent<TakeDamage>();
+            if (td != null)
+            {
+                td.SetPlayerCamera(playerCamera);
+            }
+            else
+            {
+                Debug.LogError($"{newPlayerInput.name} に TakeDamage が見つかりません！");
+            }
+
+            // 5. UI Canvas の分割画面対応
+            Canvas[] canvases = newPlayerInput.GetComponentsInChildren<Canvas>();
+            foreach (Canvas canvas in canvases)
+            {
+                canvas.renderMode = RenderMode.ScreenSpaceCamera;
+                canvas.worldCamera = playerCamera;
+                canvas.planeDistance = 1;
+            }
+
+            // 6. 画面分割の適用
+            SetupCameraRect(playerCamera, index, totalPlayers);
+
+            // 7. 位置とその他の初期化
+            newPlayerInput.transform.position = m_genelatePos[index].position;
+            newPlayerInput.GetComponent<PlayerController>()?.SetCamera(playerCamera);
+            newPlayerInput.GetComponent<SkillActivation>()?.Setup(newPlayerInput, playerCamera);
+
+            index++;
+        }
+
+        // 8. 3人プレイ時のTower監視カメラ生成
+        if (totalPlayers == 3)
+        {
+            CreateTowerCamera();
+        }
+    }
+
+    /// <summary>
+    /// 右下の空きスペースにTowerを映すカメラを作成
+    /// </summary>
+    void CreateTowerCamera()
+    {
+        GameObject tower = GameObject.FindWithTag("Tower");
+        if (tower == null) return;
+
+        Camera towerCam = Instantiate(cameraPrefab);
+
+        // 監視カメラなので追従や音声リスナーは不要
+        if (towerCam.TryGetComponent<CameraFollow>(out var follow)) follow.enabled = false;
+        if (towerCam.TryGetComponent<AudioListener>(out var listener)) listener.enabled = false;
+
+        // UIが映り込まないように Culling Mask から UI レイヤーを除外
+        towerCam.cullingMask &= ~(1 << LayerMask.NameToLayer("UI"));
+
+        towerCam.transform.position = tower.transform.position + new Vector3(0, 10, -10);
+        towerCam.transform.LookAt(tower.transform);
+        towerCam.rect = new Rect(0.5f, 0f, 0.5f, 0.5f); // 右下
+    }
+
+    void SetupCameraRect(Camera cam, int index, int total)
+    {
+        if (total <= 1)
+        {
+            cam.rect = new Rect(0, 0, 1, 1);
+            return;
+        }
+
+        if (total == 2)
+        {
+            cam.rect = new Rect(index * 0.5f, 0, 0.5f, 1.0f);
+        }
+        else
+        {
+            float x = (index % 2) * 0.5f;
+            float y = (index < 2) ? 0.5f : 0f;
+            cam.rect = new Rect(x, y, 0.5f, 0.5f);
+        }
+    }
 }

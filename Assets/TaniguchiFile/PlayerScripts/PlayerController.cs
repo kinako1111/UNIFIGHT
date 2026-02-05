@@ -44,7 +44,6 @@ public class PlayerController : MonoBehaviour
 		m_rigidbody = GetComponent<Rigidbody>();
 		m_status = GetComponent<Status>();
 		m_autoAttack = GetComponent<AutoAttack>();
-		m_targetCamera = Camera.main;
 	}
 
 	private void OnEnable()
@@ -72,37 +71,55 @@ public class PlayerController : MonoBehaviour
 		m_animator.SetBool("Move", false);
 	}
 
-	private void FixedUpdate()
-	{
-		if (m_status.GetDeath()) return;
-		// カメラの向き（角度[deg]）取得
-		var cameraAngleY = m_targetCamera.transform.eulerAngles.y;
+    private void FixedUpdate()
+    {
+        // 1. 死亡チェック
+        if (m_status.GetDeath()) return;
 
-		// 操作入力と鉛直方向速度から、現在速度を計算
-		var moveVelocity = new Vector3(
-			m_inputMove.x * m_status.GetSpeed(),
-			0,
-			m_inputMove.y * m_speed
-		);
-		// カメラの角度分だけ移動量を回転
-		moveVelocity = Quaternion.Euler(0, cameraAngleY, 0) * moveVelocity;
+        // 2. 【重要】カメラがセットされるまで処理を中断する（これで78行目のエラーを防ぐ）
+        if (m_targetCamera == null) return;
 
-		// 現在フレームの移動量を移動速度から計算
-		var moveDelta = moveVelocity * Time.deltaTime;
+        // 3. カメラの向き（角度[deg]）取得（ここが元の78行目）
+        var cameraAngleY = m_targetCamera.transform.eulerAngles.y;
 
-		// CharacterControllerに移動量を指定し、オブジェクトを動かす
-		//攻撃中は移動、振り向き不可
-		if (m_autoAttack.IsAttack || !m_moveApproval) return;
-		m_rigidbody.velocity = moveVelocity;
+        // 操作入力と鉛直方向速度から、現在速度を計算
+        var moveVelocity = new Vector3(
+            m_inputMove.x * m_status.GetSpeed(),
+            0,
+            m_inputMove.y * m_speed
+        );
 
-		if (moveVelocity != Vector3.zero)
-		{
-			Quaternion targetRotation = Quaternion.LookRotation(moveVelocity);
+        // カメラの角度分だけ移動量を回転
+        moveVelocity = Quaternion.Euler(0, cameraAngleY, 0) * moveVelocity;
 
-			targetRotation *= Quaternion.Euler(revisionRotation); // ← ここでモデルの向きを補正
+        // 以降、攻撃中などの移動制限
+        if (m_autoAttack.IsAttack || !m_moveApproval)
+        {
+            // 移動不可の時でも、重力などの鉛直方向の速度を維持したい場合は調整が必要ですが、
+            // ひとまず移動停止にするなら以下：
+            m_rigidbody.velocity = new Vector3(0, m_rigidbody.velocity.y, 0);
+            return;
+        }
 
-			transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 0.2f);
-		}
-	}
+        m_rigidbody.velocity = moveVelocity;
 
+        if (moveVelocity != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(moveVelocity);
+            targetRotation *= Quaternion.Euler(revisionRotation);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 0.2f);
+        }
+    }
+
+    public void SetCamera(Camera playerCamera)
+{
+    m_targetCamera = playerCamera;
+    
+    // 子要素にあるCameraRotateUiを探してカメラを渡す
+    var rotateUi = GetComponentInChildren<CameraRotateUi>();
+    if (rotateUi != null)
+    {
+        rotateUi.SetTargetCamera(playerCamera);
+    }
+}
 }

@@ -3,54 +3,60 @@ using UnityEngine;
 
 public class DamageUI : MonoBehaviour
 {
-	private TextMeshProUGUI damageText;
-	[SerializeField] private float fadeOutSpeed = 2f; // 少し早めが気持ちいいです
-	[SerializeField] private float moveSpeed = 1.5f;
-	[SerializeField] private float randomOffsetRange = 0.5f;
+    private TextMeshProUGUI damageText;
+    [SerializeField] private float fadeOutSpeed = 2f;
+    [SerializeField] private float moveSpeed = 1.5f;
+    [SerializeField] private float randomOffsetRange = 0.5f;
 
-	private Transform _camTransform;
+    private Transform _camTransform;
 
-	void Awake()
-	{
-		damageText = GetComponentInChildren<TextMeshProUGUI>();
-		// カメラのTransformをキャッシュ
-		if (Camera.main != null) _camTransform = Camera.main.transform;
-	}
+    void Awake()
+    {
+        damageText = GetComponentInChildren<TextMeshProUGUI>();
+    }
 
-	public void SetDamage(int damage)
-	{
-		if (damageText != null)
-		{
-			damageText.text = damage.ToString();
-		}
+    // カメラを外部からセットするメソッドを追加
+    public void SetTargetCamera(Camera cam)
+    {
+        if (cam != null) _camTransform = cam.transform;
+    }
 
-		// 初期位置にランダム性を持たせる
-		transform.position += new Vector3(
-			Random.Range(-randomOffsetRange, randomOffsetRange),
-			Random.Range(-randomOffsetRange, randomOffsetRange),
-			0f
-		);
-	}
+    public void SetDamage(int damage)
+    {
+        if (damageText != null)
+        {
+            damageText.text = damage.ToString();
+        }
 
-	void LateUpdate()
-	{
-		if (damageText == null || _camTransform == null) return;
+        transform.position += new Vector3(
+            Random.Range(-randomOffsetRange, randomOffsetRange),
+            Random.Range(-randomOffsetRange, randomOffsetRange),
+            0f
+        );
+    }
 
-		// 1. カメラの方向を向く（ビルボード）
-		transform.rotation = _camTransform.rotation;
+    void LateUpdate()
+    {
+        if (damageText == null) return;
 
-		// 2. 上に移動
-		transform.Translate(Vector3.up * moveSpeed * Time.deltaTime);
+        // 1. 移動はカメラがなくても実行
+        transform.position += Vector3.up * moveSpeed * Time.deltaTime;
 
-		// 3. アルファ値だけを下げる（元の色を維持）
-		Color textColor = damageText.color;
-		textColor.a -= fadeOutSpeed * Time.deltaTime;
-		damageText.color = textColor;
+        // 2. 回転はカメラがある時だけ実行
+        if (_camTransform != null)
+        {
+            transform.rotation = _camTransform.rotation;
+        }
 
-		// 4. 完全に透明になったら削除
-		if (textColor.a <= 0)
-		{
-			Destroy(gameObject);
-		}
-	}
+        // 3. フェードアウトは常に実行
+        Color textColor = damageText.color;
+        textColor.a -= fadeOutSpeed * Time.deltaTime;
+        damageText.color = textColor;
+
+        // 4. 削除判定（これで確実に消えるようになります）
+        if (textColor.a <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
 }

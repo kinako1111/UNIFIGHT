@@ -1,46 +1,51 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Linq;
 
 public class SelectRecord : MonoBehaviour
 {
-	[Header("最大人数"), SerializeField] const int MaxPlayerCount = 4;
-	[Header("プレイヤーの人数"), SerializeField] int m_playerCount = 1;
-	[Header("選択したマップ"), SerializeField] int m_selectMapID = 1;
+    [Header("最大人数"), SerializeField] const int MaxPlayerCount = 4;
+    [Header("プレイヤーの人数"), SerializeField] int m_playerCount = 1;
+    [Header("選択したマップ"), SerializeField] int m_selectMapID = 1;
 
-	[Header("選んだキャラ")]
-	private Dictionary<PlayerInput, int> selection = new Dictionary<PlayerInput, int>();
+    // キーを InputDevice[] にすることで、シーン遷移後の参照切れを防ぐ
+    private Dictionary<InputDevice[], int> selection = new Dictionary<InputDevice[], int>();
 
-	// 他の箇所で使うロジックを維持
-	public void Register(PlayerInput playerInput, int prefabID)
-	{
-		// Addではなくインデクサを使うことで、上書きを許容しエラーを防ぐ
-		selection[playerInput] = prefabID;
+    public void Register(PlayerInput playerInput, int prefabID)
+    {
+        // キーボード・マウスでの参加をブロックするガード
+        if (playerInput.devices.Any(d => d is Keyboard || d is Mouse))
+        {
+            Debug.Log("Keyboard/Mouse is not allowed.");
+            return;
+        }
 
-		//selectionの配列の大きさが、現在のプレイヤーの人数と同じになればシーン遷移
-		if(selection.Count == m_playerCount)
-		{
-			var sheneChager = GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneChanger>();
-			sheneChager.ChangeScene(m_selectMapID);
-		}
-	}
+        var devices = playerInput.devices.ToArray();
 
-	//もう一度続ける場合とかに中身を変えれるように
-	public void SelectionClear()
-	{
-		selection.Clear();
-	}
+        // デバイスの組み合わせを確認して登録
+        var existingKey = selection.Keys.FirstOrDefault(d => d.SequenceEqual(devices));
+        if (existingKey != null)
+        {
+            selection[existingKey] = prefabID;
+        }
+        else
+        {
+            selection[devices] = prefabID;
+        }
 
-	public void SetPlayerCount(int playerCount)
-	{
-		m_playerCount = playerCount;
-	}
+        // 全員の選択が完了したらシーン遷移
+        if (selection.Count == m_playerCount)
+        {
+            var sceneChanger = GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneChanger>();
+            sceneChanger.ChangeScene(m_selectMapID);
+        }
+    }
 
-	public Dictionary<PlayerInput, int> GetDictionary() => selection;
-	public int GetMaxPlayerCount() => MaxPlayerCount;
-	public int GetPlayerCount() => m_playerCount;
-	public int GetMapID() => m_selectMapID;
+    public void SelectionClear() => selection.Clear();
+    public void SetPlayerCount(int playerCount) => m_playerCount = playerCount;
 
-	// 既存の Decision や SetSelection もそのまま残す
-	public void Decision(int mapID) => m_selectMapID = mapID;
+    // 型を InputDevice[] に変更して取得
+    public Dictionary<InputDevice[], int> GetDictionary() => selection;
+    public void Decision(int mapID) => m_selectMapID = mapID;
 }

@@ -13,7 +13,6 @@ public class StausBar : MonoBehaviour
 		m_slider = GetComponent<Slider>();
 		if (m_status != null) return;
 		m_status = transform.root.GetComponent<Status>();
-		
 	}
 
 	private void Start()
