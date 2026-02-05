@@ -175,8 +175,7 @@ public class Status : MonoBehaviour
 			Debug.Log("Ž€‚É‚Ü‚µ‚½");
 			if (this.gameObject.CompareTag("Target"))
 			{
-				SceneChanger changer = GameObject.FindWithTag("SceneManager").GetComponent<SceneChanger>();
-				changer.ChangeScene("LoseScene");
+				TowerDestroyed();
 			}
 			hp = 0;
 			m_animator.SetTrigger("Death");
@@ -218,5 +217,10 @@ public class Status : MonoBehaviour
 		OnHpChanged?.Invoke(hp, maxHp);
 		if (takeDamage != null) takeDamage.ShowDamageUI(heal,DamageKinds.Heal);
 		Debug.Log(hp - originalHP + "‰ñ•œ‚µ‚Ü‚µ‚½");
+	}
+	void TowerDestroyed()
+	{
+		SceneChanger changer = GameObject.FindWithTag("SceneManager").GetComponent<SceneChanger>();
+		changer.ChangeScene("LoseScene");
 	}
 }
