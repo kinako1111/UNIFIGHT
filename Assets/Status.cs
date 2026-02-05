@@ -173,6 +173,11 @@ public class Status : MonoBehaviour
 		if (hp <= 0)
 		{
 			Debug.Log("Ž€‚É‚Ü‚µ‚½");
+			if (this.gameObject.CompareTag("Target"))
+			{
+				SceneChanger changer = GameObject.FindWithTag("SceneManager").GetComponent<SceneChanger>();
+				changer.ChangeScene("LoseScene");
+			}
 			hp = 0;
 			m_animator.SetTrigger("Death");
 			isDeath = true;
