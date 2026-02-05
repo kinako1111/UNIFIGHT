@@ -96,7 +96,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: da264c81a1500614abd6002e9eda97ed,
+    type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -393,7 +394,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fcbf9f03cbc09b46a5b9ccc83dee0cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameData: {fileID: 11400000, guid: 82f541923975c434994039f849c06b6a, type: 2}
 --- !u!1 &410110834
 GameObject:
   m_ObjectHideFlags: 0
@@ -936,7 +936,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fcbf9f03cbc09b46a5b9ccc83dee0cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameData: {fileID: 11400000, guid: 82f541923975c434994039f849c06b6a, type: 2}
 --- !u!1 &1887030292
 GameObject:
   m_ObjectHideFlags: 0

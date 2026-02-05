@@ -1,27 +1,47 @@
-using JetBrains.Annotations;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class WaveManager : MonoBehaviour
 {
-	[SerializeField] TextMeshProUGUI m_waveText;
-	[SerializeField] GameObject m_textActive;
+	[SerializeField] int m_maxWave = 3;
+	[SerializeField] SceneChanger m_sceneChanger;
 
-	private int m_waveCount = 0;
+	private int m_startedWave = 0;
+	private bool m_waitingClear = false;
+	private bool m_gameClear = false;
 
 	public void WaveCount()
 	{
-		m_waveCount++;
-		m_textActive.SetActive(true);
-		m_waveText.text = "現在のウェーブは" + m_waveCount.ToString() + "です";
-		StartCoroutine(WaveCountRead());
+		if (m_gameClear) return;
+
+		m_startedWave++;
+		Debug.Log($"Wave {m_startedWave} 開始通知");
+
+		m_waitingClear = true;
 	}
 
-	IEnumerator WaveCountRead()
+	private void Update()
 	{
-		yield return new WaitForSeconds(3);
-		m_textActive.SetActive(false);
+		if (!m_waitingClear || m_gameClear) return;
+
+		if (GameObject.FindGameObjectsWithTag("Enemy").Length <= 0)
+		{
+			Debug.Log($"Wave {m_startedWave} 終了");
+			m_waitingClear = false;
+
+			if (m_startedWave >= m_maxWave)
+			{
+				m_gameClear = true;
+				StartCoroutine(GoToWinScene());
+			}
+		}
+	}
+
+	IEnumerator GoToWinScene()
+	{
+		yield return new WaitForSeconds(3f);
+		SceneChanger changer = GameObject.FindWithTag("SceneManager").GetComponent<SceneChanger>();
+		changer.ChangeScene("WinScene");
 	}
 }
