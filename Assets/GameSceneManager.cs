@@ -94,7 +94,7 @@ public class GameSceneManager : MonoBehaviour
     /// </summary>
     void CreateTowerCamera()
     {
-        GameObject tower = GameObject.FindWithTag("Tower");
+        GameObject tower = GameObject.FindWithTag("Target");
         if (tower == null) return;
 
         Camera towerCam = Instantiate(cameraPrefab);
